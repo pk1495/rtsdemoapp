@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1A56DB">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>RTS Go — Reimagined</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --b: #1A56DB;
+  --bl: #EBF0FF;
+  --b2: #3B6FE8;
+  --dk: #0B1220;
+  --dk2: #141E33;
+  --sf: #F4F7FF;
+  --cd: #FFFFFF;
+  --br: rgba(0,0,0,0.08);
+  --tx: #0F172A;
+  --mt: #64748B;
+  --gn: #16A34A;
+  --gl: #DCFCE7;
+  --am: #D97706;
+  --al: #FEF3C7;
+  --pu: #534AB7;
+  --pl: #EEEDFE;
+  --fn: 'DM Sans', sans-serif;
+  --fd: 'Syne', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--fn);
+  background: var(--dk);
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== DESKTOP LAYOUT ===== */
+.desktop-wrap {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* LEFT PANEL — info / nav */
+.left-panel {
+  width: 380px;
+  flex-shrink: 0;
+  background: var(--dk2);
+  border-right: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.left-top {
+  padding: 32px 28px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  background: var(--b);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-text {
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.tagline {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+}
+
+/* Screen nav */
+.screen-nav {
+  padding: 20px 20px;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.screen-nav::-webkit-scrollbar { display: none; }
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.nav-btn {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: background 0.15s;
+  text-align: left;
+}
+
+.nav-btn:hover { background: rgba(255,255,255,0.06); }
+
+.nav-btn.active {
+  background: rgba(26,86,219,0.25);
+  border: 1px solid rgba(26,86,219,0.35);
+}
+
+.nav-btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-btn.active .nav-btn-icon {
+  background: var(--b);
+}
+
+.nav-btn-text { flex: 1; }
+.nav-btn-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  display: block;
+  margin-bottom: 1px;
+}
+.nav-btn.active .nav-btn-title { color: white; }
+.nav-btn-desc {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  display: block;
+}
+
+.nav-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 14px 0;
+}
+
+/* Feature badges */
+.feature-badges {
+  padding: 16px 20px 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fbadge {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 500;
+}
+
+/* CENTER — phone mockup */
+.center-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 0 40px;
+  background: var(--dk);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle grid background */
+.center-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(26,86,219,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,86,219,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.phone-label-top {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Phone frame */
+.phone-frame {
+  width: 340px;
+  height: 680px;
+  background: #F8FAFF;
+  border-radius: 44px;
+  border: 3px solid rgba(255,255,255,0.15);
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.3),
+    0 40px 80px rgba(0,0,0,0.5),
+    0 0 60px rgba(26,86,219,0.15);
+  transition: box-shadow 0.3s;
+}
+
+/* Notch */
+.notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 28px;
+  background: #0B1220;
+  border-radius: 0 0 18px 18px;
+  z-index: 10;
+}
+
+.phone-screen {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fn);
+}
+
+/* RIGHT PANEL — screen description */
+.right-panel {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--dk2);
+  border-left: 1px solid rgba(255,255,255,0.07);
+  padding: 40px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.right-panel::-webkit-scrollbar { display: none; }
+
+.screen-title {
+  font-family: var(--fd);
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.screen-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.feature-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.feature-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--b);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.feature-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.5;
+}
+
+.feature-text strong {
+  color: white;
+  font-weight: 500;
+}
+
+.insight-card {
+  background: rgba(26,86,219,0.12);
+  border: 1px solid rgba(26,86,219,0.25);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.insight-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #93C5FD;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.insight-text {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+}
+
+.stat-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-box {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stat-val {
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  display: block;
+}
+
+.stat-lbl {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  font-weight: 500;
+  margin-top: 3px;
+  display: block;
+}
+
+/* ===== PHONE SCREEN CONTENT ===== */
+
+/* Shared phone components */
+.p-statusbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 34px 20px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #0F172A;
+  background: white;
+  flex-shrink: 0;
+}
+
+.p-statusbar.dark { background: #0B1220; color: white; }
+.p-statusbar.blue { background: #1A56DB; color: white; }
+
+.p-si { display: flex; gap: 4px; align-items: center; }
+
+.p-screen { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; display: flex; flex-direction: column; }
+.p-screen::-webkit-scrollbar { display: none; }
+
+.p-bn {
+  display: flex;
+  background: white;
+  border-top: 1px solid rgba(0,0,0,0.07);
+  padding: 8px 0 20px;
+  flex-shrink: 0;
+}
+
+.p-ni {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.p-nl { font-size: 10px; font-weight: 500; color: #94A3B8; }
+.p-ni.active .p-nl { color: #1A56DB; }
+
+.p-sl {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 12px 18px 6px;
+}
+
+/* ===== SCREEN: HOME ===== */
+#screen-home .p-screen { background: #F8FAFF; }
+
+.home-header {
+  background: white;
+  padding: 14px 18px 0;
+}
+
+.home-greeting { font-size: 11px; color: #64748B; margin-bottom: 1px; }
+.home-title { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 700; color: #0F172A; margin-bottom: 12px; }
+
+.search-box {
+  background: #F8FAFF;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+.s-dot { width: 10px; height: 10px; border-radius: 50%; background: #1A56DB; flex-shrink: 0; }
+.s-text { font-size: 13px; color: #94A3B8; }
+
+.quick-chips {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: none;
+}
+.quick-chips::-webkit-scrollbar { display: none; }
+
+.chip {
+  background: #EBF0FF;
+  color: #1A56DB;
+  border-radius: 20px;
+  padding: 5px 11px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.balance-strip {
+  margin: 0 14px 12px;
+  background: #0F172A;
+  border-radius: 14px;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bal-label { font-size: 10px; color: rgba(255,255,255,0.5); margin-bottom: 1px; }
+.bal-amt { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: white; }
+.bal-add { background: #1A56DB; color: white; border: none; border-radius: 9px; padding: 6px 12px; font-size: 11px; font-weight: 600; font-family: var(--fn); cursor: pointer; }
+
+.map-area {
+  height: 150px;
+  margin: 0 14px;
+  border-radius: 14px;
+  background: #D6E8F5;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.m-road-h { position: absolute; left: 0; right: 0; height: 5px; background: rgba(255,255,255,0.85); }
+.m-road-v { position: absolute; top: 0; bottom: 0; width: 5px; background: rgba(255,255,255,0.85); }
+.m-stop { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: white; border: 2px solid #94A3B8; }
+.m-bus { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #1A56DB; border: 2.5px solid white; }
+.m-blabel { position: absolute; background: #1A56DB; color: white; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 6px; }
+.m-you { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #16A34A; border: 2.5px solid white; }
+
+.route-card {
+  margin: 8px 14px 0;
+  background: white;
+  border-radius: 13px;
+  border: 1px solid rgba(0,0,0,0.07);
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rn { width: 34px; height: 34px; border-radius: 9px; background: #1A56DB; color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Syne', sans-serif; }
+.ri { flex: 1; }
+.ri-name { font-size: 12px; font-weight: 500; color: #0F172A; margin-bottom: 1px; }
+.ri-detail { font-size: 10px; color: #64748B; }
+.ri-eta { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #16A34A; }
+
+/* ===== SCREEN: PLAN ===== */
+#screen-plan .p-screen { background: #F8FAFF; }
+
+.plan-header {
+  background: white;
+  padding: 14px 18px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+
+.plan-title { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 700; color: #0F172A; margin-bottom: 12px; }
+
+.route-input {
+  background: #F8FAFF;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.ri-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 13px;
+}
+
+.ri-row + .ri-row { border-top: 1px solid rgba(0,0,0,0.06); }
+
+.ri-col { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 12px; flex-shrink: 0; }
+.r-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.r-dot.from { background: #16A34A; }
+.r-dot.to { background: #1A56DB; }
+.r-dash { width: 1.5px; height: 3px; background: #CBD5E1; border-radius: 1px; }
+.ri-txt { flex: 1; }
+.ri-lbl { font-size: 9px; color: #94A3B8; font-weight: 600; margin-bottom: 1px; }
+.ri-val { font-size: 12px; color: #0F172A; font-weight: 500; }
+.ri-val.ph { color: #94A3B8; font-weight: 400; }
+
+.time-row { display: flex; gap: 7px; margin-bottom: 10px; }
+.time-chip { flex: 1; text-align: center; padding: 7px 5px; border-radius: 9px; border: 1.5px solid rgba(0,0,0,0.07); font-size: 11px; font-weight: 500; color: #64748B; background: white; cursor: pointer; }
+.time-chip.active { border-color: #1A56DB; color: #1A56DB; background: #EBF0FF; }
+
+.dt-row { display: flex; gap: 7px; margin-bottom: 4px; }
+.dt-f { flex: 1; background: white; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 11px; padding: 9px 11px; }
+.dt-l { font-size: 9px; color: #94A3B8; font-weight: 600; margin-bottom: 2px; }
+.dt-v { font-size: 12px; color: #0F172A; font-weight: 500; }
+
+.pref-row { display: flex; gap: 7px; flex-wrap: wrap; padding: 0 18px; margin-bottom: 8px; }
+.pref-chip { background: white; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 20px; padding: 4px 10px; font-size: 10px; font-weight: 500; color: #64748B; display: flex; align-items: center; gap: 4px; }
+.pref-chip.active { border-color: #1A56DB; color: #1A56DB; background: #EBF0FF; }
+.pref-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+.find-btn { margin: 8px 14px 0; background: #1A56DB; color: white; border: none; border-radius: 13px; padding: 13px; font-size: 14px; font-weight: 600; font-family: 'Syne', sans-serif; cursor: pointer; width: calc(100% - 28px); }
+
+.trip-card {
+  margin: 8px 14px 0;
+  background: white;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.trip-card.best { border-color: #1A56DB; }
+.best-badge { background: #1A56DB; color: white; font-size: 9px; font-weight: 700; padding: 3px 12px; letter-spacing: .04em; text-transform: uppercase; }
+.trip-body { padding: 10px 12px; }
+
+.tl-wrap { display: flex; align-items: center; gap: 0; margin-bottom: 8px; }
+.tl-t { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: #0F172A; width: 38px; flex-shrink: 0; }
+.tl-t.end { text-align: right; }
+.tl-bar { flex: 1; position: relative; display: flex; align-items: center; height: 24px; }
+.tl-seg { height: 5px; border-radius: 3px; }
+.tl-walk-seg { background: #E2E8F0; }
+.tl-bus-wrap { flex: 1; position: relative; display: flex; align-items: center; }
+.tl-bus-bar { height: 5px; border-radius: 3px; width: 100%; }
+.tl-bus-num { position: absolute; background: #1A56DB; color: white; font-size: 8px; font-weight: 700; padding: 1px 4px; border-radius: 5px; top: -9px; font-family: 'Syne', sans-serif; }
+.tl-gap { width: 3px; }
+.arrive-tag { display: inline-flex; align-items: center; background: #DCFCE7; color: #16A34A; font-size: 9px; font-weight: 600; padding: 1px 6px; border-radius: 7px; margin-left: 4px; }
+.arrive-tag.late { background: #FEF3C7; color: #D97706; }
+
+.trip-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+.ts-val { font-size: 12px; font-weight: 500; color: #0F172A; }
+.ts-lbl { font-size: 10px; color: #94A3B8; }
+.ts-dot { width: 4px; height: 4px; border-radius: 50%; background: #E2E8F0; margin-top: 6px; }
+
+/* ===== SCREEN: TRACK ===== */
+#screen-track .p-screen { background: #F8FAFF; }
+
+.track-map {
+  height: 220px;
+  background: #BFDBFE;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.track-card {
+  background: white;
+  border-radius: 22px 22px 0 0;
+  flex: 1;
+  padding: 16px 18px 0;
+  margin-top: -18px;
+  position: relative;
+  z-index: 2;
+}
+
+.tc-pill { width: 32px; height: 4px; background: #E2E8F0; border-radius: 2px; margin: 0 auto 14px; }
+.tc-badge { display: inline-flex; align-items: center; gap: 7px; background: #EBF0FF; padding: 4px 11px 4px 4px; border-radius: 20px; margin-bottom: 12px; }
+.tc-num { background: #1A56DB; color: white; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 12px; font-family: 'Syne', sans-serif; }
+.tc-name { font-size: 11px; font-weight: 500; color: #1A56DB; }
+.tc-heading { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: #0F172A; margin-bottom: 3px; }
+.tc-sub { font-size: 11px; color: #64748B; margin-bottom: 16px; }
+
+.stops-tl { display: flex; flex-direction: column; }
+.stop-row { display: flex; align-items: flex-start; gap: 10px; padding-bottom: 12px; }
+.sdw { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 14px; }
+.sd { width: 11px; height: 11px; border-radius: 50%; border: 2px solid #1A56DB; background: white; z-index: 1; flex-shrink: 0; margin-top: 2px; }
+.sd.done { background: #1A56DB; }
+.sd.you { background: #16A34A; border-color: #16A34A; width: 13px; height: 13px; }
+.sl-line { width: 2px; flex: 1; background: #EBF0FF; min-height: 12px; margin-top: 2px; }
+.sl-line.done { background: #1A56DB; }
+.sn { font-size: 12px; color: #94A3B8; padding-top: 1px; }
+.sn.active { color: #0F172A; font-weight: 500; }
+.you-tag { font-size: 9px; background: #DCFCE7; color: #16A34A; padding: 1px 7px; border-radius: 8px; font-weight: 600; margin-left: 5px; display: inline-block; }
+
+.eta-bar {
+  background: #1A56DB;
+  border-radius: 12px;
+  padding: 11px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.eta-l { color: rgba(255,255,255,0.7); font-size: 11px; }
+.eta-t { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 700; color: white; }
+.eta-btn { background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 8px; padding: 5px 11px; font-size: 11px; font-family: var(--fn); cursor: pointer; font-weight: 500; }
+
+/* ===== SCREEN: DISCOVER ===== */
+#screen-discover .p-screen { background: #F8FAFF; }
+
+.disc-header { background: white; padding: 14px 18px 14px; border-bottom: 1px solid rgba(0,0,0,0.07); }
+.disc-title { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 700; color: #0F172A; margin-bottom: 2px; }
+.disc-sub { font-size: 11px; color: #64748B; }
+
+.xp-card {
+  margin: 12px 14px;
+  background: #0F172A;
+  border-radius: 14px;
+  padding: 13px 15px;
+}
+
+.xp-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+.xp-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: white; }
+.xp-lv { background: #1A56DB; color: white; font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 9px; }
+.xp-track { background: rgba(255,255,255,0.12); border-radius: 4px; height: 5px; margin-bottom: 5px; }
+.xp-fill { background: #4ADE80; height: 5px; border-radius: 4px; width: 68%; }
+.xp-meta { display: flex; justify-content: space-between; }
+.xp-pts, .xp-nx { font-size: 10px; color: rgba(255,255,255,0.45); }
+
+.streak-row { display: flex; gap: 7px; padding: 0 14px 10px; }
+.streak-card { flex: 1; background: white; border: 1px solid rgba(0,0,0,0.07); border-radius: 12px; padding: 9px 10px; }
+.sk-ico { width: 20px; height: 20px; border-radius: 5px; margin-bottom: 3px; display: flex; align-items: center; justify-content: center; }
+.sk-val { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: #0F172A; }
+.sk-lbl { font-size: 9px; color: #94A3B8; }
+
+.badge-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; padding: 0 14px 10px; }
+.bdg { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.bdg-ico { width: 48px; height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center; }
+.bdg-name { font-size: 9px; color: #94A3B8; text-align: center; line-height: 1.3; font-weight: 500; }
+.bdg-name.earned { color: #0F172A; }
+
+.pulse-card {
+  margin: 0 14px 10px;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 13px;
+  padding: 11px 13px;
+}
+
+.pulse-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; }
+.pulse-title { font-size: 12px; font-weight: 500; color: #0F172A; }
+.pulse-live { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #16A34A; font-weight: 600; }
+.live-dot { width: 5px; height: 5px; border-radius: 50%; background: #16A34A; }
+
+.rpr { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.rpr:last-child { margin-bottom: 0; }
+.rp-badge { background: #1A56DB; color: white; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 7px; font-family: 'Syne', sans-serif; min-width: 24px; text-align: center; }
+.rp-bw { flex: 1; background: #F1F5F9; border-radius: 3px; height: 7px; }
+.rp-bar { height: 7px; border-radius: 3px; }
+.rp-ct { font-size: 10px; color: #94A3B8; min-width: 28px; text-align: right; }
+
+.avs { display: flex; }
+.av { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid white; margin-left: -4px; display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 700; color: white; }
+
+/* ===== SCREEN: QR SCAN ===== */
+#screen-qr .p-screen { background: #1C2B3A; }
+
+.qr-scan {
+  height: 240px;
+  background: #1C2B3A;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.scan-frame-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scan-frame {
+  width: 130px;
+  height: 130px;
+  position: relative;
+}
+
+.sc-c { position: absolute; width: 18px; height: 18px; }
+.sc-c.tl { top: 0; left: 0; border-top: 2.5px solid white; border-left: 2.5px solid white; border-radius: 2px 0 0 0; }
+.sc-c.tr { top: 0; right: 0; border-top: 2.5px solid white; border-right: 2.5px solid white; border-radius: 0 2px 0 0; }
+.sc-c.bl { bottom: 0; left: 0; border-bottom: 2.5px solid white; border-left: 2.5px solid white; border-radius: 0 0 0 2px; }
+.sc-c.br { bottom: 0; right: 0; border-bottom: 2.5px solid white; border-right: 2.5px solid white; border-radius: 0 0 2px 0; }
+.scan-line { position: absolute; left: 4px; right: 4px; height: 1.5px; background: rgba(26,86,219,0.85); top: 50%; }
+.scan-hint { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-size: 10px; color: rgba(255,255,255,0.6); font-family: var(--fn); }
+
+.stop-sheet {
+  background: white;
+  border-radius: 22px 22px 0 0;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  margin-top: -18px;
+  position: relative;
+  z-index: 2;
+}
+.stop-sheet::-webkit-scrollbar { display: none; }
+
+.sheet-pill { width: 32px; height: 4px; background: #E2E8F0; border-radius: 2px; margin: 12px auto 12px; }
+
+.pts-toast {
+  margin: 0 14px 10px;
+  background: #0F172A;
+  border-radius: 11px;
+  padding: 9px 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pt-l { display: flex; align-items: center; gap: 7px; }
+.pt-ico { width: 26px; height: 26px; border-radius: 7px; background: #4ADE80; display: flex; align-items: center; justify-content: center; }
+.pt-text { font-size: 11px; color: white; font-weight: 500; }
+.pt-pts { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #4ADE80; }
+
+.stop-name-big { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: #0F172A; padding: 0 14px 2px; }
+.stop-nbhd { font-size: 11px; color: #64748B; padding: 0 14px 10px; }
+
+.stop-photo { height: 100px; margin: 0 14px 10px; border-radius: 13px; background: #D6E4F0; overflow: hidden; position: relative; }
+.sph-label { position: absolute; bottom: 6px; left: 8px; background: rgba(15,23,42,0.65); color: white; font-size: 9px; font-weight: 500; padding: 2px 7px; border-radius: 7px; }
+
+.stop-tabs { display: flex; border-bottom: 1px solid rgba(0,0,0,0.07); margin: 0 14px 10px; }
+.stab { flex: 1; text-align: center; font-size: 11px; font-weight: 500; color: #94A3B8; padding: 7px 3px; border-bottom: 2px solid transparent; }
+.stab.active { color: #1A56DB; border-bottom-color: #1A56DB; }
+
+.hist-block {
+  margin: 0 14px 10px;
+  padding: 11px 13px;
+  background: #F8FAFF;
+  border-radius: 13px;
+  border-left: 3px solid #534AB7;
+}
+
+.hist-ey { font-size: 9px; font-weight: 700; color: #534AB7; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; }
+.hist-tx { font-size: 11px; color: #0F172A; line-height: 1.6; }
+
+.mural-row { display: flex; gap: 7px; padding: 0 14px 10px; overflow-x: auto; scrollbar-width: none; }
+.mural-row::-webkit-scrollbar { display: none; }
+.mural-thumb { width: 64px; height: 64px; border-radius: 11px; flex-shrink: 0; overflow: hidden; position: relative; }
+.mural-lbl { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; font-size: 7px; font-weight: 500; padding: 2px 4px; text-align: center; }
+
+/* ===== SCREEN: ON DEMAND ===== */
+#screen-demand .p-screen { background: #F8FAFF; }
+
+.demand-header { background: white; padding: 14px 18px 14px; border-bottom: 1px solid rgba(0,0,0,0.07); }
+.demand-title { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 700; color: #0F172A; margin-bottom: 3px; }
+.demand-sub { font-size: 11px; color: #64748B; margin-bottom: 14px; }
+
+.dest-group { background: #F8FAFF; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 14px; overflow: hidden; margin-bottom: 12px; }
+.dest-row { display: flex; align-items: center; gap: 9px; padding: 11px 13px; }
+.dest-row + .dest-row { border-top: 1px solid rgba(0,0,0,0.06); }
+.dest-ic { display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0; width: 12px; }
+.dc { width: 9px; height: 9px; border-radius: 50%; }
+.dc.from { background: #16A34A; }
+.dc.to { background: #1A56DB; }
+.dd { width: 1.5px; height: 3px; background: #CBD5E1; border-radius: 1px; }
+.dph { font-size: 12px; color: #94A3B8; }
+.dval { font-size: 12px; color: #0F172A; font-weight: 500; }
+
+.od-notice {
+  margin: 0 14px 12px;
+  background: #FEF3C7;
+  border: 1.5px solid #FDE68A;
+  border-radius: 12px;
+  padding: 9px 12px;
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+}
+
+.od-notice-text { font-size: 10px; color: #92400E; line-height: 1.5; }
+.od-notice-text strong { font-weight: 600; color: #78350F; display: block; margin-bottom: 1px; }
+
+.ride-opts { display: flex; flex-direction: column; gap: 8px; padding: 0 14px; }
+.ride-opt { background: white; border: 1.5px solid rgba(0,0,0,0.08); border-radius: 13px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; }
+.ride-opt.sel { border-color: #1A56DB; background: #EBF0FF; }
+.ride-ico { width: 38px; height: 38px; border-radius: 9px; background: #F8FAFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ride-opt.sel .ride-ico { background: #1A56DB; }
+.ride-info { flex: 1; }
+.ride-name { font-size: 12px; font-weight: 500; color: #0F172A; }
+.ride-opt.sel .ride-name { color: #1A56DB; }
+.ride-desc { font-size: 10px; color: #94A3B8; margin-top: 1px; }
+.ride-wait { font-size: 11px; font-weight: 600; color: #16A34A; }
+.ride-price { font-size: 10px; color: #94A3B8; }
+
+.book-btn { margin: 12px 14px 0; background: #1A56DB; color: white; border: none; border-radius: 13px; padding: 13px; font-size: 14px; font-weight: 600; font-family: 'Syne', sans-serif; cursor: pointer; width: calc(100% - 28px); }
+
+/* NAV ICONS */
+.ni-home, .ni-plan, .ni-track, .ni-disc, .ni-pay { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes scanline {
+  0%, 100% { top: 20%; }
+  50% { top: 80%; }
+}
+
+.scan-line { animation: scanline 2s ease-in-out infinite; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.live-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.phone-frame { animation: fade-in-up 0.4s ease-out; }
+
+/* ===== MOBILE ONLY VIEW ===== */
+@media (max-width: 768px) {
+  .desktop-wrap { flex-direction: column; }
+  .left-panel { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .left-top { padding: 20px 20px 16px; }
+  .screen-nav { padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .nav-btn { width: auto; flex: 1; min-width: 140px; }
+  .feature-badges { display: none; }
+  .center-panel { padding: 24px 0; }
+  .phone-frame { width: 100%; max-width: 340px; height: 680px; }
+  .right-panel { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.07); padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="desktop-wrap">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-top">
+      <div class="logo-row">
+        <div class="logo-mark">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="2" y="7" width="18" height="11" rx="2.5" fill="white" opacity="0.9"/>
+            <circle cx="6" cy="18" r="2" fill="rgba(255,255,255,0.7)"/>
+            <circle cx="16" cy="18" r="2" fill="rgba(255,255,255,0.7)"/>
+            <path d="M2 12h18" stroke="white" stroke-width="1" opacity="0.4"/>
+            <path d="M5 7L7.5 4h7L17 7" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="logo-text">RTS Go</div>
+          <div class="logo-sub">Reimagined for Rochester</div>
+        </div>
+      </div>
+      <div class="tagline">A redesigned transit experience for college students — simpler, smarter, and more connected to Rochester's community.</div>
+    </div>
+
+    <div class="screen-nav">
+      <div class="nav-section-label">Core screens</div>
+
+      <button class="nav-btn active" onclick="showScreen('home', this)">
+        <div class="nav-btn-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2l6 5v7a1 1 0 01-1 1H3a1 1 0 01-1-1V7z" fill="white" opacity="0.8"/></svg>
+        </div>
+        <div class="nav-btn-text">
+          <span class="nav-btn-title">Home</span>
+          <span class="nav-btn-desc">Balance, nearby routes & map</span>
+        </div>
+      </button>
+
+      <button class="nav-btn" onclick="showScreen('plan', this)">
+        <div class="nav-btn-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3 3.8 3 6.5c0 3.7 5 9 5 9s5-5.3 5-9c0-2.7-2.5-5-5-5z" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><circle cx="8" cy="6.5" r="1.8" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/></svg>
+        </div>
+        <div class="nav-btn-text">
+          <span class="nav-btn-title">Plan a Trip</span>
+          <span class="nav-btn-desc">Routes, times, step-by-step</span>
+        </div>
+      </button>
+
+      <button class="nav-btn" onclick="showScreen('track', this)">
+        <div class="nav-btn-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="nav-btn-text">
+          <span class="nav-btn-title">Live Tracking</span>
+          <span class="nav-btn-desc">Real-time bus position & ETA</span>
+        </div>
+      </button>
+
+      <button class="nav-btn" onclick="showScreen('demand', this)">
+        <div class="nav-btn-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="8" rx="1.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><circle cx="5" cy="13" r="1.2" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><circle cx="11" cy="13" r="1.2" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><path d="M2 9h12" stroke="rgba(255,255,255,0.5)" stroke-width="1"/><path d="M5 5V3.5h6V5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-btn-text">
+          <span class="nav-btn-title">On Demand</span>
+          <span class="nav-btn-desc">Schedule advance flex rides</span>
+        </div>
+      </button>
+
+      <div class="nav-divider"></div>
+      <div class="nav-section-label">Community features</div>
+
+      <button class="nav-btn" onclick="showScreen('discover', this)">
+        <div class="nav-btn-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.5 4h4l-3.2 2.3 1.2 4L8 9.5l-3.5 2.3 1.2-4L2.5 5.5h4z" fill="rgba(255,255,255,0.8)"/></svg>
+        </div>
+        <div class="nav-btn-text">
+          <span class="nav-btn-title">Discover & XP</span>
+          <span class="nav-btn-desc">Badges, streaks, live ridership</span>
+        </div>
+      </button>
+
+      <button class="nav-btn" onclick="showScreen('qr', this)">
+        <div class="nav-btn-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="10" y="10" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="13" y="10" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="10" y="13" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="13" y="13" width="2" height="2" fill="rgba(255,255,255,0.7)"/></svg>
+        </div>
+        <div class="nav-btn-text">
+          <span class="nav-btn-title">QR Stop Scan</span>
+          <span class="nav-btn-desc">History, art, events, tips</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="feature-badges">
+      <div class="fbadge">PWA Ready</div>
+      <div class="fbadge">Mobile-first</div>
+      <div class="fbadge">Offline support</div>
+      <div class="fbadge">QR scanning</div>
+      <div class="fbadge">Gamification</div>
+      <div class="fbadge">Social layer</div>
+      <div class="fbadge">Stop stories</div>
+    </div>
+  </div>
+
+  <!-- CENTER — PHONE -->
+  <div class="center-panel">
+    <div class="phone-label-top" id="phone-label">Home Screen</div>
+
+    <div class="phone-frame">
+      <div class="notch"></div>
+
+      <!-- ===== HOME SCREEN ===== -->
+      <div class="phone-screen" id="screen-home">
+        <div class="p-statusbar">
+          <span>9:41</span>
+          <div class="p-si">
+            <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg>
+            <svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg>
+          </div>
+        </div>
+        <div class="p-screen">
+          <div class="home-header">
+            <div class="home-greeting">Good morning, Alex</div>
+            <div class="home-title">Where are you headed?</div>
+            <div class="search-box">
+              <div class="s-dot"></div>
+              <span class="s-text">Search destination...</span>
+            </div>
+            <div class="quick-chips">
+              <div class="chip">Home</div>
+              <div class="chip">Strong Memorial</div>
+              <div class="chip">RIT</div>
+              <div class="chip">Downtown</div>
+              <div class="chip">U of R</div>
+            </div>
+          </div>
+
+          <div class="balance-strip">
+            <div><div class="bal-label">RTS Balance</div><div class="bal-amt">$12.50</div></div>
+            <button class="bal-add">+ Add Funds</button>
+          </div>
+
+          <div class="p-sl">Nearby Buses</div>
+
+          <div class="map-area">
+            <div class="m-road-h" style="top:48%;"></div>
+            <div class="m-road-v" style="left:38%;"></div>
+            <div class="m-road-v" style="left:68%;"></div>
+            <div class="m-road-h" style="top:24%;"></div>
+            <div class="m-stop" style="top:44%;left:22%;"></div>
+            <div class="m-stop" style="top:44%;left:54%;"></div>
+            <div class="m-bus" style="top:40%;left:28%;"></div>
+            <div class="m-blabel" style="top:26%;left:26%;">7</div>
+            <div class="m-bus" style="top:40%;left:56%;background:#D97706;"></div>
+            <div class="m-blabel" style="top:26%;left:54%;background:#D97706;">35</div>
+            <div class="m-you" style="top:42%;left:42%;"></div>
+          </div>
+
+          <div class="route-card">
+            <div class="rn">7</div>
+            <div class="ri"><div class="ri-name">Monroe Ave</div><div class="ri-detail">2 stops away · University Ave</div></div>
+            <div class="ri-eta">3 min</div>
+          </div>
+
+          <div class="route-card" style="margin-bottom:12px;">
+            <div class="rn" style="background:#D97706;">35</div>
+            <div class="ri"><div class="ri-name">Chili Ave</div><div class="ri-detail">4 stops away · Jefferson Rd</div></div>
+            <div class="ri-eta" style="color:#D97706;">8 min</div>
+          </div>
+        </div>
+        <div class="p-bn">
+          <div class="p-ni active" onclick="showScreen('home',null)">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 8.5L10 2l8 6.5V18a1 1 0 01-1 1H3a1 1 0 01-1-1V8.5z" fill="#1A56DB" opacity="0.15" stroke="#1A56DB" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            <span class="p-nl" style="color:#1A56DB;">Home</span>
+          </div>
+          <div class="p-ni" onclick="showScreen('plan',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5C7 1.5 4.5 4 4.5 7c0 4.2 5.5 10 5.5 10s5.5-5.8 5.5-10c0-3-2.5-5.5-5.5-5.5z" stroke="#94A3B8" stroke-width="1.5"/><circle cx="10" cy="7" r="2" stroke="#94A3B8" stroke-width="1.3"/></svg><span class="p-nl">Plan</span></div>
+          <div class="p-ni" onclick="showScreen('track',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#94A3B8" stroke-width="1.5"/><path d="M10 7v3l2.5 1.5" stroke="#94A3B8" stroke-width="1.3" stroke-linecap="round"/></svg><span class="p-nl">Track</span></div>
+          <div class="p-ni" onclick="showScreen('discover',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l1.8 5h5l-4 3 1.5 5L10 12l-4.3 3 1.5-5-4-3h5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Discover</span></div>
+          <div class="p-ni" onclick="showScreen('demand',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="10" rx="2" stroke="#94A3B8" stroke-width="1.5"/><circle cx="6" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><circle cx="14" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><path d="M2 10h16" stroke="#94A3B8" stroke-width="1"/><path d="M6 6V4h8v2" stroke="#94A3B8" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="p-nl">On Demand</span></div>
+        </div>
+      </div>
+
+      <!-- ===== PLAN SCREEN ===== -->
+      <div class="phone-screen" id="screen-plan" style="display:none;">
+        <div class="p-statusbar"><span>9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
+        <div class="p-screen">
+          <div class="plan-header">
+            <div class="plan-title">Plan a Trip</div>
+            <div class="route-input">
+              <div class="ri-row">
+                <div class="ri-col"><div class="r-dot from"></div><div class="r-dash"></div><div class="r-dash"></div><div class="r-dash"></div></div>
+                <div class="ri-txt"><div class="ri-lbl">FROM</div><div class="ri-val">Current location</div></div>
+              </div>
+              <div class="ri-row">
+                <div class="ri-col"><div class="r-dot to"></div></div>
+                <div class="ri-txt"><div class="ri-lbl">TO</div><div class="ri-val ph">Where do you want to go?</div></div>
+              </div>
+            </div>
+            <div class="time-row">
+              <div class="time-chip active">Depart at</div>
+              <div class="time-chip">Arrive by</div>
+              <div class="time-chip">Last trip</div>
+            </div>
+            <div class="dt-row">
+              <div class="dt-f"><div class="dt-l">DATE</div><div class="dt-v">Today, Mar 26</div></div>
+              <div class="dt-f"><div class="dt-l">TIME</div><div class="dt-v">9:45 AM</div></div>
+            </div>
+          </div>
+          <div class="p-sl">Preferences</div>
+          <div class="pref-row">
+            <div class="pref-chip active"><div class="pref-dot"></div>Fewest transfers</div>
+            <div class="pref-chip"><div class="pref-dot"></div>Fastest route</div>
+            <div class="pref-chip"><div class="pref-dot"></div>Less walking</div>
+          </div>
+          <div class="pref-row" style="margin-top:6px;"><div class="pref-chip">Wheelchair accessible</div></div>
+          <button class="find-btn">Find Routes</button>
+
+          <div class="p-sl" style="margin-top:8px;">3 options found</div>
+
+          <div class="trip-card best">
+            <div class="best-badge">Best match</div>
+            <div class="trip-body">
+              <div class="tl-wrap">
+                <div class="tl-t">9:52</div>
+                <div class="tl-bar">
+                  <div class="tl-seg tl-walk-seg" style="width:12px;"></div>
+                  <div class="tl-gap"></div>
+                  <div class="tl-bus-wrap">
+                    <div class="tl-bus-bar" style="background:#1A56DB;"></div>
+                    <div class="tl-bus-num">7</div>
+                  </div>
+                  <div class="tl-gap"></div>
+                  <div class="tl-seg tl-walk-seg" style="width:9px;"></div>
+                </div>
+                <div class="tl-t end">10:18<span class="arrive-tag">On time</span></div>
+              </div>
+              <div class="trip-stats">
+                <span class="ts-val">26 min</span><span class="ts-lbl">total</span>
+                <div class="ts-dot"></div>
+                <span class="ts-val">0</span><span class="ts-lbl">transfers</span>
+                <div class="ts-dot"></div>
+                <span class="ts-val">4 min</span><span class="ts-lbl">walk</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="trip-card" style="margin-bottom:4px;">
+            <div class="trip-body">
+              <div class="tl-wrap">
+                <div class="tl-t">10:05</div>
+                <div class="tl-bar">
+                  <div class="tl-seg tl-walk-seg" style="width:8px;"></div>
+                  <div class="tl-gap"></div>
+                  <div class="tl-bus-wrap" style="flex:0.55;">
+                    <div class="tl-bus-bar" style="background:#D97706;"></div>
+                    <div class="tl-bus-num" style="background:#D97706;">35</div>
+                  </div>
+                  <div class="tl-gap"></div>
+                  <div class="tl-seg tl-walk-seg" style="width:5px;"></div>
+                  <div class="tl-gap"></div>
+                  <div class="tl-bus-wrap" style="flex:0.45;">
+                    <div class="tl-bus-bar" style="background:#1A56DB;"></div>
+                    <div class="tl-bus-num">7</div>
+                  </div>
+                  <div class="tl-gap"></div>
+                  <div class="tl-seg tl-walk-seg" style="width:7px;"></div>
+                </div>
+                <div class="tl-t end">10:41<span class="arrive-tag late">+5 late</span></div>
+              </div>
+              <div class="trip-stats">
+                <span class="ts-val">36 min</span><span class="ts-lbl">total</span>
+                <div class="ts-dot"></div>
+                <span class="ts-val">1</span><span class="ts-lbl">transfer</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="height:14px;"></div>
+        </div>
+        <div class="p-bn">
+          <div class="p-ni" onclick="showScreen('home',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 8.5L10 2l8 6.5V18a1 1 0 01-1 1H3a1 1 0 01-1-1V8.5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Home</span></div>
+          <div class="p-ni active"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5C7 1.5 4.5 4 4.5 7c0 4.2 5.5 10 5.5 10s5.5-5.8 5.5-10c0-3-2.5-5.5-5.5-5.5z" fill="#1A56DB" opacity="0.15" stroke="#1A56DB" stroke-width="1.5"/><circle cx="10" cy="7" r="2" stroke="#1A56DB" stroke-width="1.3"/></svg><span class="p-nl" style="color:#1A56DB;">Plan</span></div>
+          <div class="p-ni" onclick="showScreen('track',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#94A3B8" stroke-width="1.5"/><path d="M10 7v3l2.5 1.5" stroke="#94A3B8" stroke-width="1.3" stroke-linecap="round"/></svg><span class="p-nl">Track</span></div>
+          <div class="p-ni" onclick="showScreen('discover',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l1.8 5h5l-4 3 1.5 5L10 12l-4.3 3 1.5-5-4-3h5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Discover</span></div>
+          <div class="p-ni" onclick="showScreen('demand',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="10" rx="2" stroke="#94A3B8" stroke-width="1.5"/><circle cx="6" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><circle cx="14" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><path d="M2 10h16" stroke="#94A3B8" stroke-width="1"/><path d="M6 6V4h8v2" stroke="#94A3B8" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="p-nl">On Demand</span></div>
+        </div>
+      </div>
+
+      <!-- ===== TRACK SCREEN ===== -->
+      <div class="phone-screen" id="screen-track" style="display:none;">
+        <div class="p-statusbar"><span>9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
+        <div class="p-screen">
+          <div class="track-map">
+            <svg width="100%" height="100%" viewBox="0 0 340 220" preserveAspectRatio="xMidYMid slice">
+              <rect width="340" height="220" fill="#BFDBFE"/>
+              <rect y="104" width="340" height="6" fill="rgba(255,255,255,0.85)"/>
+              <rect x="118" y="0" width="6" height="220" fill="rgba(255,255,255,0.85)"/>
+              <rect x="230" y="0" width="6" height="220" fill="rgba(255,255,255,0.65)"/>
+              <rect y="55" width="340" height="4" fill="rgba(255,255,255,0.5)"/>
+              <line x1="30" y1="107" x2="210" y2="107" stroke="#1A56DB" stroke-width="3" stroke-dasharray="0"/>
+              <circle cx="60" cy="107" r="5" fill="white" stroke="#94A3B8" stroke-width="1.5"/>
+              <circle cx="118" cy="107" r="5" fill="white" stroke="#1A56DB" stroke-width="1.5"/>
+              <circle cx="175" cy="107" r="5" fill="white" stroke="#1A56DB" stroke-width="1.5"/>
+              <circle cx="232" cy="107" r="5" fill="white" stroke="#94A3B8" stroke-width="1.5"/>
+              <circle cx="105" cy="107" r="9" fill="#1A56DB" stroke="white" stroke-width="2.5"/>
+              <rect x="95" y="88" width="20" height="11" rx="4" fill="#1A56DB"/>
+              <text x="105" y="96.5" font-size="7" font-weight="700" fill="white" text-anchor="middle" font-family="sans-serif">7</text>
+              <circle cx="168" cy="107" r="7" fill="#16A34A" stroke="white" stroke-width="2.5"/>
+              <polygon points="232,90 225,104 239,104" fill="#1A56DB"/>
+            </svg>
+          </div>
+          <div class="track-card">
+            <div class="tc-pill"></div>
+            <div class="tc-badge"><div class="tc-num">7</div><span class="tc-name">Monroe Ave</span></div>
+            <div class="tc-heading">Bus arriving in 3 min</div>
+            <div class="tc-sub">Stop: University Ave & Elmwood</div>
+            <div class="stops-tl">
+              <div class="stop-row"><div class="sdw"><div class="sd done"></div><div class="sl-line done"></div></div><span class="sn">Park Ave & Alexander</span></div>
+              <div class="stop-row"><div class="sdw"><div class="sd done"></div><div class="sl-line done"></div></div><span class="sn">Monroe & Goodman</span></div>
+              <div class="stop-row"><div class="sdw"><div class="sd you"></div><div class="sl-line"></div></div><div><span class="sn active">University Ave & Elmwood</span><span class="you-tag">You're here</span></div></div>
+              <div class="stop-row"><div class="sdw"><div class="sd"></div></div><span class="sn">Mt. Hope & Elmwood</span></div>
+            </div>
+            <div class="eta-bar">
+              <div><div class="eta-l">Arriving at destination</div><div class="eta-t">12 min</div></div>
+              <button class="eta-btn">Share ETA</button>
+            </div>
+          </div>
+        </div>
+        <div class="p-bn">
+          <div class="p-ni" onclick="showScreen('home',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 8.5L10 2l8 6.5V18a1 1 0 01-1 1H3a1 1 0 01-1-1V8.5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Home</span></div>
+          <div class="p-ni" onclick="showScreen('plan',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5C7 1.5 4.5 4 4.5 7c0 4.2 5.5 10 5.5 10s5.5-5.8 5.5-10c0-3-2.5-5.5-5.5-5.5z" stroke="#94A3B8" stroke-width="1.5"/><circle cx="10" cy="7" r="2" stroke="#94A3B8" stroke-width="1.3"/></svg><span class="p-nl">Plan</span></div>
+          <div class="p-ni active"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" fill="#1A56DB" opacity="0.15" stroke="#1A56DB" stroke-width="1.5"/><path d="M10 7v3l2.5 1.5" stroke="#1A56DB" stroke-width="1.3" stroke-linecap="round"/></svg><span class="p-nl" style="color:#1A56DB;">Track</span></div>
+          <div class="p-ni" onclick="showScreen('discover',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l1.8 5h5l-4 3 1.5 5L10 12l-4.3 3 1.5-5-4-3h5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Discover</span></div>
+          <div class="p-ni" onclick="showScreen('demand',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="10" rx="2" stroke="#94A3B8" stroke-width="1.5"/><circle cx="6" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><circle cx="14" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><path d="M2 10h16" stroke="#94A3B8" stroke-width="1"/><path d="M6 6V4h8v2" stroke="#94A3B8" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="p-nl">On Demand</span></div>
+        </div>
+      </div>
+
+      <!-- ===== DISCOVER SCREEN ===== -->
+      <div class="phone-screen" id="screen-discover" style="display:none;">
+        <div class="p-statusbar"><span>9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
+        <div class="p-screen">
+          <div class="disc-header"><div class="disc-title">Discover ROC</div><div class="disc-sub">Earn points. Explore your city.</div></div>
+          <div class="xp-card">
+            <div class="xp-top"><div class="xp-name">Alex J. — Explorer</div><div class="xp-lv">Level 4</div></div>
+            <div class="xp-track"><div class="xp-fill"></div></div>
+            <div class="xp-meta"><span class="xp-pts">680 / 1000 XP</span><span class="xp-nx">320 XP to Level 5</span></div>
+          </div>
+          <div class="streak-row">
+            <div class="streak-card"><div class="sk-ico" style="background:#FEF3C7;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1s-3.5 2.5-3.5 5.5a3.5 3.5 0 007 0C9.5 3.5 6 1 6 1z" fill="#D97706"/></svg></div><div class="sk-val" style="color:#D97706;">12</div><div class="sk-lbl">day streak</div></div>
+            <div class="streak-card"><div class="sk-ico" style="background:#EBF0FF;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#1A56DB" stroke-width="1.2"/><path d="M6 3.5v2.5l1.5 1" stroke="#1A56DB" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="sk-val">47</div><div class="sk-lbl">rides total</div></div>
+            <div class="streak-card"><div class="sk-ico" style="background:#DCFCE7;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.2 2.8 2.8.4-2 2 .5 2.8L6 7.8 3.5 9l.5-2.8-2-2 2.8-.4z" fill="#16A34A"/></svg></div><div class="sk-val" style="color:#16A34A;">9</div><div class="sk-lbl">stops scanned</div></div>
+          </div>
+          <div class="p-sl">Badges earned</div>
+          <div class="badge-grid">
+            <div class="bdg"><div class="bdg-ico" style="background:#FEF3C7;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2s-5 4-5 9a5 5 0 0010 0C16 6 11 2 11 2z" fill="#D97706"/><circle cx="11" cy="11" r="2" fill="#FEF3C7"/></svg></div><span class="bdg-name earned">First Ride</span></div>
+            <div class="bdg"><div class="bdg-ico" style="background:#EBF0FF;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="7" width="16" height="10" rx="2" fill="#1A56DB"/><path d="M3 12h16" stroke="white" stroke-width="1" opacity="0.4"/><circle cx="7" cy="17" r="1.5" fill="#0C447C"/><circle cx="15" cy="17" r="1.5" fill="#0C447C"/></svg></div><span class="bdg-name earned">Route 7 Pro</span></div>
+            <div class="bdg"><div class="bdg-ico" style="background:#EEEDFE;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="4" y="4" width="14" height="14" rx="3" fill="#534AB7"/><path d="M8 11l2.5 2.5 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="bdg-name earned">Stop Scanner</span></div>
+            <div class="bdg"><div class="bdg-ico" style="background:#F1F5F9;border:1.5px dashed #CBD5E1;"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2l2 5.5 5.5.8-4 3.8 1 5.5L11 15l-4.5 2.6 1-5.5-4-3.8 5.5-.8z" stroke="#CBD5E1" stroke-width="1.3"/></svg></div><span class="bdg-name">Night Owl</span></div>
+          </div>
+          <div class="p-sl">Who's riding now</div>
+          <div class="pulse-card">
+            <div class="pulse-hdr"><span class="pulse-title">Live ridership — anonymized</span><div class="pulse-live"><div class="live-dot"></div>Live</div></div>
+            <div class="rpr"><div class="rp-badge">7</div><div class="rp-bw"><div class="rp-bar" style="width:78%;background:#1A56DB;opacity:0.7;"></div></div><div class="avs"><div class="av" style="background:#1A56DB;">R</div><div class="av" style="background:#534AB7;">M</div><div class="av" style="background:#0F6E56;">S</div></div><span class="rp-ct">+34</span></div>
+            <div class="rpr"><div class="rp-badge" style="background:#D97706;">35</div><div class="rp-bw"><div class="rp-bar" style="width:45%;background:#D97706;opacity:0.7;"></div></div><div class="avs"><div class="av" style="background:#D97706;">K</div><div class="av" style="background:#993C1D;">J</div></div><span class="rp-ct">+18</span></div>
+            <div class="rpr"><div class="rp-badge" style="background:#16A34A;">19</div><div class="rp-bw"><div class="rp-bar" style="width:28%;background:#16A34A;opacity:0.7;"></div></div><div class="avs"><div class="av" style="background:#16A34A;">T</div></div><span class="rp-ct">+9</span></div>
+          </div>
+          <div class="p-sl">Active challenge</div>
+          <div style="margin:0 14px 16px;background:white;border:1.5px solid #1A56DB;border-radius:13px;padding:11px 13px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;"><div><div style="font-size:12px;font-weight:500;color:#0F172A;margin-bottom:2px;">Explore the Neighborhood</div><div style="font-size:10px;color:#64748B;">Scan 3 stops in the South Wedge</div></div><div style="background:#EBF0FF;color:#1A56DB;font-size:10px;font-weight:600;padding:2px 7px;border-radius:7px;">+150 XP</div></div>
+            <div style="background:#F1F5F9;border-radius:5px;height:5px;margin-bottom:5px;"><div style="background:#1A56DB;height:5px;border-radius:5px;width:33%;"></div></div>
+            <div style="font-size:10px;color:#94A3B8;">1 of 3 stops scanned</div>
+          </div>
+        </div>
+        <div class="p-bn">
+          <div class="p-ni" onclick="showScreen('home',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 8.5L10 2l8 6.5V18a1 1 0 01-1 1H3a1 1 0 01-1-1V8.5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Home</span></div>
+          <div class="p-ni" onclick="showScreen('plan',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5C7 1.5 4.5 4 4.5 7c0 4.2 5.5 10 5.5 10s5.5-5.8 5.5-10c0-3-2.5-5.5-5.5-5.5z" stroke="#94A3B8" stroke-width="1.5"/><circle cx="10" cy="7" r="2" stroke="#94A3B8" stroke-width="1.3"/></svg><span class="p-nl">Plan</span></div>
+          <div class="p-ni" onclick="showScreen('track',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#94A3B8" stroke-width="1.5"/><path d="M10 7v3l2.5 1.5" stroke="#94A3B8" stroke-width="1.3" stroke-linecap="round"/></svg><span class="p-nl">Track</span></div>
+          <div class="p-ni active"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l1.8 5h5l-4 3 1.5 5L10 12l-4.3 3 1.5-5-4-3h5z" fill="#1A56DB" opacity="0.15" stroke="#1A56DB" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl" style="color:#1A56DB;">Discover</span></div>
+          <div class="p-ni" onclick="showScreen('demand',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="10" rx="2" stroke="#94A3B8" stroke-width="1.5"/><circle cx="6" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><circle cx="14" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><path d="M2 10h16" stroke="#94A3B8" stroke-width="1"/><path d="M6 6V4h8v2" stroke="#94A3B8" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="p-nl">On Demand</span></div>
+        </div>
+      </div>
+
+      <!-- ===== QR SCREEN ===== -->
+      <div class="phone-screen" id="screen-qr" style="display:none;">
+        <div class="p-statusbar dark"><span>9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="white"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="white"/><rect x="6" y="1" width="2" height="8" rx="1" fill="white"/><rect x="9" y="0" width="2" height="9" rx="1" fill="white"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="white" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="white"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="white" opacity="0.5"/></svg></div></div>
+        <div class="p-screen">
+          <div class="qr-scan">
+            <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 340 240" preserveAspectRatio="xMidYMid slice"><defs><pattern id="g2" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="white" stroke-width="0.4" opacity="0.08"/></pattern></defs><rect width="340" height="240" fill="url(#g2)"/></svg>
+            <div style="position:absolute;top:10px;left:14px;background:rgba(0,0,0,0.5);color:white;font-size:10px;font-weight:500;padding:3px 9px;border-radius:7px;">Point at stop QR code</div>
+            <div class="scan-frame-wrap">
+              <div class="scan-frame">
+                <div class="sc-c tl"></div><div class="sc-c tr"></div><div class="sc-c bl"></div><div class="sc-c br"></div>
+                <div class="scan-line"></div>
+              </div>
+            </div>
+            <div class="scan-hint">Scanning automatically</div>
+          </div>
+          <div class="stop-sheet">
+            <div class="sheet-pill"></div>
+            <div class="pts-toast">
+              <div class="pt-l"><div class="pt-ico"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.2 2.8 2.8.4-2 2 .5 2.8L6 7.8 3.5 9l.5-2.8-2-2 2.8-.4z" fill="#0F172A"/></svg></div><span class="pt-text">New stop scanned!</span></div>
+              <span class="pt-pts">+25 XP</span>
+            </div>
+            <div class="stop-name-big">Monroe Ave & Goodman St</div>
+            <div class="stop-nbhd">South Wedge · Stop #1847</div>
+            <div class="stop-photo">
+              <svg viewBox="0 0 310 100" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid slice">
+                <rect width="310" height="100" fill="#BFDBFE"/>
+                <rect y="76" width="310" height="24" fill="#CBD5E1"/>
+                <rect y="72" width="310" height="6" fill="#94A3B8"/>
+                <rect x="0" y="18" width="55" height="58" fill="#E2E8F0"/>
+                <rect x="8" y="28" width="13" height="16" fill="#BFDBFE" opacity="0.6"/>
+                <rect x="26" y="28" width="13" height="16" fill="#BFDBFE" opacity="0.6"/>
+                <rect x="0" y="36" width="55" height="20" fill="#7F77DD" opacity="0.3"/>
+                <rect x="8" y="40" width="11" height="9" fill="#D4537E" opacity="0.5"/>
+                <rect x="24" y="40" width="8" height="9" fill="#1D9E75" opacity="0.5"/>
+                <rect x="36" y="40" width="11" height="9" fill="#EF9F27" opacity="0.45"/>
+                <rect x="210" y="8" width="100" height="68" fill="#E2E8F0"/>
+                <rect x="220" y="18" width="12" height="16" fill="#BFDBFE" opacity="0.6"/>
+                <rect x="238" y="18" width="12" height="16" fill="#BFDBFE" opacity="0.6"/>
+                <rect x="256" y="18" width="12" height="16" fill="#BFDBFE" opacity="0.6"/>
+                <rect x="220" y="42" width="12" height="16" fill="#BFDBFE" opacity="0.6"/>
+                <rect x="238" y="42" width="12" height="16" fill="#BFDBFE" opacity="0.6"/>
+                <rect x="256" y="42" width="12" height="16" fill="#BFDBFE" opacity="0.6"/>
+                <rect x="148" y="50" width="5" height="24" fill="#78350F"/>
+                <ellipse cx="151" cy="46" rx="16" ry="14" fill="#16A34A"/>
+                <rect x="84" y="46" width="52" height="28" fill="#1A56DB" opacity="0.12"/>
+                <rect x="84" y="46" width="52" height="3" fill="#1A56DB" opacity="0.5"/>
+                <rect x="84" y="46" width="3" height="28" fill="#1A56DB" opacity="0.4"/>
+                <rect x="133" y="46" width="3" height="28" fill="#1A56DB" opacity="0.4"/>
+                <rect x="90" y="66" width="40" height="4" rx="1" fill="#94A3B8"/>
+                <rect x="92" y="70" width="4" height="7" fill="#94A3B8"/>
+                <rect x="124" y="70" width="4" height="7" fill="#94A3B8"/>
+                <rect x="100" y="50" width="14" height="14" rx="2" fill="white"/>
+                <rect x="101.5" y="51.5" width="4" height="4" fill="#1A56DB"/>
+                <rect x="108" y="51.5" width="4" height="4" fill="#1A56DB"/>
+                <rect x="101.5" y="58" width="4" height="4" fill="#1A56DB"/>
+                <rect x="108" y="58" width="2" height="2" fill="#1A56DB"/>
+                <rect x="112" y="60" width="2" height="2" fill="#1A56DB"/>
+                <rect x="105" y="55" width="2" height="2" fill="#1A56DB"/>
+              </svg>
+              <div class="sph-label">Monroe Ave & Goodman St</div>
+            </div>
+            <div class="stop-tabs">
+              <div class="stab active">History</div>
+              <div class="stab">Art & Murals</div>
+              <div class="stab">Events</div>
+              <div class="stab">Tips</div>
+            </div>
+            <div class="hist-block">
+              <div class="hist-ey">South Wedge neighborhood</div>
+              <div class="hist-tx">Monroe Ave has been Rochester's bohemian corridor since the 1970s. The South Wedge was one of the city's first neighborhoods to see student-led revitalization, with UR and RIT grads opening cafés and studios along this stretch in the late 1980s.</div>
+            </div>
+            <div style="padding:0 14px 6px;display:flex;justify-content:space-between;align-items:center;"><div style="font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.05em;">Murals nearby</div><div style="font-size:10px;color:#1A56DB;font-weight:500;">See all</div></div>
+            <div class="mural-row">
+              <div class="mural-thumb"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#534AB7"/><circle cx="32" cy="26" r="14" fill="#AFA9EC" opacity="0.6"/><rect x="14" y="40" width="36" height="18" fill="#3C3489" opacity="0.5"/></svg><div class="mural-lbl">Unity Wall</div></div>
+              <div class="mural-thumb"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#D4537E"/><rect x="6" y="6" width="22" height="52" fill="#ED93B1" opacity="0.5"/><rect x="36" y="6" width="22" height="52" fill="#993556" opacity="0.5"/><circle cx="32" cy="32" r="12" fill="#F4C0D1" opacity="0.6"/></svg><div class="mural-lbl">ROC Roots</div></div>
+              <div class="mural-thumb"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#0F6E56"/><path d="M32 8 L56 56 L8 56 Z" fill="#1D9E75" opacity="0.7"/><circle cx="32" cy="42" r="9" fill="#9FE1CB" opacity="0.6"/></svg><div class="mural-lbl">Green Future</div></div>
+              <div class="mural-thumb"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#BA7517"/><rect x="0" y="22" width="64" height="20" fill="#EF9F27" opacity="0.6"/><rect x="22" y="0" width="20" height="64" fill="#FAC775" opacity="0.4"/></svg><div class="mural-lbl">Crossroads</div></div>
+            </div>
+            <div style="height:10px;"></div>
+          </div>
+        </div>
+        <div class="p-bn">
+          <div class="p-ni" onclick="showScreen('home',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 8.5L10 2l8 6.5V18a1 1 0 01-1 1H3a1 1 0 01-1-1V8.5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Home</span></div>
+          <div class="p-ni" onclick="showScreen('plan',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5C7 1.5 4.5 4 4.5 7c0 4.2 5.5 10 5.5 10s5.5-5.8 5.5-10c0-3-2.5-5.5-5.5-5.5z" stroke="#94A3B8" stroke-width="1.5"/><circle cx="10" cy="7" r="2" stroke="#94A3B8" stroke-width="1.3"/></svg><span class="p-nl">Plan</span></div>
+          <div class="p-ni" onclick="showScreen('track',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#94A3B8" stroke-width="1.5"/><path d="M10 7v3l2.5 1.5" stroke="#94A3B8" stroke-width="1.3" stroke-linecap="round"/></svg><span class="p-nl">Track</span></div>
+          <div class="p-ni active"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l1.8 5h5l-4 3 1.5 5L10 12l-4.3 3 1.5-5-4-3h5z" fill="#1A56DB" opacity="0.15" stroke="#1A56DB" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl" style="color:#1A56DB;">Discover</span></div>
+          <div class="p-ni" onclick="showScreen('demand',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="10" rx="2" stroke="#94A3B8" stroke-width="1.5"/><circle cx="6" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><circle cx="14" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.2"/><path d="M2 10h16" stroke="#94A3B8" stroke-width="1"/><path d="M6 6V4h8v2" stroke="#94A3B8" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="p-nl">On Demand</span></div>
+        </div>
+      </div>
+
+      <!-- ===== ON DEMAND SCREEN ===== -->
+      <div class="phone-screen" id="screen-demand" style="display:none;">
+        <div class="p-statusbar"><span>9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
+        <div class="p-screen">
+          <div class="demand-header">
+            <div class="demand-title">On Demand</div>
+            <div class="demand-sub">Schedule your flex-route ride in advance</div>
+            <div class="dest-group">
+              <div class="dest-row"><div class="dest-ic"><div class="dc from"></div><div class="dd"></div><div class="dd"></div><div class="dd"></div></div><span class="dval">Current location</span></div>
+              <div class="dest-row"><div class="dest-ic"><div class="dc to"></div></div><span class="dph">Where to?</span></div>
+            </div>
+          </div>
+          <div class="od-notice">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="7" cy="7" r="6" stroke="#D97706" stroke-width="1.2"/><path d="M7 4.5v3" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="9.5" r="0.6" fill="#D97706"/></svg>
+            <div class="od-notice-text"><strong>Book in advance</strong>On Demand rides must be scheduled before 5 PM the day before your trip.</div>
+          </div>
+          <div class="p-sl">Choose your ride</div>
+          <div class="ride-opts">
+            <div class="ride-opt sel">
+              <div class="ride-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="7" width="16" height="9" rx="2" fill="white" opacity="0.9"/><circle cx="6" cy="16" r="1.5" fill="white" opacity="0.6"/><circle cx="14" cy="16" r="1.5" fill="white" opacity="0.6"/><path d="M2 11h16" stroke="white" stroke-width="1" opacity="0.4"/><path d="M5 7L7 4.5h6L15 7" stroke="white" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+              <div class="ride-info"><div class="ride-name">Standard Van</div><div class="ride-desc">Shared flex-route · up to 6</div></div>
+              <div><div class="ride-wait">4 min wait</div><div class="ride-price">$2.00</div></div>
+            </div>
+            <div class="ride-opt">
+              <div class="ride-ico" style="background:#F8FAFF;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="1" y="6" width="18" height="10" rx="2" stroke="#94A3B8" stroke-width="1.3"/><circle cx="5" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.1"/><circle cx="15" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.1"/><path d="M1 11h18" stroke="#94A3B8" stroke-width="1"/><path d="M4 6L6 3.5h8L16 6" stroke="#94A3B8" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+              <div class="ride-info"><div class="ride-name">Accessible Van</div><div class="ride-desc">Wheelchair accessible · WAV</div></div>
+              <div><div class="ride-wait">9 min wait</div><div class="ride-price">$2.00</div></div>
+            </div>
+            <div class="ride-opt">
+              <div class="ride-ico" style="background:#F8FAFF;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="7" width="14" height="9" rx="2" stroke="#94A3B8" stroke-width="1.3"/><circle cx="7" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.1"/><circle cx="13" cy="16" r="1.5" stroke="#94A3B8" stroke-width="1.1"/><path d="M6 7L8 4.5h4L14 7" stroke="#94A3B8" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+              <div class="ride-info"><div class="ride-name">Express</div><div class="ride-desc">Solo ride · fastest route</div></div>
+              <div><div class="ride-wait">2 min wait</div><div class="ride-price">$4.50</div></div>
+            </div>
+          </div>
+          <button class="book-btn">Schedule Standard Van</button>
+        </div>
+        <div class="p-bn">
+          <div class="p-ni" onclick="showScreen('home',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 8.5L10 2l8 6.5V18a1 1 0 01-1 1H3a1 1 0 01-1-1V8.5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Home</span></div>
+          <div class="p-ni" onclick="showScreen('plan',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5C7 1.5 4.5 4 4.5 7c0 4.2 5.5 10 5.5 10s5.5-5.8 5.5-10c0-3-2.5-5.5-5.5-5.5z" stroke="#94A3B8" stroke-width="1.5"/><circle cx="10" cy="7" r="2" stroke="#94A3B8" stroke-width="1.3"/></svg><span class="p-nl">Plan</span></div>
+          <div class="p-ni" onclick="showScreen('track',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#94A3B8" stroke-width="1.5"/><path d="M10 7v3l2.5 1.5" stroke="#94A3B8" stroke-width="1.3" stroke-linecap="round"/></svg><span class="p-nl">Track</span></div>
+          <div class="p-ni" onclick="showScreen('discover',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l1.8 5h5l-4 3 1.5 5L10 12l-4.3 3 1.5-5-4-3h5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Discover</span></div>
+          <div class="p-ni active"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="10" rx="2" fill="#1A56DB" opacity="0.15" stroke="#1A56DB" stroke-width="1.5"/><circle cx="6" cy="16" r="1.5" stroke="#1A56DB" stroke-width="1.2"/><circle cx="14" cy="16" r="1.5" stroke="#1A56DB" stroke-width="1.2"/><path d="M2 10h16" stroke="#1A56DB" stroke-width="1"/><path d="M6 6V4h8v2" stroke="#1A56DB" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="p-nl" style="color:#1A56DB;">On Demand</span></div>
+        </div>
+      </div>
+
+    </div><!-- /phone-frame -->
+  </div><!-- /center-panel -->
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel" id="right-panel">
+    <!-- content injected by JS -->
+  </div>
+
+</div><!-- /desktop-wrap -->
+
+<script>
+const screens = {
+  home: {
+    label: 'Home Screen',
+    title: 'Instant overview,\nzero confusion',
+    desc: 'The home screen strips everything down to one question: where are you going? Inspired by Uber\'s single-input model, it immediately shows nearby buses, ETAs, and your balance — no digging through menus.',
+    features: [
+      { strong: 'Uber-style search bar', rest: ' — one tap gets you routing, no transit jargon.' },
+      { strong: 'Quick-access chips', rest: ' — saved destinations like Home, RIT, Strong Memorial.' },
+      { strong: 'Live nearby buses', rest: ' — mini map with color-coded bus positions and real ETAs.' },
+      { strong: 'Balance strip', rest: ' — fare context is always visible so users are never caught off guard.' },
+    ],
+    insight: { label: 'Design rationale', text: 'Most confusing UX in the current app: users have to navigate to a separate tab just to find nearby routes. This collapses it all to one view.' },
+    stats: [{ val: '1', lbl: 'tap to route' }, { val: '0', lbl: 'menus to dig through' }, { val: '3s', lbl: 'to nearest bus' }]
+  },
+  plan: {
+    label: 'Plan a Trip',
+    title: 'Plan any trip,\nyour way',
+    desc: 'Three timing modes — Depart at, Arrive by, Last trip — cover every use case college students have. Results are shown as visual timeline bars so the best option is obvious at a glance.',
+    features: [
+      { strong: '"Arrive by" mode', rest: ' — enter when you need to be somewhere, the app works backwards.' },
+      { strong: 'Visual route bars', rest: ' — color-coded segments show bus route, walking, and transfers instantly.' },
+      { strong: '"Best match" highlight', rest: ' — removes decision paralysis, one option is always recommended.' },
+      { strong: 'On-time vs. late tags', rest: ' — green/amber status so students know what they\'re committing to.' },
+    ],
+    insight: { label: 'Student insight', text: 'Students most often miss buses because they don\'t know when to leave, not because they don\'t know the route. "Arrive by" solves this directly.' },
+    stats: [{ val: '3', lbl: 'timing modes' }, { val: '0', lbl: 'transfers (best)' }, { val: '26m', lbl: 'avg trip time' }]
+  },
+  track: {
+    label: 'Live Tracking',
+    title: 'Watch your bus,\nnot the clock',
+    desc: 'Real-time bus position on a live map, with a stop-by-stop timeline that shows exactly where the bus is relative to you. No more refreshing — it updates automatically.',
+    features: [
+      { strong: 'Live bus dot', rest: ' — color-coded by route, positioned on a real map view.' },
+      { strong: 'Stop timeline', rest: ' — progress bar shows done/current/upcoming stops at a glance.' },
+      { strong: '"You\'re here" marker', rest: ' — green dot shows exactly which stop is yours.' },
+      { strong: 'Share ETA', rest: ' — one tap to send your arrival time to a friend or professor.' },
+    ],
+    insight: { label: 'UX rationale', text: 'Tracking anxiety is the #1 reason students leave early. Showing the bus moving in real time on a map reduces uncertainty and reduces early departures.' },
+    stats: [{ val: 'Live', lbl: 'bus position' }, { val: '3 min', lbl: 'to stop' }, { val: '12 min', lbl: 'to destination' }]
+  },
+  discover: {
+    label: 'Discover & XP',
+    title: 'Make transit\nfeel like a game',
+    desc: 'The Discover tab turns riding the bus into a social, gamified experience — designed specifically to hook college students with the same mechanics as Duolingo and Strava.',
+    features: [
+      { strong: 'XP & leveling system', rest: ' — every ride, scan, and tip earns points toward a visible level.' },
+      { strong: 'Streak tracking', rest: ' — daily ride streaks reward consistency, just like Duolingo.' },
+      { strong: 'Unlockable badges', rest: ' — "Route 7 Pro", "Stop Scanner", "Night Owl" — status symbols for riders.' },
+      { strong: 'Live ridership pulse', rest: ' — anonymized bar showing who\'s on each route right now. Reduces the "am I the only one?" hesitation.' },
+    ],
+    insight: { label: 'Ridership strategy', text: 'Research shows social proof is the #1 driver of new transit adoption among 18–24 year olds. Seeing peers ride normalizes it.' },
+    stats: [{ val: '680', lbl: 'XP earned' }, { val: '12', lbl: 'day streak' }, { val: '47', lbl: 'total rides' }]
+  },
+  qr: {
+    label: 'QR Stop Scan',
+    title: 'Every stop tells\na story',
+    desc: 'Scan the QR code at any bus stop to unlock that stop\'s identity — neighborhood history, local murals, nearby events, and student tips from verified riders.',
+    features: [
+      { strong: 'Instant XP reward', rest: ' — +25 XP the moment a new stop is scanned, reinforcing exploration.' },
+      { strong: 'Neighborhood history', rest: ' — short, readable stories about Rochester\'s neighborhoods and how they\'ve changed.' },
+      { strong: 'Mural gallery', rest: ' — photos of local art near the stop, making transit feel culturally rich.' },
+      { strong: 'Student tips', rest: ' — peer-to-peer advice from verified RIT/UR riders, with school affiliation shown.' },
+    ],
+    insight: { label: 'Community angle', text: 'This is the feature that makes RTS Go feel like it belongs to students, not just the transit authority. User-generated content and local history give each stop a personality.' },
+    stats: [{ val: '9', lbl: 'stops scanned' }, { val: '+25', lbl: 'XP per scan' }, { val: '4', lbl: 'content tabs' }]
+  },
+  demand: {
+    label: 'On Demand',
+    title: 'Flex rides,\nscheduled ahead',
+    desc: 'On Demand is RTS\'s advance-booking flex van service. The redesign makes clear upfront that this is a scheduled service — no Uber-style instant booking — and shows real options with wait times and pricing.',
+    features: [
+      { strong: 'Advance booking notice', rest: ' — amber notice explains the "before 5 PM" rule immediately so users aren\'t surprised.' },
+      { strong: 'Ride type cards', rest: ' — Standard Van, Accessible (WAV), and Express with honest wait times and fares.' },
+      { strong: 'WAV accessibility', rest: ' — wheelchair-accessible option is prominently listed, not buried.' },
+      { strong: 'Consistent fare display', rest: ' — $2.00 flat fare shown clearly alongside each option.' },
+    ],
+    insight: { label: 'Key fix', text: 'The biggest complaint about On Demand in user research: people try to book it like Uber and are confused when it doesn\'t work instantly. The amber notice solves this upfront.' },
+    stats: [{ val: '$2', lbl: 'flat fare' }, { val: '5 PM', lbl: 'booking cutoff' }, { val: '3', lbl: 'ride types' }]
+  }
+};
+
+function showScreen(id, btn) {
+  document.querySelectorAll('.phone-screen').forEach(s => s.style.display = 'none');
+  document.getElementById('screen-' + id).style.display = 'flex';
+
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const data = screens[id];
+  document.getElementById('phone-label').textContent = data.label;
+
+  const rp = document.getElementById('right-panel');
+  rp.innerHTML = `
+    <div style="margin-bottom:28px;">
+      <div class="screen-title">${data.title.replace('\n','<br>')}</div>
+      <div class="screen-desc">${data.desc}</div>
+      <div class="feature-list">
+        ${data.features.map(f => `<div class="feature-item"><div class="feature-dot"></div><div class="feature-text"><strong>${f.strong}</strong>${f.rest}</div></div>`).join('')}
+      </div>
+      <div class="insight-card">
+        <div class="insight-label">${data.insight.label}</div>
+        <div class="insight-text">${data.insight.text}</div>
+      </div>
+      <div class="stat-row">
+        ${data.stats.map(s => `<div class="stat-box"><span class="stat-val">${s.val}</span><span class="stat-lbl">${s.lbl}</span></div>`).join('')}
+      </div>
+    </div>
+  `;
+
+  document.querySelector('.phone-frame').style.animation = 'none';
+  setTimeout(() => { document.querySelector('.phone-frame').style.animation = 'fade-in-up 0.3s ease-out'; }, 10);
+}
+
+showScreen('home', document.querySelector('.nav-btn.active'));
+</script>
+</body>
+</html>
