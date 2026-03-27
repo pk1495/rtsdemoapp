@@ -898,6 +898,112 @@ body {
 
 .phone-frame { animation: fade-in-up 0.4s ease-out; }
 
+/* ===== PWA INSTALL BANNER ===== */
+#pwa-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0F172A;
+  border: 1px solid rgba(26,86,219,0.4);
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 9999;
+  min-width: 320px;
+  max-width: 480px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: slide-up 0.4s ease-out;
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+#pwa-banner .pwa-icon {
+  width: 40px; height: 40px; background: #1A56DB; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+#pwa-banner .pwa-text { flex: 1; }
+#pwa-banner .pwa-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 2px; }
+#pwa-banner .pwa-sub { font-size: 11px; color: rgba(255,255,255,0.5); }
+#pwa-banner .pwa-install { background: #1A56DB; color: white; border: none; border-radius: 9px; padding: 8px 16px; font-size: 12px; font-weight: 600; font-family: var(--fn); cursor: pointer; white-space: nowrap; }
+#pwa-banner .pwa-dismiss { background: transparent; color: rgba(255,255,255,0.35); border: none; font-size: 18px; cursor: pointer; padding: 0 2px; line-height: 1; }
+
+/* ===== MODAL OVERLAY ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 8888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fade-in 0.2s ease;
+}
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-box {
+  background: #141E33;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  animation: slide-up-modal 0.25s ease-out;
+}
+
+@keyframes slide-up-modal {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-title { font-family: var(--fd); font-size: 20px; font-weight: 700; color: white; margin-bottom: 8px; }
+.modal-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 20px; }
+.modal-input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; color: white; font-size: 13px; font-family: var(--fn); margin-bottom: 10px; outline: none; }
+.modal-input::placeholder { color: rgba(255,255,255,0.3); }
+.modal-input:focus { border-color: rgba(26,86,219,0.6); }
+.modal-textarea { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; color: white; font-size: 13px; font-family: var(--fn); margin-bottom: 10px; outline: none; resize: none; height: 80px; }
+.modal-textarea::placeholder { color: rgba(255,255,255,0.3); }
+.modal-btn-row { display: flex; gap: 10px; }
+.modal-btn-primary { flex: 1; background: #1A56DB; color: white; border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; font-family: var(--fn); cursor: pointer; }
+.modal-btn-secondary { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 18px; font-size: 13px; font-family: var(--fn); cursor: pointer; }
+
+/* ===== TOAST NOTIFICATION ===== */
+.toast-notif {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0F172A;
+  border: 1px solid rgba(26,86,219,0.35);
+  border-radius: 12px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 9998;
+  font-size: 13px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  animation: slide-down 0.3s ease;
+  white-space: nowrap;
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.toast-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
 /* ===== MOBILE ONLY VIEW ===== */
 @media (max-width: 768px) {
   .desktop-wrap { flex-direction: column; }
@@ -913,6 +1019,25 @@ body {
 </style>
 </head>
 <body>
+
+<!-- PWA Install Banner -->
+<div id="pwa-banner" style="display:none;">
+  <div class="pwa-icon">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <rect x="2" y="7" width="18" height="11" rx="2.5" fill="white" opacity="0.9"/>
+      <circle cx="6" cy="18" r="2" fill="rgba(255,255,255,0.7)"/>
+      <circle cx="16" cy="18" r="2" fill="rgba(255,255,255,0.7)"/>
+      <path d="M2 12h18" stroke="white" stroke-width="1" opacity="0.4"/>
+      <path d="M5 7L7.5 4h7L17 7" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="pwa-text">
+    <div class="pwa-title">Install RTS Go</div>
+    <div class="pwa-sub">Add to home screen for the full app experience</div>
+  </div>
+  <button class="pwa-install" id="pwa-install-btn">Install</button>
+  <button class="pwa-dismiss" onclick="document.getElementById('pwa-banner').style.display='none'">×</button>
+</div>
 
 <div class="desktop-wrap">
 
@@ -1033,7 +1158,7 @@ body {
         </div>
         <div class="p-screen">
           <div class="home-header">
-            <div class="home-greeting">Good morning, Petrina</div>
+            <div class="home-greeting">Good morning, Alex</div>
             <div class="home-title">Where are you headed?</div>
             <div class="search-box">
               <div class="s-dot"></div>
@@ -1254,7 +1379,7 @@ body {
         <div class="p-screen">
           <div class="disc-header"><div class="disc-title">Discover ROC</div><div class="disc-sub">Earn points. Explore your city.</div></div>
           <div class="xp-card">
-            <div class="xp-top"><div class="xp-name">Petrina K. — Explorer</div><div class="xp-lv">Level 4</div></div>
+            <div class="xp-top"><div class="xp-name">Alex J. — Explorer</div><div class="xp-lv">Level 4</div></div>
             <div class="xp-track"><div class="xp-fill"></div></div>
             <div class="xp-meta"><span class="xp-pts">680 / 1000 XP</span><span class="xp-nx">320 XP to Level 5</span></div>
           </div>
@@ -1354,23 +1479,139 @@ body {
               </svg>
               <div class="sph-label">Monroe Ave & Goodman St</div>
             </div>
-            <div class="stop-tabs">
-              <div class="stab active">History</div>
-              <div class="stab">Art & Murals</div>
-              <div class="stab">Events</div>
-              <div class="stab">Tips</div>
+            <div class="stop-tabs" id="stop-tabs">
+              <div class="stab active" onclick="switchTab('history',this)">History</div>
+              <div class="stab" onclick="switchTab('murals',this)">Art & Murals</div>
+              <div class="stab" onclick="switchTab('events',this)">Events</div>
+              <div class="stab" onclick="switchTab('tips',this)">Tips</div>
             </div>
-            <div class="hist-block">
-              <div class="hist-ey">South Wedge neighborhood</div>
-              <div class="hist-tx">Monroe Ave has been Rochester's bohemian corridor since the 1970s. The South Wedge was one of the city's first neighborhoods to see student-led revitalization, with UR and RIT grads opening cafés and studios along this stretch in the late 1980s.</div>
+
+            <!-- HISTORY TAB -->
+            <div id="tab-history">
+              <div class="hist-block">
+                <div class="hist-ey">South Wedge neighborhood</div>
+                <div class="hist-tx">Monroe Ave has been Rochester's bohemian corridor since the 1970s. The South Wedge was one of the city's first neighborhoods to see student-led revitalization, with UR and RIT grads opening cafés and studios along this stretch in the late 1980s.</div>
+              </div>
+              <div style="margin:0 14px 10px;padding:11px 13px;background:#F8FAFF;border-radius:13px;border-left:3px solid #1A56DB;">
+                <div style="font-size:9px;font-weight:700;color:#1A56DB;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">Did you know?</div>
+                <div style="font-size:11px;color:#0F172A;line-height:1.6;">The Goodman St intersection was once a streetcar hub in the early 1900s before the city's trolley lines were decommissioned in 1941 — replaced by the very buses you're riding today.</div>
+              </div>
             </div>
-            <div style="padding:0 14px 6px;display:flex;justify-content:space-between;align-items:center;"><div style="font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.05em;">Murals nearby</div><div style="font-size:10px;color:#1A56DB;font-weight:500;">See all</div></div>
-            <div class="mural-row">
-              <div class="mural-thumb"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#534AB7"/><circle cx="32" cy="26" r="14" fill="#AFA9EC" opacity="0.6"/><rect x="14" y="40" width="36" height="18" fill="#3C3489" opacity="0.5"/></svg><div class="mural-lbl">Unity Wall</div></div>
-              <div class="mural-thumb"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#D4537E"/><rect x="6" y="6" width="22" height="52" fill="#ED93B1" opacity="0.5"/><rect x="36" y="6" width="22" height="52" fill="#993556" opacity="0.5"/><circle cx="32" cy="32" r="12" fill="#F4C0D1" opacity="0.6"/></svg><div class="mural-lbl">ROC Roots</div></div>
-              <div class="mural-thumb"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#0F6E56"/><path d="M32 8 L56 56 L8 56 Z" fill="#1D9E75" opacity="0.7"/><circle cx="32" cy="42" r="9" fill="#9FE1CB" opacity="0.6"/></svg><div class="mural-lbl">Green Future</div></div>
-              <div class="mural-thumb"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#BA7517"/><rect x="0" y="22" width="64" height="20" fill="#EF9F27" opacity="0.6"/><rect x="22" y="0" width="20" height="64" fill="#FAC775" opacity="0.4"/></svg><div class="mural-lbl">Crossroads</div></div>
+
+            <!-- MURALS TAB -->
+            <div id="tab-murals" style="display:none;">
+              <div style="padding:0 14px 6px;display:flex;justify-content:space-between;align-items:center;"><div style="font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.05em;">4 murals within 0.3 mi</div></div>
+              <div class="mural-row">
+                <div class="mural-thumb" onclick="showToast('🎨 Unity Wall — painted by local artists in 2019 as part of the ROC Mural Festival','#534AB7')"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#534AB7"/><circle cx="32" cy="26" r="14" fill="#AFA9EC" opacity="0.6"/><rect x="14" y="40" width="36" height="18" fill="#3C3489" opacity="0.5"/></svg><div class="mural-lbl">Unity Wall</div></div>
+                <div class="mural-thumb" onclick="showToast('🎨 ROC Roots — celebrates the South Wedge\\'s diverse immigrant history','#D4537E')"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#D4537E"/><rect x="6" y="6" width="22" height="52" fill="#ED93B1" opacity="0.5"/><rect x="36" y="6" width="22" height="52" fill="#993556" opacity="0.5"/><circle cx="32" cy="32" r="12" fill="#F4C0D1" opacity="0.6"/></svg><div class="mural-lbl">ROC Roots</div></div>
+                <div class="mural-thumb" onclick="showToast('🎨 Green Future — commissioned by RIT students in 2022','#0F6E56')"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#0F6E56"/><path d="M32 8 L56 56 L8 56 Z" fill="#1D9E75" opacity="0.7"/><circle cx="32" cy="42" r="9" fill="#9FE1CB" opacity="0.6"/></svg><div class="mural-lbl">Green Future</div></div>
+                <div class="mural-thumb" onclick="showToast('🎨 Crossroads — symbolizes Monroe Ave\\'s role as a cultural intersection','#BA7517')"><svg viewBox="0 0 64 64" style="width:100%;height:100%;"><rect width="64" height="64" fill="#BA7517"/><rect x="0" y="22" width="64" height="20" fill="#EF9F27" opacity="0.6"/><rect x="22" y="0" width="20" height="64" fill="#FAC775" opacity="0.4"/></svg><div class="mural-lbl">Crossroads</div></div>
+              </div>
             </div>
+
+            <!-- EVENTS TAB -->
+            <div id="tab-events" style="display:none;">
+              <div style="margin:0 14px 8px;background:white;border:1px solid rgba(0,0,0,0.07);border-radius:13px;padding:10px 12px;display:flex;gap:10px;align-items:center;cursor:pointer;" onclick="showToast('📅 Saved! South Wedge Artisan Market added to your calendar','#16A34A')">
+                <div style="width:36px;height:36px;border-radius:9px;background:#EBF0FF;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#1A56DB;line-height:1;">28</span>
+                  <span style="font-size:8px;color:#1A56DB;font-weight:600;text-transform:uppercase;">Mar</span>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:12px;font-weight:500;color:#0F172A;margin-bottom:1px;">South Wedge Artisan Market</div>
+                  <div style="font-size:10px;color:#64748B;">Swillburger Parking Lot</div>
+                </div>
+                <div style="font-size:11px;color:#16A34A;font-weight:500;">0.1 mi</div>
+              </div>
+              <div style="margin:0 14px 8px;background:white;border:1px solid rgba(0,0,0,0.07);border-radius:13px;padding:10px 12px;display:flex;gap:10px;align-items:center;cursor:pointer;" onclick="showToast('📅 Saved! RIT Jazz Ensemble added to your calendar','#16A34A')">
+                <div style="width:36px;height:36px;border-radius:9px;background:#EBF0FF;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#1A56DB;line-height:1;">29</span>
+                  <span style="font-size:8px;color:#1A56DB;font-weight:600;text-transform:uppercase;">Mar</span>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:12px;font-weight:500;color:#0F172A;margin-bottom:1px;">RIT Jazz Ensemble — Free Show</div>
+                  <div style="font-size:10px;color:#64748B;">Montage Music Hall</div>
+                </div>
+                <div style="font-size:11px;color:#16A34A;font-weight:500;">0.3 mi</div>
+              </div>
+              <div style="margin:0 14px 10px;background:white;border:1px solid rgba(0,0,0,0.07);border-radius:13px;padding:10px 12px;display:flex;gap:10px;align-items:center;cursor:pointer;" onclick="showToast('📅 Saved! Lilac Festival added to your calendar','#16A34A')">
+                <div style="width:36px;height:36px;border-radius:9px;background:#EBF0FF;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#1A56DB;line-height:1;">2</span>
+                  <span style="font-size:8px;color:#1A56DB;font-weight:600;text-transform:uppercase;">Apr</span>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:12px;font-weight:500;color:#0F172A;margin-bottom:1px;">Lilac Festival Opening Weekend</div>
+                  <div style="font-size:10px;color:#64748B;">Highland Park</div>
+                </div>
+                <div style="font-size:11px;color:#16A34A;font-weight:500;">0.8 mi</div>
+              </div>
+            </div>
+
+            <!-- TIPS TAB -->
+            <div id="tab-tips" style="display:none;">
+              <!-- Tip 1 -->
+              <div style="margin:0 14px 8px;background:white;border:1px solid rgba(0,0,0,0.07);border-radius:13px;padding:10px 12px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                  <div style="width:26px;height:26px;border-radius:50%;background:#534AB7;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;">MK</div>
+                  <div>
+                    <div style="font-size:12px;font-weight:500;color:#0F172A;">Maya K.</div>
+                    <div style="font-size:10px;color:#64748B;">RIT Industrial Design</div>
+                  </div>
+                  <div style="margin-left:auto;display:flex;gap:1px;">
+                    <span style="color:#D97706;font-size:10px;">★★★★★</span>
+                  </div>
+                </div>
+                <div style="font-size:11px;color:#0F172A;line-height:1.6;margin-bottom:5px;">"The 7 runs really reliably here before 8am. Get on here every day to make it to class by 9 — never been late. Shelter keeps you out of the wind too."</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <div style="background:#DCFCE7;color:#16A34A;font-size:9px;font-weight:600;padding:2px 7px;border-radius:6px;">Verified rider</div>
+                  <div style="background:#EBF0FF;color:#1A56DB;font-size:9px;font-weight:500;padding:2px 7px;border-radius:6px;">Route 7</div>
+                </div>
+              </div>
+              <!-- Tip 2 -->
+              <div style="margin:0 14px 8px;background:white;border:1px solid rgba(0,0,0,0.07);border-radius:13px;padding:10px 12px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                  <div style="width:26px;height:26px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;">JS</div>
+                  <div>
+                    <div style="font-size:12px;font-weight:500;color:#0F172A;">Jordan S.</div>
+                    <div style="font-size:10px;color:#64748B;">UR Nursing</div>
+                  </div>
+                  <div style="margin-left:auto;">
+                    <span style="color:#D97706;font-size:10px;">★★★★</span><span style="color:#E2E8F0;font-size:10px;">★</span>
+                  </div>
+                </div>
+                <div style="font-size:11px;color:#0F172A;line-height:1.6;margin-bottom:5px;">"Swillburger is literally steps away — great spot to wait if it's cold. Super cheap coffee. The 35 can run a few minutes late on Fridays so give yourself buffer."</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <div style="background:#DCFCE7;color:#16A34A;font-size:9px;font-weight:600;padding:2px 7px;border-radius:6px;">Verified rider</div>
+                  <div style="background:#FEF3C7;color:#D97706;font-size:9px;font-weight:500;padding:2px 7px;border-radius:6px;">Route 35</div>
+                </div>
+              </div>
+              <!-- Tip 3 -->
+              <div style="margin:0 14px 8px;background:white;border:1px solid rgba(0,0,0,0.07);border-radius:13px;padding:10px 12px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                  <div style="width:26px;height:26px;border-radius:50%;background:#D85A30;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;">TL</div>
+                  <div>
+                    <div style="font-size:12px;font-weight:500;color:#0F172A;">Tyler L.</div>
+                    <div style="font-size:10px;color:#64748B;">MCC Liberal Arts</div>
+                  </div>
+                  <div style="margin-left:auto;">
+                    <span style="color:#D97706;font-size:10px;">★★★★★</span>
+                  </div>
+                </div>
+                <div style="font-size:11px;color:#0F172A;line-height:1.6;margin-bottom:5px;">"This stop gets busy around 5pm. If the bus looks full just let it pass — another 7 comes in about 8 minutes and you'll actually get a seat."</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <div style="background:#DCFCE7;color:#16A34A;font-size:9px;font-weight:600;padding:2px 7px;border-radius:6px;">Verified rider</div>
+                  <div style="background:#EBF0FF;color:#1A56DB;font-size:9px;font-weight:500;padding:2px 7px;border-radius:6px;">Route 7</div>
+                </div>
+              </div>
+              <!-- Add tip CTA -->
+              <div style="margin:0 14px 14px;background:#EBF0FF;border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="openAddTipModal()">
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:#1A56DB;">Add your tip</div>
+                  <div style="font-size:10px;color:#185FA5;">Earn +15 XP for every tip submitted</div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 3l5 5-5 5" stroke="#1A56DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+
             <div style="height:10px;"></div>
           </div>
         </div>
@@ -1439,6 +1680,235 @@ body {
 </div><!-- /desktop-wrap -->
 
 <script>
+/* ===== PWA INSTALL PROMPT ===== */
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('pwa-banner').style.display = 'flex';
+});
+
+document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      showToast('RTS Go installed! Check your home screen.', '#16A34A');
+    }
+    deferredPrompt = null;
+    document.getElementById('pwa-banner').style.display = 'none';
+  } else {
+    showToast('To install: open browser menu → "Add to Home Screen"', '#1A56DB');
+    document.getElementById('pwa-banner').style.display = 'none';
+  }
+});
+
+// Show banner after 3s as fallback for demo purposes
+setTimeout(() => {
+  if (!deferredPrompt) {
+    document.getElementById('pwa-banner').style.display = 'flex';
+  }
+}, 3000);
+
+/* ===== TOAST NOTIFICATION ===== */
+let toastTimeout = null;
+function showToast(msg, color) {
+  const existing = document.querySelector('.toast-notif');
+  if (existing) existing.remove();
+  if (toastTimeout) clearTimeout(toastTimeout);
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-notif';
+  toast.innerHTML = `<div class="toast-dot" style="background:${color || '#1A56DB'};"></div>${msg}`;
+  document.body.appendChild(toast);
+
+  toastTimeout = setTimeout(() => toast.remove(), 3000);
+}
+
+/* ===== MODAL ===== */
+function openModal(html) {
+  const existing = document.querySelector('.modal-overlay');
+  if (existing) existing.remove();
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal-box">${html}</div>`;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+function closeModal() {
+  const overlay = document.querySelector('.modal-overlay');
+  if (overlay) overlay.remove();
+}
+
+/* ===== QR TAB SWITCHING ===== */
+function switchTab(tab, el) {
+  ['history','murals','events','tips'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('#stop-tabs .stab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ===== ADD TIP MODAL ===== */
+function openAddTipModal() {
+  openModal(`
+    <div class="modal-title">Share a tip</div>
+    <div class="modal-desc">Help fellow riders — your tip earns you +15 XP once verified.</div>
+    <input class="modal-input" id="tip-name" placeholder="Your first name & school (e.g. Alex · RIT)" />
+    <textarea class="modal-textarea" id="tip-text" placeholder="What should riders know about this stop? (e.g. timing, nearby spots, accessibility...)"></textarea>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+      <div id="tag-7" onclick="toggleTag('tag-7','Route 7')" style="background:#EBF0FF;color:#1A56DB;font-size:10px;font-weight:500;padding:4px 10px;border-radius:20px;cursor:pointer;border:1.5px solid transparent;">Route 7</div>
+      <div id="tag-35" onclick="toggleTag('tag-35','Route 35')" style="background:#FEF3C7;color:#D97706;font-size:10px;font-weight:500;padding:4px 10px;border-radius:20px;cursor:pointer;border:1.5px solid transparent;">Route 35</div>
+      <div id="tag-19" onclick="toggleTag('tag-19','Route 19')" style="background:#DCFCE7;color:#16A34A;font-size:10px;font-weight:500;padding:4px 10px;border-radius:20px;cursor:pointer;border:1.5px solid transparent;">Route 19</div>
+    </div>
+    <div class="modal-btn-row">
+      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn-primary" onclick="submitTip()">Submit tip (+15 XP)</button>
+    </div>
+  `);
+}
+
+function toggleTag(id, label) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.dataset.selected = el.dataset.selected === '1' ? '0' : '1';
+  el.style.borderColor = el.dataset.selected === '1' ? 'currentColor' : 'transparent';
+  el.style.fontWeight = el.dataset.selected === '1' ? '700' : '500';
+}
+
+function submitTip() {
+  const name = document.getElementById('tip-name')?.value?.trim();
+  const text = document.getElementById('tip-text')?.value?.trim();
+  if (!name || !text) {
+    showToast('Please fill in your name and tip before submitting', '#D97706');
+    return;
+  }
+  closeModal();
+  showToast('+15 XP earned! Your tip is under review.', '#16A34A');
+}
+
+/* ===== ADD FUNDS MODAL ===== */
+function openAddFundsModal() {
+  openModal(`
+    <div class="modal-title">Add funds</div>
+    <div class="modal-desc">Choose an amount to add to your RTS balance.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      ${['$5','$10','$20','$50'].map(a => `<div onclick="selectAmount(this,'${a}')" style="background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;text-align:center;font-size:15px;font-weight:600;color:white;cursor:pointer;">${a}</div>`).join('')}
+    </div>
+    <input class="modal-input" placeholder="Or enter custom amount" type="number" min="1" id="custom-amount" style="margin-bottom:14px;" />
+    <div class="modal-btn-row">
+      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn-primary" onclick="confirmAddFunds()">Add to balance</button>
+    </div>
+  `);
+}
+
+let selectedAmount = '';
+function selectAmount(el, amt) {
+  document.querySelectorAll('.modal-box [onclick^="selectAmount"]').forEach(e => {
+    e.style.borderColor = 'rgba(255,255,255,0.1)';
+    e.style.background = 'rgba(255,255,255,0.05)';
+  });
+  el.style.borderColor = '#1A56DB';
+  el.style.background = 'rgba(26,86,219,0.2)';
+  selectedAmount = amt;
+  const ci = document.getElementById('custom-amount');
+  if (ci) ci.value = '';
+}
+
+function confirmAddFunds() {
+  const custom = document.getElementById('custom-amount')?.value;
+  const amt = custom ? `$${parseFloat(custom).toFixed(2)}` : selectedAmount;
+  if (!amt || amt === '$NaN') { showToast('Please select or enter an amount', '#D97706'); return; }
+  closeModal();
+  showToast(`${amt} added to your RTS balance!`, '#16A34A');
+}
+
+/* ===== SHARE ETA MODAL ===== */
+function openShareETAModal() {
+  openModal(`
+    <div class="modal-title">Share your ETA</div>
+    <div class="modal-desc">Let someone know you're arriving at <strong style="color:white;">Strong Memorial</strong> at <strong style="color:white;">10:18 AM</strong>.</div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;">
+      "Hey, I'm on Route 7 — arriving Strong Memorial around 10:18 AM. Tracking via RTS Go."
+    </div>
+    <div class="modal-btn-row">
+      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn-primary" onclick="closeModal();showToast('ETA copied to clipboard!','#16A34A')">Copy message</button>
+    </div>
+  `);
+}
+
+/* ===== SEARCH MODAL ===== */
+function openSearchModal() {
+  openModal(`
+    <div class="modal-title">Search destination</div>
+    <input class="modal-input" id="search-dest" placeholder="e.g. Strong Memorial, RIT, Downtown..." autofocus />
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;" id="search-suggestions">
+      ${['Strong Memorial Hospital','RIT Campus','University of Rochester','Downtown Rochester','Rochester Airport'].map(p =>
+        `<div onclick="selectDest('${p}')" style="padding:10px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:9px;font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;">${p}</div>`
+      ).join('')}
+    </div>
+  `);
+}
+
+function selectDest(dest) {
+  closeModal();
+  showScreen('plan', document.querySelector('.nav-btn[onclick*="plan"]'));
+  showToast(`Destination set: ${dest}`, '#1A56DB');
+}
+
+/* ===== PLAN TRIP INTERACTIONS ===== */
+function toggleTimeChip(el) {
+  document.querySelectorAll('#screen-plan .time-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  showToast(`Mode: ${el.textContent}`, '#1A56DB');
+}
+
+function togglePrefChip(el) {
+  el.classList.toggle('active');
+}
+
+function selectTripCard(el) {
+  document.querySelectorAll('#screen-plan .trip-card').forEach(c => c.style.outline = 'none');
+  el.style.outline = '2px solid #1A56DB';
+  showToast('Route selected — tap "Start This Trip" to begin tracking', '#1A56DB');
+}
+
+/* ===== ON DEMAND RIDE SELECTION ===== */
+function selectRideOpt(el, name, price) {
+  document.querySelectorAll('.ride-opt').forEach(r => r.classList.remove('sel'));
+  el.classList.add('sel');
+  const btn = document.querySelector('.book-btn');
+  if (btn) btn.textContent = `Schedule ${name} — ${price}`;
+}
+
+/* ===== BOOK DEMAND MODAL ===== */
+function openBookDemandModal() {
+  openModal(`
+    <div class="modal-title">Schedule your ride</div>
+    <div class="modal-desc">Select your pickup date and time for your On Demand flex ride.</div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;">Pickup date</div>
+      <input class="modal-input" type="date" style="color:white;" />
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;">Pickup time</div>
+      <input class="modal-input" type="time" style="color:white;" />
+    </div>
+    <div style="background:rgba(217,119,6,0.15);border:1px solid rgba(217,119,6,0.3);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#FCD34D;">
+      Book before 5:00 PM the day before your trip.
+    </div>
+    <div class="modal-btn-row">
+      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn-primary" onclick="closeModal();showToast('Ride scheduled! You\\'ll get a confirmation soon.','#16A34A')">Confirm booking</button>
+    </div>
+  `);
+}
+
+/* ===== SCREEN NAVIGATION ===== */
 const screens = {
   home: {
     label: 'Home Screen',
@@ -1495,14 +1965,14 @@ const screens = {
   qr: {
     label: 'QR Stop Scan',
     title: 'Every stop tells\na story',
-    desc: 'Scan the QR code at any bus stop to unlock that stop\'s identity — neighborhood history, local murals, nearby events, and student tips from verified riders.',
+    desc: 'Scan the QR code at any bus stop to unlock that stop\'s identity — neighborhood history, local murals, nearby events, and student tips with star ratings from verified riders.',
     features: [
       { strong: 'Instant XP reward', rest: ' — +25 XP the moment a new stop is scanned, reinforcing exploration.' },
       { strong: 'Neighborhood history', rest: ' — short, readable stories about Rochester\'s neighborhoods and how they\'ve changed.' },
-      { strong: 'Mural gallery', rest: ' — photos of local art near the stop, making transit feel culturally rich.' },
-      { strong: 'Student tips', rest: ' — peer-to-peer advice from verified RIT/UR riders, with school affiliation shown.' },
+      { strong: 'Mural gallery', rest: ' — tap any mural thumbnail for details about the artwork.' },
+      { strong: 'Student reviews & tips', rest: ' — star-rated peer advice from verified RIT/UR riders, with route tags. Students can submit their own tips for +15 XP.' },
     ],
-    insight: { label: 'Community angle', text: 'This is the feature that makes RTS Go feel like it belongs to students, not just the transit authority. User-generated content and local history give each stop a personality.' },
+    insight: { label: 'Community angle', text: 'This is the feature that makes RTS Go feel like it belongs to students, not the transit authority. User-generated content and local history give each stop a personality.' },
     stats: [{ val: '9', lbl: 'stops scanned' }, { val: '+25', lbl: 'XP per scan' }, { val: '4', lbl: 'content tabs' }]
   },
   demand: {
@@ -1511,11 +1981,11 @@ const screens = {
     desc: 'On Demand is RTS\'s advance-booking flex van service. The redesign makes clear upfront that this is a scheduled service — no Uber-style instant booking — and shows real options with wait times and pricing.',
     features: [
       { strong: 'Advance booking notice', rest: ' — amber notice explains the "before 5 PM" rule immediately so users aren\'t surprised.' },
-      { strong: 'Ride type cards', rest: ' — Standard Van, Accessible (WAV), and Express with honest wait times and fares.' },
+      { strong: 'Ride type cards', rest: ' — Standard Van, Accessible (WAV), and Express with honest wait times and fares. Tap to select.' },
       { strong: 'WAV accessibility', rest: ' — wheelchair-accessible option is prominently listed, not buried.' },
-      { strong: 'Consistent fare display', rest: ' — $2.00 flat fare shown clearly alongside each option.' },
+      { strong: 'Scheduling modal', rest: ' — tapping "Schedule" opens a date/time picker confirming the advance-booking flow.' },
     ],
-    insight: { label: 'Key fix', text: 'The biggest complaint about On Demand in user research: people try to book it like Uber and are confused when it doesn\'t work instantly. The amber notice solves this upfront.' },
+    insight: { label: 'Key fix', text: 'The biggest complaint about On Demand in user research: people try to book it like Uber and are confused when it doesn\'t work instantly. The amber notice and scheduler solve this upfront.' },
     stats: [{ val: '$2', lbl: 'flat fare' }, { val: '5 PM', lbl: 'booking cutoff' }, { val: '3', lbl: 'ride types' }]
   }
 };
@@ -1551,6 +2021,85 @@ function showScreen(id, btn) {
   document.querySelector('.phone-frame').style.animation = 'none';
   setTimeout(() => { document.querySelector('.phone-frame').style.animation = 'fade-in-up 0.3s ease-out'; }, 10);
 }
+
+/* ===== WIRE UP ALL BUTTONS ===== */
+document.addEventListener('click', (e) => {
+  const t = e.target;
+
+  // Search box
+  if (t.closest('.search-box')) { openSearchModal(); return; }
+
+  // Quick chips
+  if (t.closest('.chip') && t.closest('#screen-home')) {
+    const dest = t.textContent.trim();
+    showScreen('plan', document.querySelector('.nav-btn[onclick*="plan"]'));
+    showToast(`Destination set: ${dest}`, '#1A56DB');
+    return;
+  }
+
+  // Add funds
+  if (t.classList.contains('bal-add')) { openAddFundsModal(); return; }
+
+  // Route cards → go to tracking
+  if (t.closest('.route-card')) {
+    showScreen('track', document.querySelector('.nav-btn[onclick*="track"]'));
+    return;
+  }
+
+  // Time chips on plan screen
+  if (t.classList.contains('time-chip')) { toggleTimeChip(t); return; }
+
+  // Pref chips
+  if (t.closest('.pref-chip')) { togglePrefChip(t.closest('.pref-chip')); return; }
+
+  // Find routes button
+  if (t.classList.contains('find-btn')) {
+    showToast('Searching routes...', '#1A56DB');
+    setTimeout(() => showToast('3 routes found! Tap a card to select.', '#16A34A'), 1200);
+    return;
+  }
+
+  // Trip card click → show tracking
+  if (t.closest('.trip-card')) {
+    selectTripCard(t.closest('.trip-card'));
+    setTimeout(() => showScreen('track', document.querySelector('.nav-btn[onclick*="track"]')), 600);
+    return;
+  }
+
+  // Share ETA
+  if (t.classList.contains('eta-btn')) { openShareETAModal(); return; }
+
+  // Ride options on demand
+  if (t.closest('.ride-opt') && !t.closest('.ride-opts') === false) {
+    const ro = t.closest('.ride-opt');
+    if (ro) {
+      const name = ro.querySelector('.ride-name')?.textContent || 'Van';
+      const price = ro.querySelector('.ride-price')?.textContent || '$2.00';
+      selectRideOpt(ro, name, price);
+    }
+    return;
+  }
+
+  // Book/schedule button
+  if (t.classList.contains('book-btn')) { openBookDemandModal(); return; }
+
+  // Discover badges
+  if (t.closest('.bdg')) {
+    const name = t.closest('.bdg')?.querySelector('.bdg-name')?.textContent;
+    if (name && t.closest('.bdg-ico')?.style.border?.includes('dashed')) {
+      showToast(`${name}: Keep riding to unlock this badge!`, '#D97706');
+    } else if (name) {
+      showToast(`Badge earned: ${name}!`, '#16A34A');
+    }
+    return;
+  }
+
+  // Challenge card
+  if (t.closest('#screen-discover') && t.closest('[style*="border:1.5px solid #1A56DB"]')) {
+    showToast('Challenge active: scan 2 more stops in South Wedge to earn 150 XP!', '#1A56DB');
+    return;
+  }
+});
 
 showScreen('home', document.querySelector('.nav-btn.active'));
 </script>
