@@ -1221,46 +1221,94 @@ body {
       <!-- ===== PLAN SCREEN ===== -->
       <div class="phone-screen" id="screen-plan" style="display:none;">
         <div class="p-statusbar"><span class="live-clock">9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
-        <div class="p-screen">
-          <div class="plan-header">
-            <div class="plan-title">Plan a Trip</div>
-            <div class="route-input">
-              <div class="ri-row">
-                <div class="ri-col"><div class="r-dot from"></div><div class="r-dash"></div><div class="r-dash"></div><div class="r-dash"></div></div>
-                <div class="ri-txt"><div class="ri-lbl">FROM</div><div class="ri-val">Current location</div></div>
-              </div>
-              <div class="ri-row">
-                <div class="ri-col"><div class="r-dot to"></div></div>
-                <div class="ri-txt"><div class="ri-lbl">TO</div><div class="ri-val ph">Where do you want to go?</div></div>
-              </div>
-            </div>
-            <div class="time-row">
-              <div class="time-chip active">Depart at</div>
-              <div class="time-chip">Arrive by</div>
-              <div class="time-chip">Last trip</div>
-            </div>
-            <div class="dt-row">
-              <div class="dt-f"><div class="dt-l">DATE</div><div class="dt-v" data-type="date">Today, Mar 27</div></div>
-              <div class="dt-f"><div class="dt-l">TIME</div><div class="dt-v" data-type="time">9:45 AM</div></div>
-            </div>
-          </div>
-          <div class="p-sl">Preferences</div>
-          <div class="pref-row">
-            <div class="pref-chip active"><div class="pref-dot"></div>Fewest transfers</div>
-            <div class="pref-chip"><div class="pref-dot"></div>Fastest route</div>
-            <div class="pref-chip"><div class="pref-dot"></div>Less walking</div>
-          </div>
-          <div class="pref-row" style="margin-top:6px;"><div class="pref-chip">Wheelchair accessible</div></div>
-          <button class="find-btn" onclick="runTripSearch(selectedDestination || document.querySelector('.ri-val:not(.ph)')?.textContent || '')">Find Routes</button>
+        <div class="p-screen" style="background:#F8FAFF;">
 
-          <div id="trip-results">
-            <div style="padding:20px 14px;text-align:center;">
-              <div style="font-size:13px;color:#94A3B8;margin-bottom:6px;">Enter a destination above to see live routes</div>
-              <div style="font-size:11px;color:#CBD5E1;">Schedule data from myrts.com</div>
+          <!-- INPUT HEADER -->
+          <div style="background:white;padding:12px 14px 10px;border-bottom:1px solid rgba(0,0,0,0.07);">
+
+            <!-- FROM input -->
+            <div style="display:flex;align-items:center;gap:8px;background:#F8FAFF;border:1.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:9px 12px;margin-bottom:7px;position:relative;">
+              <div style="width:9px;height:9px;border-radius:50%;background:#16A34A;flex-shrink:0;"></div>
+              <input id="plan-from" placeholder="Current location"
+                style="flex:1;border:none;background:transparent;font-size:12px;font-weight:500;color:#0F172A;font-family:'DM Sans',sans-serif;outline:none;"
+                value="Current location"
+                oninput="onPlanFromInput()"
+              />
+              <svg id="from-loc-btn" onclick="useCurrentLocation()" width="14" height="14" viewBox="0 0 14 14" fill="none" style="cursor:pointer;flex-shrink:0;">
+                <circle cx="7" cy="7" r="5.5" stroke="#1A56DB" stroke-width="1.3"/>
+                <circle cx="7" cy="7" r="2" fill="#1A56DB"/>
+              </svg>
+            </div>
+
+            <!-- Swap + TO input row -->
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:9px;">
+              <div style="display:flex;flex-direction:column;gap:0;align-items:center;width:9px;flex-shrink:0;">
+                <div style="width:1.5px;height:4px;background:#CBD5E1;border-radius:1px;"></div>
+                <div style="width:1.5px;height:4px;background:#CBD5E1;border-radius:1px;margin-top:2px;"></div>
+              </div>
+              <div style="flex:1;display:flex;align-items:center;gap:8px;background:#F8FAFF;border:1.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:9px 12px;">
+                <div style="width:9px;height:9px;border-radius:50%;background:#1A56DB;flex-shrink:0;"></div>
+                <input id="plan-to" placeholder="Where to?"
+                  style="flex:1;border:none;background:transparent;font-size:12px;font-weight:500;color:#0F172A;font-family:'DM Sans',sans-serif;outline:none;"
+                  oninput="onPlanInputChange()"
+                  onfocus="showPlanSuggestions('to')"
+                />
+                <svg onclick="clearPlanTo()" width="13" height="13" viewBox="0 0 13 13" fill="none" style="cursor:pointer;flex-shrink:0;opacity:0.4;">
+                  <circle cx="6.5" cy="6.5" r="5.5" fill="#64748B"/>
+                  <path d="M4.5 4.5l4 4M8.5 4.5l-4 4" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div onclick="swapPlanInputs()" style="width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(0,0,0,0.1);background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 1v10M3 11l-1.5-1.5M3 11l1.5-1.5M9 11V1M9 1L7.5 2.5M9 1l1.5 1.5" stroke="#64748B" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+
+            <!-- Suggestions dropdown -->
+            <div id="plan-suggestions" style="display:none;background:white;border:1px solid rgba(0,0,0,0.08);border-radius:11px;overflow:hidden;margin-bottom:8px;max-height:180px;overflow-y:auto;"></div>
+
+            <!-- Time row -->
+            <div style="display:flex;gap:6px;margin-bottom:8px;">
+              <div id="tc-depart" onclick="setPlanTimeMode('depart')" style="flex:1;text-align:center;padding:6px 4px;border-radius:8px;border:1.5px solid #1A56DB;background:#EBF0FF;font-size:10px;font-weight:600;color:#1A56DB;cursor:pointer;">Depart at</div>
+              <div id="tc-arrive" onclick="setPlanTimeMode('arrive')" style="flex:1;text-align:center;padding:6px 4px;border-radius:8px;border:1.5px solid rgba(0,0,0,0.08);background:white;font-size:10px;font-weight:500;color:#64748B;cursor:pointer;">Arrive by</div>
+              <div id="tc-last" onclick="setPlanTimeMode('last')" style="flex:1;text-align:center;padding:6px 4px;border-radius:8px;border:1.5px solid rgba(0,0,0,0.08);background:white;font-size:10px;font-weight:500;color:#64748B;cursor:pointer;">Last trip</div>
+            </div>
+
+            <!-- Date / time pickers -->
+            <div style="display:flex;gap:6px;margin-bottom:8px;">
+              <div style="flex:1;background:#F8FAFF;border:1.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:7px 10px;">
+                <div style="font-size:9px;color:#94A3B8;font-weight:600;margin-bottom:2px;">DATE</div>
+                <input id="plan-date" type="date" style="border:none;background:transparent;font-size:11px;font-weight:500;color:#0F172A;font-family:'DM Sans',sans-serif;outline:none;width:100%;" />
+              </div>
+              <div style="flex:1;background:#F8FAFF;border:1.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:7px 10px;">
+                <div style="font-size:9px;color:#94A3B8;font-weight:600;margin-bottom:2px;">TIME</div>
+                <input id="plan-time" type="time" style="border:none;background:transparent;font-size:11px;font-weight:500;color:#0F172A;font-family:'DM Sans',sans-serif;outline:none;width:100%;" />
+              </div>
+            </div>
+
+            <!-- Prefs -->
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
+              <div id="pref-transfers" onclick="togglePlanPref(this)" style="background:#EBF0FF;border:1.5px solid #1A56DB;border-radius:20px;padding:4px 9px;font-size:10px;font-weight:500;color:#1A56DB;cursor:pointer;display:flex;align-items:center;gap:4px;"><div style="width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;"></div>Fewest transfers</div>
+              <div id="pref-fast" onclick="togglePlanPref(this)" style="background:white;border:1.5px solid rgba(0,0,0,0.08);border-radius:20px;padding:4px 9px;font-size:10px;font-weight:500;color:#64748B;cursor:pointer;display:flex;align-items:center;gap:4px;"><div style="width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;"></div>Fastest</div>
+              <div id="pref-walk" onclick="togglePlanPref(this)" style="background:white;border:1.5px solid rgba(0,0,0,0.08);border-radius:20px;padding:4px 9px;font-size:10px;font-weight:500;color:#64748B;cursor:pointer;display:flex;align-items:center;gap:4px;"><div style="width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;"></div>Less walking</div>
+              <div id="pref-access" onclick="togglePlanPref(this)" style="background:white;border:1.5px solid rgba(0,0,0,0.08);border-radius:20px;padding:4px 9px;font-size:10px;font-weight:500;color:#64748B;cursor:pointer;">Accessible</div>
+            </div>
+
+            <button id="plan-search-btn" onclick="doPlanSearch()" style="width:100%;background:#1A56DB;color:white;border:none;border-radius:11px;padding:12px;font-size:13px;font-weight:600;font-family:'Syne',sans-serif;cursor:pointer;">Find Routes</button>
+          </div>
+
+          <!-- RESULTS AREA -->
+          <div id="trip-results" style="flex:1;overflow-y:auto;">
+            <div id="trip-results-inner" style="padding:16px 14px;text-align:center;">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="margin:0 auto 10px;display:block;opacity:0.25;">
+                <path d="M20 4C11.2 4 4 11.2 4 20c0 10.5 16 28 16 28S36 30.5 36 20c0-8.8-7.2-16-16-16z" fill="#1A56DB"/>
+                <circle cx="20" cy="20" r="5" fill="white"/>
+              </svg>
+              <div style="font-size:13px;color:#94A3B8;margin-bottom:4px;">Enter origin &amp; destination</div>
+              <div style="font-size:11px;color:#CBD5E1;">Real RTS transit routes powered by Google Maps</div>
             </div>
           </div>
-          <div style="height:14px;"></div>
         </div>
+
         <div class="p-bn">
           <div class="p-ni" onclick="showScreen('home',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 8.5L10 2l8 6.5V18a1 1 0 01-1 1H3a1 1 0 01-1-1V8.5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Home</span></div>
           <div class="p-ni active"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5C7 1.5 4.5 4 4.5 7c0 4.2 5.5 10 5.5 10s5.5-5.8 5.5-10c0-3-2.5-5.5-5.5-5.5z" fill="#1A56DB" opacity="0.15" stroke="#1A56DB" stroke-width="1.5"/><circle cx="10" cy="7" r="2" stroke="#1A56DB" stroke-width="1.3"/></svg><span class="p-nl" style="color:#1A56DB;">Plan</span></div>
@@ -1954,272 +2002,970 @@ function buildTripOptions(destName) {
   return results.length ? results : null;
 }
 
-/* ===== REAL GEOCODING SEARCH (Nominatim / OpenStreetMap) ===== */
-let searchTimeout = null;
-let selectedDestination = null;
+/* ===== GTFS TRIP PLANNING ENGINE ===== */
+// Loads the real RGRTA GTFS feed via CORS proxy, parses it in-browser,
+// caches in localStorage, and runs full trip planning with transfers.
 
-function openSearchModal() {
-  openModal(`
-    <div class="modal-title">Where to?</div>
-    <input class="modal-input" id="search-dest"
-      placeholder="Search Rochester destinations..."
-      autocomplete="off"
-      oninput="handleSearchInput(this.value)"
-      onkeydown="if(event.key==='Enter'){doGeoSearch(this.value)}"
-      style="margin-bottom:8px;"
-    />
-    <div id="search-status" style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px;min-height:16px;"></div>
-    <div id="search-suggestions" style="display:flex;flex-direction:column;gap:5px;max-height:300px;overflow-y:auto;">
-      <div style="font-size:11px;color:rgba(255,255,255,0.3);padding:4px 0;">Common destinations:</div>
-      ${ROC_DESTINATIONS.map(p =>
-        `<div onclick="selectDest('${p.name.replace(/'/g,"\'")}','geocode')"
-          style="padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:9px;font-size:12px;color:rgba(255,255,255,0.75);cursor:pointer;display:flex;align-items:center;gap:8px;">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" fill="rgba(26,86,219,0.7)"/><circle cx="6" cy="5" r="1.3" fill="white"/></svg>
-          <span>${p.name}</span>
-          <span style="margin-left:auto;font-size:10px;color:rgba(255,255,255,0.3);">${p.routes.map(r=>`<span style="background:${RTS_ROUTES[r]?.color||'#555'};color:white;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;">${r}</span>`).join(' ')}</span>
-        </div>`
-      ).join('')}
-    </div>
-    <div class="modal-btn-row" style="margin-top:12px;">
-      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="modal-btn-primary" onclick="doGeoSearch(document.getElementById('search-dest').value)">Search</button>
-    </div>
-  `);
-  setTimeout(() => document.getElementById('search-dest')?.focus(), 100);
+const GTFS_URL = 'https://corsproxy.io/?' + encodeURIComponent('http://scheduledata.rgrta.com/google_transit.zip');
+const CACHE_KEY = 'rts_gtfs_v3';
+const CACHE_AGE  = 24 * 60 * 60 * 1000; // 24 hours
+
+// ─── In-memory GTFS tables ────────────────────────────────────────
+let G = {
+  loaded: false, loading: false, error: null,
+  routes: {},      // route_id → {route_short_name, route_long_name, route_color}
+  stops:  {},      // stop_id  → {stop_name, stop_lat, stop_lon}
+  trips:  {},      // trip_id  → {route_id, service_id, trip_headsign, direction_id}
+  stopTimes: {},   // trip_id  → [{stop_id, arrival_time, departure_time, stop_sequence}]
+  stopTrips: {},   // stop_id  → Set of trip_ids
+  calendar: {},    // service_id → {monday..sunday, start_date, end_date}
+  calDates: {},    // service_id → [{date, exception_type}]
+  routeStops: {},  // route_id  → Set of stop_ids
+};
+
+// ─── JSZip + PapaParse CDN (loaded lazily) ───────────────────────
+function loadLibs() {
+  return new Promise(resolve => {
+    if (window.JSZip && window.Papa) { resolve(); return; }
+    const s1 = document.createElement('script');
+    s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    const s2 = document.createElement('script');
+    s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
+    let loaded = 0;
+    const done = () => { if (++loaded === 2) resolve(); };
+    s1.onload = done; s2.onload = done;
+    document.head.appendChild(s1);
+    document.head.appendChild(s2);
+  });
 }
 
-function handleSearchInput(val) {
-  clearTimeout(searchTimeout);
-  const status = document.getElementById('search-status');
-  const sugBox = document.getElementById('search-suggestions');
-  if (!val.trim()) {
-    // Reset to defaults
-    if (status) status.textContent = '';
-    if (sugBox) {
-      sugBox.innerHTML = '<div style="font-size:11px;color:rgba(255,255,255,0.3);padding:4px 0;">Common destinations:</div>' +
-        ROC_DESTINATIONS.map(p =>
-          `<div onclick="selectDest('${p.name.replace(/'/g,"\'")}','geocode')"
-            style="padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:9px;font-size:12px;color:rgba(255,255,255,0.75);cursor:pointer;display:flex;align-items:center;gap:8px;">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" fill="rgba(26,86,219,0.7)"/><circle cx="6" cy="5" r="1.3" fill="white"/></svg>
-            <span>${p.name}</span>
-            <span style="margin-left:auto;">${p.routes.map(r=>`<span style="background:${RTS_ROUTES[r]?.color||'#555'};color:white;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;">${r}</span>`).join(' ')}</span>
-          </div>`
-        ).join('');
-    }
-    return;
-  }
-  // Filter known destinations first
-  const lower = val.toLowerCase();
-  const matches = ROC_DESTINATIONS.filter(d => d.name.toLowerCase().includes(lower) || d.address.toLowerCase().includes(lower));
-  if (matches.length && sugBox) {
-    sugBox.innerHTML = matches.map(p =>
-      `<div onclick="selectDest('${p.name.replace(/'/g,"\'")}','geocode')"
-        style="padding:9px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(26,86,219,0.25);border-radius:9px;font-size:12px;color:white;cursor:pointer;display:flex;align-items:center;gap:8px;">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" fill="#1A56DB"/><circle cx="6" cy="5" r="1.3" fill="white"/></svg>
-        <div style="flex:1;"><div>${p.name}</div><div style="font-size:10px;color:rgba(255,255,255,0.4);">${p.address}</div></div>
-        <span style="margin-left:auto;">${p.routes.map(r=>`<span style="background:${RTS_ROUTES[r]?.color||'#555'};color:white;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;">${r}</span>`).join(' ')}</span>
-      </div>`
-    ).join('');
-  }
-  // Then do live Nominatim search after 500ms
-  searchTimeout = setTimeout(() => doGeoSearch(val, true), 500);
+// ─── CSV parse helper ────────────────────────────────────────────
+function parseCSV(text) {
+  return Papa.parse(text.trim(), { header: true, skipEmptyLines: true }).data;
 }
 
-async function doGeoSearch(query, isLive = false) {
-  if (!query.trim()) return;
-  const status = document.getElementById('search-status');
-  const sugBox = document.getElementById('search-suggestions');
-  if (status) status.textContent = 'Searching...';
+// ─── Convert "HH:MM:SS" (may exceed 23:xx) to minutes since midnight
+function toMins(t) {
+  if (!t) return Infinity;
+  const [h, m, s] = t.split(':').map(Number);
+  return h * 60 + m + (s || 0) / 60;
+}
+
+// ─── Today's date as YYYYMMDD ────────────────────────────────────
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear().toString() +
+    (d.getMonth()+1).toString().padStart(2,'0') +
+    d.getDate().toString().padStart(2,'0');
+}
+
+// ─── Day-of-week key ─────────────────────────────────────────────
+function todayDow() {
+  return ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][new Date().getDay()];
+}
+
+// ─── Load & parse the GTFS ZIP ───────────────────────────────────
+async function loadGTFS(onProgress) {
+  if (G.loaded) return true;
+  if (G.loading) return false;
+  G.loading = true;
+
+  onProgress?.('Checking cache...');
+
+  // Try localStorage cache
   try {
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ' Rochester NY')}&format=json&limit=6&countrycodes=us&viewbox=-77.85,43.25,-77.45,43.02&bounded=1`;
-    const res = await fetch(url, { headers: { 'Accept-Language': 'en', 'User-Agent': 'RTSGoDemo/1.0' } });
-    const data = await res.json();
-    if (status) status.textContent = data.length ? `${data.length} result${data.length>1?'s':''} found` : 'No results — try a different search';
-    if (data.length && sugBox) {
-      const items = data.map(r => {
-        const shortName = r.display_name.split(',').slice(0,2).join(',').trim();
-        const knownDest = ROC_DESTINATIONS.find(d =>
-          r.display_name.toLowerCase().includes(d.name.toLowerCase().split(' ')[0])
-        );
-        return `<div onclick="selectDest('${shortName.replace(/'/g,"\'")}','geo')"
-          style="padding:9px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;font-size:12px;color:rgba(255,255,255,0.85);cursor:pointer;display:flex;align-items:flex-start;gap:8px;">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;margin-top:2px;"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" fill="rgba(255,255,255,0.4)"/><circle cx="6" cy="5" r="1.3" fill="rgba(255,255,255,0.7)"/></svg>
-          <div>
-            <div>${shortName}</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;">${r.display_name.split(',').slice(2,4).join(',').trim()}</div>
-            ${knownDest ? `<div style="margin-top:3px;">${knownDest.routes.map(rn=>`<span style="background:${RTS_ROUTES[rn]?.color||'#555'};color:white;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;">Route ${rn}</span>`).join(' ')}</div>` : '<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">Check myrts.com for routes serving this area</div>'}
-          </div>
-        </div>`;
-      }).join('');
-      sugBox.innerHTML = items;
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const obj = JSON.parse(cached);
+      if (Date.now() - obj.ts < CACHE_AGE) {
+        onProgress?.('Loading from cache...');
+        Object.assign(G, obj.data, { loaded: true, loading: false, error: null });
+        // Re-hydrate Sets
+        for (const sid in G.stopTrips)  G.stopTrips[sid]  = new Set(G.stopTrips[sid]);
+        for (const rid in G.routeStops) G.routeStops[rid] = new Set(G.routeStops[rid]);
+        onProgress?.('Ready!');
+        return true;
+      }
     }
+  } catch(e) { /* ignore */ }
+
+  // Fetch fresh
+  try {
+    onProgress?.('Downloading RTS schedule data...');
+    const res = await fetch(GTFS_URL, { signal: AbortSignal.timeout(30000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    onProgress?.('Unpacking schedule files...');
+    await loadLibs();
+    const buf = await res.arrayBuffer();
+    const zip = await JSZip.loadAsync(buf);
+
+    const read = async name => {
+      const f = zip.file(name);
+      if (!f) return '';
+      return f.async('string');
+    };
+
+    onProgress?.('Parsing routes...');
+    const routeRows = parseCSV(await read('routes.txt'));
+    routeRows.forEach(r => {
+      G.routes[r.route_id] = {
+        short: r.route_short_name?.trim() || r.route_id,
+        name:  r.route_long_name?.trim()  || '',
+        color: r.route_color ? '#' + r.route_color : '#1A56DB',
+      };
+    });
+
+    onProgress?.('Parsing stops...');
+    const stopRows = parseCSV(await read('stops.txt'));
+    stopRows.forEach(s => {
+      G.stops[s.stop_id] = {
+        name: s.stop_name?.trim() || '',
+        lat:  parseFloat(s.stop_lat)  || 0,
+        lon:  parseFloat(s.stop_lon) || 0,
+      };
+    });
+
+    onProgress?.('Parsing trips...');
+    const tripRows = parseCSV(await read('trips.txt'));
+    tripRows.forEach(t => {
+      G.trips[t.trip_id] = {
+        route_id:   t.route_id,
+        service_id: t.service_id,
+        headsign:   t.trip_headsign?.trim() || '',
+        direction:  t.direction_id,
+      };
+    });
+
+    onProgress?.('Parsing calendar...');
+    try {
+      const calRows = parseCSV(await read('calendar.txt'));
+      calRows.forEach(c => { G.calendar[c.service_id] = c; });
+    } catch(e) {}
+    try {
+      const cdRows = parseCSV(await read('calendar_dates.txt'));
+      cdRows.forEach(c => {
+        if (!G.calDates[c.service_id]) G.calDates[c.service_id] = [];
+        G.calDates[c.service_id].push(c);
+      });
+    } catch(e) {}
+
+    onProgress?.('Parsing stop times (largest file)...');
+    const stText = await read('stop_times.txt');
+    const stRows = parseCSV(stText);
+    stRows.forEach(st => {
+      if (!G.stopTimes[st.trip_id]) G.stopTimes[st.trip_id] = [];
+      G.stopTimes[st.trip_id].push({
+        stop_id: st.stop_id,
+        arr:     toMins(st.arrival_time),
+        dep:     toMins(st.departure_time),
+        seq:     parseInt(st.stop_sequence) || 0,
+      });
+      if (!G.stopTrips[st.stop_id]) G.stopTrips[st.stop_id] = new Set();
+      G.stopTrips[st.stop_id].add(st.trip_id);
+    });
+
+    // Build routeStops index
+    for (const tid in G.trips) {
+      const rid = G.trips[tid].route_id;
+      if (!G.routeStops[rid]) G.routeStops[rid] = new Set();
+      const sts = G.stopTimes[tid] || [];
+      sts.forEach(st => G.routeStops[rid].add(st.stop_id));
+    }
+
+    // Sort stop_times by sequence
+    for (const tid in G.stopTimes) {
+      G.stopTimes[tid].sort((a,b) => a.seq - b.seq);
+    }
+
+    G.loaded = true; G.loading = false; G.error = null;
+    onProgress?.('Saving to cache...');
+
+    // Cache to localStorage (convert Sets to arrays)
+    try {
+      const toCache = {
+        routes: G.routes, stops: G.stops, trips: G.trips,
+        stopTimes: G.stopTimes,
+        stopTrips: Object.fromEntries(Object.entries(G.stopTrips).map(([k,v])=>[k,[...v]])),
+        calendar: G.calendar, calDates: G.calDates,
+        routeStops: Object.fromEntries(Object.entries(G.routeStops).map(([k,v])=>[k,[...v]])),
+      };
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: toCache }));
+    } catch(e) { /* quota exceeded — still works without cache */ }
+
+    onProgress?.('Ready!');
+    return true;
   } catch(e) {
-    if (status) status.textContent = 'Search unavailable — select from list above';
+    G.loading = false; G.error = e.message;
+    console.error('GTFS load error:', e);
+    return false;
   }
 }
 
-function selectDest(dest, source) {
-  selectedDestination = dest;
-  closeModal();
-  // Update "TO" field on plan screen
-  const toVal = document.querySelector('.ri-val.ph');
-  if (toVal) { toVal.textContent = dest; toVal.classList.remove('ph'); }
-  // Update search box text on home screen
-  const sText = document.querySelector('#screen-home .s-text');
-  if (sText) sText.textContent = dest;
-  showScreen('plan', document.querySelector('.nav-btn[onclick*="plan"]'));
-  // Auto-run trip search
-  setTimeout(() => runTripSearch(dest), 300);
+// ─── Is a service_id running today? ─────────────────────────────
+function serviceRunsToday(service_id) {
+  const today = todayStr();
+  const dow   = todayDow();
+
+  // Check calendar_dates exceptions
+  const exceptions = G.calDates[service_id] || [];
+  for (const ex of exceptions) {
+    if (ex.date === today) {
+      return ex.exception_type === '1'; // 1=added, 2=removed
+    }
+  }
+
+  // Fall back to calendar
+  const cal = G.calendar[service_id];
+  if (!cal) return true; // assume running if no data
+  if (today < cal.start_date || today > cal.end_date) return false;
+  return cal[dow] === '1';
 }
 
-/* ===== REAL TRIP PLANNER ===== */
-function runTripSearch(destName) {
-  const now = new Date();
-  const h = now.getHours();
-  const m = now.getMinutes().toString().padStart(2,'0');
+// ─── Haversine distance (km) ─────────────────────────────────────
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ─── Find stops within radius (km), sorted by distance ──────────
+function nearbyStops(lat, lon, radiusKm = 0.5, maxN = 8) {
+  const res = [];
+  for (const [sid, s] of Object.entries(G.stops)) {
+    const d = haversine(lat, lon, s.lat, s.lon);
+    if (d <= radiusKm) res.push({ sid, ...s, dist: d });
+  }
+  res.sort((a,b) => a.dist - b.dist);
+  return res.slice(0, maxN);
+}
+
+// ─── Search stops by name (fuzzy) ────────────────────────────────
+function searchStops(query, maxN = 10) {
+  const q = query.toLowerCase().replace(/[^a-z0-9 ]/g,' ');
+  const words = q.split(' ').filter(Boolean);
+  const res = [];
+  for (const [sid, s] of Object.entries(G.stops)) {
+    const name = s.name.toLowerCase();
+    const score = words.reduce((acc, w) => acc + (name.includes(w) ? 1 : 0), 0);
+    if (score > 0) res.push({ sid, ...s, score });
+  }
+  res.sort((a,b) => b.score - a.score || a.name.localeCompare(b.name));
+  // De-dupe by name prefix (many stops share the same intersection name)
+  const seen = new Set();
+  return res.filter(s => {
+    const key = s.name.slice(0,30);
+    if (seen.has(key)) return false;
+    seen.add(key); return true;
+  }).slice(0, maxN);
+}
+
+// ─── Get active trips for a route today, after a given minute ────
+function getActiveTrips(route_id, afterMins, beforeMins = afterMins + 180) {
+  const res = [];
+  for (const [tid, trip] of Object.entries(G.trips)) {
+    if (trip.route_id !== route_id) continue;
+    if (!serviceRunsToday(trip.service_id)) continue;
+    const sts = G.stopTimes[tid];
+    if (!sts || !sts.length) continue;
+    const firstDep = sts[0].dep;
+    if (firstDep >= afterMins && firstDep <= beforeMins) {
+      res.push({ tid, trip, sts });
+    }
+  }
+  res.sort((a,b) => a.sts[0].dep - b.sts[0].dep);
+  return res;
+}
+
+// ─── Core: find direct trips from origin stop → destination stop ─
+function findDirectTrips(originSids, destSids, afterMins, maxResults = 5) {
+  const originSet = new Set(originSids);
+  const destSet   = new Set(destSids);
+  const results = [];
+
+  // Collect all trip_ids that serve any origin stop
+  const candidateTids = new Set();
+  for (const sid of originSids) {
+    for (const tid of (G.stopTrips[sid] || [])) candidateTids.add(tid);
+  }
+
+  for (const tid of candidateTids) {
+    const trip = G.trips[tid];
+    if (!trip || !serviceRunsToday(trip.service_id)) continue;
+    const sts = G.stopTimes[tid];
+    if (!sts) continue;
+
+    // Find origin board point
+    let boardIdx = -1, boardTime = Infinity;
+    for (let i = 0; i < sts.length; i++) {
+      if (originSet.has(sts[i].stop_id) && sts[i].dep >= afterMins && sts[i].dep < boardTime) {
+        boardIdx = i; boardTime = sts[i].dep;
+      }
+    }
+    if (boardIdx < 0) continue;
+
+    // Find dest alight point AFTER board
+    let alightIdx = -1, alightTime = Infinity;
+    for (let i = boardIdx + 1; i < sts.length; i++) {
+      if (destSet.has(sts[i].stop_id) && sts[i].arr < alightTime) {
+        alightIdx = i; alightTime = sts[i].arr;
+      }
+    }
+    if (alightIdx < 0) continue;
+
+    const route = G.routes[trip.route_id] || {};
+    results.push({
+      type: 'direct',
+      tid, route_id: trip.route_id,
+      routeShort: route.short || '?',
+      routeName:  route.name  || '',
+      routeColor: route.color || '#1A56DB',
+      headsign:   trip.headsign,
+      boardStop:  G.stops[sts[boardIdx].stop_id]?.name || '',
+      alightStop: G.stops[sts[alightIdx].stop_id]?.name || '',
+      boardStopId:  sts[boardIdx].stop_id,
+      alightStopId: sts[alightIdx].stop_id,
+      departMins:  boardTime,
+      arriveMins:  alightTime,
+      numStops:    alightIdx - boardIdx,
+      waitMins:    Math.round(boardTime - afterMins),
+      ridesMins:   Math.round(alightTime - boardTime),
+    });
+  }
+
+  results.sort((a,b) => a.departMins - b.departMins);
+  // Deduplicate by route — keep earliest departure per route
+  const seenRoute = new Set();
+  return results.filter(r => {
+    if (seenRoute.has(r.route_id)) return false;
+    seenRoute.add(r.route_id); return true;
+  }).slice(0, maxResults);
+}
+
+// ─── Find 1-transfer trips ───────────────────────────────────────
+function findTransferTrips(originSids, destSids, afterMins, maxResults = 3) {
+  const results = [];
+  const originSet = new Set(originSids);
+  const destSet   = new Set(destSids);
+
+  // Find all trips from origin
+  const leg1Trips = findDirectTrips(originSids,
+    Object.keys(G.stops).filter(sid => !originSet.has(sid) && !destSet.has(sid)).slice(0,9999),
+    afterMins, 20);
+
+  for (const leg1 of leg1Trips.slice(0, 8)) {
+    // Stops reachable after alighting from leg1 (the alight stop + nearby)
+    const transferStop = G.stops[leg1.alightStopId];
+    if (!transferStop) continue;
+    const nearby = nearbyStops(transferStop.lat, transferStop.lon, 0.25, 5).map(s => s.sid);
+    const xferSids = [leg1.alightStopId, ...nearby];
+
+    // Find leg2 after transfer (add 5 min walking buffer)
+    const leg2Trips = findDirectTrips(xferSids, destSids, leg1.arriveMins + 4, 4);
+
+    for (const leg2 of leg2Trips) {
+      if (leg2.route_id === leg1.route_id) continue; // same route = just stay on
+      results.push({
+        type: 'transfer',
+        legs: [leg1, leg2],
+        departMins: leg1.departMins,
+        arriveMins: leg2.arriveMins,
+        waitMins:   leg1.waitMins,
+        ridesMins:  Math.round((leg1.arriveMins - leg1.departMins) + (leg2.arriveMins - leg2.departMins)),
+        xferWaitMins: Math.round(leg2.departMins - leg1.arriveMins),
+        xferStop: transferStop.name,
+      });
+    }
+  }
+
+  results.sort((a,b) => a.arriveMins - b.arriveMins);
+  return results.slice(0, maxResults);
+}
+
+// ─── Format minutes-since-midnight as "9:42 AM" ──────────────────
+function fmtMins(mins) {
+  if (!isFinite(mins)) return '--:--';
+  const h = Math.floor(mins / 60) % 24;
+  const m = Math.round(mins % 60);
   const ampm = h >= 12 ? 'PM' : 'AM';
-  const h12 = (h % 12) || 12;
+  return (h % 12 || 12) + ':' + m.toString().padStart(2,'0') + '\u00A0' + ampm;
+}
 
-  const options = buildTripOptions(destName);
-  const resultsArea = document.getElementById('trip-results');
-  if (!resultsArea) return;
+// ─── Geocode a text query → {lat, lon, name} using Nominatim ─────
+async function geocodeQuery(query) {
+  // Check our built-in Rochester destination list first
+  const lower = query.toLowerCase().trim();
+  const known = ROC_DESTINATIONS.find(d =>
+    d.name.toLowerCase().includes(lower) || lower.includes(d.name.toLowerCase().split(' ')[0])
+  );
+  if (known) return { lat: known.lat, lon: known.lng, name: known.name };
 
-  if (!options || !options.length) {
-    resultsArea.innerHTML = `
-      <div style="padding:14px 14px;background:rgba(255,255,255,0.04);border-radius:13px;margin:0 14px;text-align:center;">
-        <div style="font-size:13px;color:#94A3B8;margin-bottom:6px;">No direct RTS routes found for this destination</div>
-        <div style="font-size:11px;color:#64748B;">Try nearby stops or <a href="https://www.myrts.com/Maps-Schedules/RTS-Monroe" target="_blank" style="color:#1A56DB;">view full schedules at myrts.com</a></div>
-      </div>`;
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ' Rochester NY')}&format=json&limit=1&countrycodes=us&viewbox=-77.85,43.25,-77.45,43.02&bounded=1`;
+    const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+    const data = await res.json();
+    if (data.length) {
+      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), name: data[0].display_name.split(',')[0] };
+    }
+  } catch(e) {}
+
+  // Fall back: search stop names in GTFS
+  if (G.loaded) {
+    const matches = searchStops(query, 1);
+    if (matches.length) return { lat: matches[0].lat, lon: matches[0].lon, name: matches[0].name };
+  }
+  return null;
+}
+
+// ─── Haversine walking estimate ──────────────────────────────────
+function walkingMins(lat1, lon1, lat2, lon2) {
+  const km = haversine(lat1, lon1, lat2, lon2);
+  return Math.max(1, Math.round(km / 0.083)); // ~5 km/h walking
+}
+
+/* ===== PLAN SCREEN UI LOGIC ===== */
+let planTimeMode    = 'depart';
+let planSuggestTarget = null;
+let planSearchTimeout = null;
+let planOriginGeo   = null; // {lat, lon, name}
+let planDestGeo     = null; // {lat, lon, name}
+let gtfsLoadPromise = null;
+
+// Init pickers to now
+function initPlanDateTime() {
+  const now  = new Date();
+  const dateInput = document.getElementById('plan-date');
+  const timeInput = document.getElementById('plan-time');
+  if (dateInput) dateInput.value = now.toISOString().split('T')[0];
+  if (timeInput) {
+    timeInput.value = now.getHours().toString().padStart(2,'0') + ':' +
+                      now.getMinutes().toString().padStart(2,'0');
+  }
+}
+initPlanDateTime();
+
+function setPlanTimeMode(mode) {
+  planTimeMode = mode;
+  ['depart','arrive','last'].forEach(m => {
+    const chip = document.getElementById('tc-' + m);
+    if (!chip) return;
+    const active = m === mode;
+    chip.style.border      = active ? '1.5px solid #1A56DB' : '1.5px solid rgba(0,0,0,0.08)';
+    chip.style.background  = active ? '#EBF0FF' : 'white';
+    chip.style.color       = active ? '#1A56DB' : '#64748B';
+    chip.style.fontWeight  = active ? '600' : '500';
+  });
+  if (mode === 'last') {
+    const ti = document.getElementById('plan-time');
+    if (ti) ti.value = '23:00';
+    showToast('Showing last trip of the day', '#1A56DB');
+  }
+}
+
+function togglePlanPref(el) {
+  const on = el.style.background.includes('235') || el.style.background === '#EBF0FF';
+  el.style.background  = on ? 'white' : '#EBF0FF';
+  el.style.borderColor = on ? 'rgba(0,0,0,0.08)' : '#1A56DB';
+  el.style.color       = on ? '#64748B' : '#1A56DB';
+}
+
+function swapPlanInputs() {
+  const fi = document.getElementById('plan-from');
+  const ti = document.getElementById('plan-to');
+  if (!fi || !ti) return;
+  [fi.value, ti.value] = [ti.value, fi.value];
+  [planOriginGeo, planDestGeo] = [planDestGeo, planOriginGeo];
+}
+
+function clearPlanTo() {
+  const ti = document.getElementById('plan-to');
+  if (ti) ti.value = '';
+  planDestGeo = null;
+  hideSuggestions();
+  setResultsEmpty();
+}
+
+function useCurrentLocation() {
+  if (!navigator.geolocation) { showToast('Geolocation not available on this device', '#D97706'); return; }
+  showToast('Getting your location…', '#1A56DB');
+  navigator.geolocation.getCurrentPosition(pos => {
+    planOriginGeo = { lat: pos.coords.latitude, lon: pos.coords.longitude, name: 'My location' };
+    const fi = document.getElementById('plan-from');
+    if (fi) fi.value = 'My location';
+    showToast('Location set!', '#16A34A');
+  }, () => showToast('Could not get location — enter an address', '#D97706'));
+}
+
+// ─── Suggestion dropdown ─────────────────────────────────────────
+function hideSuggestions() {
+  const box = document.getElementById('plan-suggestions');
+  if (box) box.style.display = 'none';
+}
+
+function showSuggestionsFor(target, query) {
+  const box = document.getElementById('plan-suggestions');
+  if (!box) return;
+  const lower = query.toLowerCase();
+
+  // Built-in destinations
+  let matches = ROC_DESTINATIONS.filter(d =>
+    !lower || d.name.toLowerCase().includes(lower) || d.address.toLowerCase().includes(lower)
+  );
+
+  // Also search GTFS stops if loaded
+  let stopMatches = [];
+  if (G.loaded && query.length > 2) {
+    stopMatches = searchStops(query, 5).map(s => ({
+      name: s.name, address: 'RTS Stop #' + s.sid,
+      routes: [], isStop: true, lat: s.lat, lon: s.lon, sid: s.sid
+    }));
+  }
+
+  const all = [...matches.slice(0,5), ...stopMatches.slice(0,4)];
+  if (!all.length) { hideSuggestions(); return; }
+
+  box.style.display = 'block';
+  box.innerHTML = all.map(p => {
+    const routeBadges = (p.routes||[]).slice(0,3).map(r =>
+      `<span style="background:${RTS_ROUTES[r]?.color||'#1A56DB'};color:white;font-size:8px;padding:1px 4px;border-radius:3px;font-weight:700;">${r}</span>`
+    ).join(' ');
+    return `<div onclick="pickSuggestion('${target}','${p.name.replace(/'/g,"\\'")}'${p.isStop?`,'stop',${p.lat},${p.lon}`:''} )"
+      style="padding:8px 12px;font-size:11px;color:#0F172A;cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:7px;">
+      <svg width="10" height="12" viewBox="0 0 10 12" fill="none" style="flex-shrink:0;"><path d="M5 0.5C2.8 0.5 1 2.3 1 4.5c0 3 4 7.5 4 7.5s4-4.5 4-7.5C9 2.3 7.2 0.5 5 0.5z" fill="${p.isStop?'#16A34A':'#1A56DB'}"/><circle cx="5" cy="4.5" r="1.5" fill="white"/></svg>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
+        <div style="font-size:9px;color:#94A3B8;">${p.address || ''}</div>
+      </div>
+      <div style="flex-shrink:0;">${routeBadges}</div>
+    </div>`;
+  }).join('');
+}
+
+function pickSuggestion(target, name, type, lat, lon) {
+  hideSuggestions();
+  const el = document.getElementById(target === 'from' ? 'plan-from' : 'plan-to');
+  if (el) el.value = name;
+  const geo = { name, lat: lat||null, lon: lon||null };
+  if (target === 'from') planOriginGeo = geo;
+  else { planDestGeo = geo; doPlanSearch(); }
+}
+
+function onPlanFromInput() {
+  const v = document.getElementById('plan-from')?.value || '';
+  planOriginGeo = null;
+  if (v.length > 1) showSuggestionsFor('from', v);
+  else hideSuggestions();
+}
+
+function onPlanToInput() {
+  const v = document.getElementById('plan-to')?.value || '';
+  planDestGeo = null;
+  clearTimeout(planSearchTimeout);
+  if (v.length > 1) {
+    showSuggestionsFor('to', v);
+    planSearchTimeout = setTimeout(() => doPlanSearch(), 1200);
+  } else hideSuggestions();
+}
+
+function setResultsEmpty(msg) {
+  const el = document.getElementById('trip-results-inner');
+  if (!el) return;
+  el.innerHTML = `<div style="padding:20px 14px;text-align:center;">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin:0 auto 10px;display:block;opacity:0.2;"><path d="M18 3C9.7 3 3 9.7 3 18c0 9.4 15 27 15 27S33 27.4 33 18C33 9.7 26.3 3 18 3z" fill="#1A56DB"/><circle cx="18" cy="18" r="4.5" fill="white"/></svg>
+    <div style="font-size:12px;color:#94A3B8;">${msg || 'Enter origin &amp; destination to find routes'}</div>
+    <div style="font-size:10px;color:#CBD5E1;margin-top:3px;">Real RTS schedule data · No third-party services</div>
+  </div>`;
+}
+
+function setResultsLoading(msg) {
+  const el = document.getElementById('trip-results-inner');
+  if (!el) return;
+  el.innerHTML = `<div style="padding:24px 14px;text-align:center;">
+    <div style="width:20px;height:20px;border:2.5px solid #1A56DB;border-top-color:transparent;border-radius:50%;animation:rts-spin 0.8s linear infinite;margin:0 auto 10px;"></div>
+    <div style="font-size:12px;color:#94A3B8;">${msg}</div>
+  </div>`;
+  if (!document.getElementById('rts-spin-css')) {
+    const s = document.createElement('style');
+    s.id = 'rts-spin-css';
+    s.textContent = '@keyframes rts-spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(s);
+  }
+}
+
+/* ===== MAIN SEARCH ENTRY POINT ===== */
+async function doPlanSearch() {
+  hideSuggestions();
+  const fromVal = document.getElementById('plan-from')?.value?.trim() || '';
+  const toVal   = document.getElementById('plan-to')?.value?.trim()   || '';
+  if (!toVal) { setResultsEmpty(); return; }
+  if (!fromVal) { showToast('Please enter a starting point', '#D97706'); return; }
+
+  // Parse time
+  const dateStr = document.getElementById('plan-date')?.value || new Date().toISOString().split('T')[0];
+  const timeStr = document.getElementById('plan-time')?.value || '00:00';
+  const [hh, mm] = timeStr.split(':').map(Number);
+  let afterMins = hh * 60 + mm;
+  if (planTimeMode === 'last') afterMins = Math.max(afterMins, 20 * 60);
+
+  setResultsLoading('Loading RTS schedule data…');
+
+  // Load GTFS if not already loaded
+  if (!G.loaded) {
+    const ok = await loadGTFS(msg => setResultsLoading(msg));
+    if (!ok) {
+      // Network failure — fall back to built-in schedule data
+      const fallback = buildTripOptions(toVal);
+      renderBuiltInResults(fallback, toVal, afterMins);
+      return;
+    }
+  }
+
+  setResultsLoading('Finding your stops…');
+
+  // Geocode origin
+  let originGeo = planOriginGeo;
+  if (!originGeo || !originGeo.lat) {
+    originGeo = await geocodeQuery(fromVal);
+    if (!originGeo && fromVal.toLowerCase() !== 'current location' && fromVal.toLowerCase() !== 'my location') {
+      const el = document.getElementById('trip-results-inner');
+      if (el) el.innerHTML = `<div style="padding:14px;text-align:center;font-size:12px;color:#94A3B8;">Could not find starting location: "${fromVal}"</div>`;
+      return;
+    }
+    if (!originGeo) {
+      // Try geolocation
+      try {
+        originGeo = await new Promise((res,rej) => navigator.geolocation.getCurrentPosition(
+          p => res({lat:p.coords.latitude,lon:p.coords.longitude,name:'My location'}), rej, {timeout:5000}));
+      } catch(e) {
+        originGeo = { lat: 43.1547, lon: -77.6076, name: 'Downtown Rochester' }; // fallback centroid
+      }
+    }
+    planOriginGeo = originGeo;
+  }
+
+  // Geocode destination
+  let destGeo = planDestGeo;
+  if (!destGeo || !destGeo.lat) {
+    destGeo = await geocodeQuery(toVal);
+    if (!destGeo) {
+      const el = document.getElementById('trip-results-inner');
+      if (el) el.innerHTML = `<div style="padding:14px;text-align:center;font-size:12px;color:#94A3B8;">Could not find destination: "${toVal}"</div>`;
+      return;
+    }
+    planDestGeo = destGeo;
+  }
+
+  setResultsLoading('Searching routes…');
+
+  // Find nearby stops for each end
+  const originStops = nearbyStops(originGeo.lat, originGeo.lon, 0.6, 10);
+  const destStops   = nearbyStops(destGeo.lat,  destGeo.lon,  0.6, 10);
+
+  if (!originStops.length) {
+    const el = document.getElementById('trip-results-inner');
+    if (el) el.innerHTML = `<div style="padding:14px;text-align:center;font-size:12px;color:#94A3B8;">No RTS stops found near "${fromVal}" — try a different address</div>`;
+    return;
+  }
+  if (!destStops.length) {
+    const el = document.getElementById('trip-results-inner');
+    if (el) el.innerHTML = `<div style="padding:14px;text-align:center;font-size:12px;color:#94A3B8;">No RTS stops found near "${toVal}" — RTS may not serve this area</div>`;
     return;
   }
 
-  const countLabel = `${options.length} route${options.length>1?'s':''} found`;
-  let html = `<div class="p-sl" style="padding-top:12px;">${countLabel} — departing after ${h12}:${m} ${ampm}</div>`;
+  const originSids = originStops.map(s => s.sid);
+  const destSids   = destStops.map(s => s.sid);
 
-  options.forEach((opt, i) => {
+  // Walking time to/from stops
+  const walkToBoard  = walkingMins(originGeo.lat, originGeo.lon, originStops[0].lat, originStops[0].lon);
+  const walkToDestEl = walkingMins(destGeo.lat,   destGeo.lon,   destStops[0].lat,  destStops[0].lon);
+
+  const boardAfter = afterMins + walkToBoard;
+
+  // Find direct trips
+  const direct = findDirectTrips(originSids, destSids, boardAfter, 5);
+
+  // Find transfer trips
+  const transfers = findTransferTrips(originSids, destSids, boardAfter, 3);
+
+  // Merge and sort
+  const all = [...direct, ...transfers].sort((a,b) => a.arriveMins - b.arriveMins).slice(0, 5);
+
+  if (!all.length) {
+    const el = document.getElementById('trip-results-inner');
+    if (el) el.innerHTML = `<div style="padding:14px;text-align:center;">
+      <div style="font-size:12px;color:#94A3B8;margin-bottom:6px;">No trips found in the next 3 hours</div>
+      <a href="https://www.myrts.com/Maps-Schedules/RTS-Monroe" target="_blank" style="font-size:11px;color:#1A56DB;">View full schedules at myrts.com →</a>
+    </div>`;
+    return;
+  }
+
+  renderGTFSResults(all, originGeo, destGeo, walkToBoard, walkToDestEl);
+}
+
+/* ===== RENDER GTFS RESULTS ===== */
+function renderGTFSResults(trips, originGeo, destGeo, walkToBoard, walkToDest) {
+  const el = document.getElementById('trip-results-inner');
+  if (!el) return;
+
+  const cnt = trips.length;
+  let html = `<div style="padding:8px 14px 4px;font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.05em;">
+    ${cnt} option${cnt>1?'s':''} · from ${originGeo.name.slice(0,22)} → ${destGeo.name.slice(0,22)}
+  </div>`;
+
+  trips.forEach((t, i) => {
     const isBest = i === 0;
-    const onTimeStatus = opt.waitMins < 20 ? 'On time' : 'Scheduled';
-    const statusColor = opt.waitMins < 20 ? '#16A34A' : '#D97706';
-    const statusBg = opt.waitMins < 20 ? '#DCFCE7' : '#FEF3C7';
+    const totalMins = Math.round((t.arriveMins - t.departMins) + walkToBoard + walkToDest);
+    const departDisplay  = fmtMins(t.departMins);
+    const arriveDisplay  = fmtMins(t.arriveMins + walkToDest);
+
+    // Build visual segments
+    let segHtml = '';
+    if (t.type === 'direct') {
+      const walkW = Math.max(8, walkToBoard * 2);
+      const walkW2 = Math.max(6, walkToDest * 2);
+      segHtml = `
+        <div style="height:5px;border-radius:3px;background:#E2E8F0;width:${walkW}px;flex-shrink:0;"></div>
+        <div style="width:3px;flex-shrink:0;"></div>
+        <div style="flex:1;position:relative;display:flex;align-items:center;">
+          <div style="height:5px;border-radius:3px;background:${t.routeColor};width:100%;"></div>
+          <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:${t.routeColor};color:white;font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;white-space:nowrap;">${t.routeShort}</div>
+        </div>
+        <div style="width:3px;flex-shrink:0;"></div>
+        <div style="height:5px;border-radius:3px;background:#E2E8F0;width:${walkW2}px;flex-shrink:0;"></div>`;
+    } else {
+      const [l1, l2] = t.legs;
+      segHtml = `
+        <div style="height:5px;border-radius:3px;background:#E2E8F0;width:${Math.max(6,walkToBoard*2)}px;flex-shrink:0;"></div>
+        <div style="width:2px;flex-shrink:0;"></div>
+        <div style="flex:1;position:relative;display:flex;align-items:center;">
+          <div style="height:5px;border-radius:3px;background:${l1.routeColor};width:100%;"></div>
+          <div style="position:absolute;top:-10px;left:40%;background:${l1.routeColor};color:white;font-size:8px;font-weight:700;padding:1px 4px;border-radius:4px;">${l1.routeShort}</div>
+        </div>
+        <div style="width:2px;flex-shrink:0;"></div>
+        <div style="height:5px;border-radius:3px;background:#CBD5E1;width:8px;flex-shrink:0;" title="Transfer"></div>
+        <div style="width:2px;flex-shrink:0;"></div>
+        <div style="flex:1;position:relative;display:flex;align-items:center;">
+          <div style="height:5px;border-radius:3px;background:${l2.routeColor};width:100%;"></div>
+          <div style="position:absolute;top:-10px;left:40%;background:${l2.routeColor};color:white;font-size:8px;font-weight:700;padding:1px 4px;border-radius:4px;">${l2.routeShort}</div>
+        </div>
+        <div style="width:2px;flex-shrink:0;"></div>
+        <div style="height:5px;border-radius:3px;background:#E2E8F0;width:${Math.max(6,walkToDest*2)}px;flex-shrink:0;"></div>`;
+    }
+
+    const xferBadge = t.type === 'transfer'
+      ? `<div style="width:4px;height:4px;border-radius:50%;background:#E2E8F0;margin-top:6px;"></div>
+         <span style="font-size:12px;font-weight:500;color:#0F172A;">1</span><span style="font-size:10px;color:#94A3B8;">transfer</span>`
+      : `<div style="width:4px;height:4px;border-radius:50%;background:#E2E8F0;margin-top:6px;"></div>
+         <span style="font-size:12px;font-weight:500;color:#0F172A;">0</span><span style="font-size:10px;color:#94A3B8;">transfers</span>`;
+
+    const routeDesc = t.type === 'direct'
+      ? `Route ${t.routeShort} ${t.routeName} · ${t.headsign}`
+      : `Route ${t.legs[0].routeShort} → Route ${t.legs[1].routeShort} · transfer at ${t.xferStop.slice(0,30)}`;
 
     html += `
-    <div class="trip-card ${isBest?'best':''}" style="cursor:pointer;margin-bottom:${i===options.length-1?'14px':'0'};"
-      onclick="selectAndTrack('${opt.routeNum}','${opt.routeName}','${opt.depart}','${opt.arrive}','${destName.replace(/'/g,"\'")}')">
-      ${isBest ? '<div class="best-badge">Best match</div>' : ''}
-      <div class="trip-body">
-        <div class="tl-wrap">
-          <div class="tl-t">${opt.depart.replace(' AM','').replace(' PM','')}</div>
-          <div class="tl-bar">
-            <div class="tl-seg tl-walk-seg" style="width:${opt.walkMins*2}px;"></div>
-            <div class="tl-gap"></div>
-            <div class="tl-bus-wrap">
-              <div class="tl-bus-bar" style="background:${opt.color};"></div>
-              <div class="tl-bus-num" style="background:${opt.color};">${opt.routeNum}</div>
-            </div>
-            <div class="tl-gap"></div>
-            <div class="tl-seg tl-walk-seg" style="width:8px;"></div>
+    <div onclick='showTripDetail(${JSON.stringify(JSON.stringify(t))},${walkToBoard},${walkToDest},"${originGeo.name.replace(/"/g,'')}", "${destGeo.name.replace(/"/g,'')}")'
+      style="margin:6px 14px 0;background:white;border:1.5px solid ${isBest?'#1A56DB':'rgba(0,0,0,0.08)'};border-radius:13px;overflow:hidden;cursor:pointer;">
+      ${isBest ? '<div style="background:#1A56DB;color:white;font-size:9px;font-weight:700;padding:3px 12px;letter-spacing:.04em;">Best match</div>' : ''}
+      <div style="padding:10px 12px;">
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:10px;">
+          <div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:700;color:#0F172A;width:40px;flex-shrink:0;">${departDisplay.replace(/\s?(AM|PM)/,'')}</div>
+          <div style="flex:1;display:flex;align-items:center;gap:0;height:24px;">${segHtml}</div>
+          <div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:700;color:#0F172A;text-align:right;min-width:44px;">
+            ${arriveDisplay.replace(/\s?(AM|PM)/,'')}
+            <span style="display:inline-flex;background:#DCFCE7;color:#16A34A;font-size:8px;font-weight:600;padding:1px 5px;border-radius:6px;margin-left:2px;">On time</span>
           </div>
-          <div class="tl-t end">${opt.arrive.replace(' AM','').replace(' PM','')}<span class="arrive-tag" style="background:${statusBg};color:${statusColor};">${onTimeStatus}</span></div>
         </div>
-        <div class="trip-stats">
-          <span class="ts-val">${opt.travelMins + opt.walkMins} min</span><span class="ts-lbl">total</span>
-          <div class="ts-dot"></div>
-          <span class="ts-val">${opt.waitMins < 60 ? opt.waitMins + ' min' : 'Next ' + opt.freq}</span><span class="ts-lbl">wait</span>
-          <div class="ts-dot"></div>
-          <span class="ts-val">${opt.walkMins} min</span><span class="ts-lbl">walk</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:4px;">
+          <span style="font-size:12px;font-weight:500;color:#0F172A;">${totalMins} min</span><span style="font-size:10px;color:#94A3B8;">total</span>
+          ${xferBadge}
+          <div style="width:4px;height:4px;border-radius:50%;background:#E2E8F0;margin-top:6px;"></div>
+          <span style="font-size:12px;font-weight:500;color:#0F172A;">${t.waitMins}</span><span style="font-size:10px;color:#94A3B8;">min wait</span>
+          <div style="width:4px;height:4px;border-radius:50%;background:#E2E8F0;margin-top:6px;"></div>
+          <span style="font-size:12px;font-weight:500;color:#0F172A;">${walkToBoard}</span><span style="font-size:10px;color:#94A3B8;">min walk</span>
         </div>
-        <div style="margin-top:5px;font-size:10px;color:#94A3B8;">Route ${opt.routeNum} ${opt.routeName} · ${opt.direction}</div>
+        <div style="font-size:10px;color:#94A3B8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${routeDesc}</div>
       </div>
     </div>`;
   });
 
-  // Upcoming departures table
-  const firstRoute = options[0];
-  const nextDeps = getNextDepartures(firstRoute.routeNum, 5);
-  if (nextDeps.length > 1) {
-    html += `<div class="p-sl">Next Route ${firstRoute.routeNum} departures</div>
-    <div style="margin:0 14px 14px;background:white;border:1px solid rgba(0,0,0,0.07);border-radius:13px;overflow:hidden;">`;
-    nextDeps.forEach((d, i) => {
-      html += `<div style="display:flex;align-items:center;padding:9px 12px;${i>0?'border-top:1px solid rgba(0,0,0,0.05)':''};">
-        <div style="width:8px;height:8px;border-radius:50%;background:${firstRoute.color};margin-right:10px;flex-shrink:0;"></div>
-        <span style="font-size:12px;font-weight:500;color:#0F172A;flex:1;">${d.departDisplay}</span>
-        <span style="font-size:11px;color:${d.waitMins<5?'#16A34A':d.waitMins<15?'#D97706':'#94A3B8'};">
-          ${d.waitMins < 1 ? 'Now' : d.waitMins === 1 ? '1 min' : d.waitMins + ' min'}
-        </span>
-        <span style="font-size:10px;color:#94A3B8;margin-left:10px;">arr ${d.arrivalDisplay}</span>
-      </div>`;
-    });
-    html += `</div>`;
+  html += '<div style="height:14px;"></div>';
+  el.innerHTML = html;
+}
+
+/* ===== TRIP DETAIL MODAL ===== */
+function showTripDetail(tJson, walkToBoard, walkToDest, originName, destName) {
+  const t = JSON.parse(tJson);
+  const steps = [];
+
+  // Walk to first stop
+  if (walkToBoard > 0) {
+    steps.push({ type:'walk', mins: walkToBoard,
+      desc: `Walk to stop`, sub: t.type==='direct' ? t.boardStop : t.legs[0].boardStop });
   }
 
-  resultsArea.innerHTML = html;
-}
+  if (t.type === 'direct') {
+    steps.push({ type:'bus', routeShort: t.routeShort, routeColor: t.routeColor,
+      desc: `Board Route ${t.routeShort} — ${t.routeName}`,
+      sub:  `Departs ${fmtMins(t.departMins)} · ${t.headsign}`,
+      sub2: `${t.numStops} stop${t.numStops===1?'':'s'} · ride ${t.ridesMins} min`,
+      alight: `Get off at ${t.alightStop}` });
+  } else {
+    const [l1, l2] = t.legs;
+    steps.push({ type:'bus', routeShort: l1.routeShort, routeColor: l1.routeColor,
+      desc: `Board Route ${l1.routeShort} — ${l1.routeName}`,
+      sub:  `Departs ${fmtMins(l1.departMins)} · ${l1.headsign}`,
+      sub2: `${l1.numStops} stop${l1.numStops===1?'':'s'} · ride ${l1.ridesMins} min`,
+      alight: `Transfer at ${l1.alightStop}` });
+    steps.push({ type:'transfer', mins: t.xferWaitMins,
+      desc: `Wait for connection`, sub: `${t.xferWaitMins} min · ${t.xferStop}` });
+    steps.push({ type:'bus', routeShort: l2.routeShort, routeColor: l2.routeColor,
+      desc: `Board Route ${l2.routeShort} — ${l2.routeName}`,
+      sub:  `Departs ${fmtMins(l2.departMins)} · ${l2.headsign}`,
+      sub2: `${l2.numStops} stop${l2.numStops===1?'':'s'} · ride ${l2.ridesMins} min`,
+      alight: `Get off at ${l2.alightStop}` });
+  }
 
-function selectAndTrack(routeNum, routeName, depart, arrive, dest) {
-  showToast(`Route ${routeNum} selected — departing ${depart}`, '#1A56DB');
-  // Update track screen heading
-  const tcH = document.querySelector('.tc-heading');
-  const tcS = document.querySelector('.tc-sub');
-  const tcN = document.querySelector('.tc-num');
-  const tcNm = document.querySelector('.tc-name');
-  const etaT = document.querySelector('.eta-t');
-  if (tcH) tcH.textContent = `Bus departing at ${depart}`;
-  if (tcS) tcS.textContent = `Destination: ${dest}`;
-  if (tcN) tcN.textContent = routeNum;
-  if (tcNm) tcNm.textContent = `Route ${routeNum} — ${routeName}`;
-  if (etaT) etaT.textContent = arrive;
-  setTimeout(() => showScreen('track', document.querySelector('.nav-btn[onclick*="track"]')), 600);
-}
+  if (walkToDest > 0) {
+    steps.push({ type:'walk', mins: walkToDest,
+      desc: `Walk to destination`, sub: destName.slice(0,40) });
+  }
+  steps.push({ type:'arrive', desc: `Arrive at ${destName.slice(0,35)}`,
+    sub: fmtMins(t.arriveMins + walkToDest) });
 
-/* ===== PLAN TRIP INTERACTIONS ===== */
-function toggleTimeChip(el) {
-  document.querySelectorAll('#screen-plan .time-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  showToast(`Mode: ${el.textContent}`, '#1A56DB');
-}
+  const totalMins = Math.round((t.arriveMins - t.departMins) + walkToBoard + walkToDest);
+  const stepIcons = {
+    walk: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5a1 1 0 100-2 1 1 0 000 2zM4 4l2 2.5 1.5-.5 1 3.5-2 1" stroke="rgba(255,255,255,0.8)" stroke-width="1.1" stroke-linecap="round"/></svg>`,
+    bus: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="12" height="8" rx="1.5" fill="white" opacity="0.9"/><path d="M1 8h12" stroke="rgba(0,0,0,0.2)" stroke-width="0.8"/><circle cx="4" cy="12" r="1.2" fill="rgba(0,0,0,0.3)"/><circle cx="10" cy="12" r="1.2" fill="rgba(0,0,0,0.3)"/><path d="M4 4L5 2h4l1 2" stroke="rgba(255,255,255,0.6)" stroke-width="1" stroke-linejoin="round"/></svg>`,
+    transfer: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 2v10M4 12l-2-2M4 12l2-2M10 12V2M10 2L8 4M10 2l2 2" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    arrive: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C4.8 1 3 2.8 3 5c0 3 4 8 4 8s4-5 4-8C11 2.8 9.2 1 7 1z" fill="rgba(255,255,255,0.8)"/><circle cx="7" cy="5" r="1.5" fill="rgba(255,255,255,0.4)"/></svg>`,
+  };
+  const stepBg = { walk:'rgba(255,255,255,0.1)', bus:null, transfer:'rgba(255,255,255,0.1)', arrive:'rgba(22,163,74,0.3)' };
 
-function togglePrefChip(el) {
-  el.classList.toggle('active');
-}
+  const stepsHtml = steps.map(s => {
+    const bg   = s.type === 'bus' ? s.routeColor : (stepBg[s.type]||'rgba(255,255,255,0.08)');
+    const icon = stepIcons[s.type] || '';
+    return `<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="width:28px;height:28px;border-radius:8px;background:${bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;">${
+        s.type==='bus' ? `<span style="font-size:9px;font-weight:700;color:white;font-family:'Syne',sans-serif;">${s.routeShort}</span>` : icon
+      }</div>
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:500;color:white;margin-bottom:1px;">${s.desc}</div>
+        ${s.sub  ? `<div style="font-size:10px;color:rgba(255,255,255,0.5);">${s.sub}</div>` : ''}
+        ${s.sub2 ? `<div style="font-size:10px;color:rgba(255,255,255,0.4);">${s.sub2}</div>` : ''}
+        ${s.alight ? `<div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">↓ ${s.alight}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 
-function selectTripCard(el) {
-  document.querySelectorAll('#screen-plan .trip-card').forEach(c => c.style.outline = 'none');
-  el.style.outline = '2px solid #1A56DB';
-  showToast('Route selected — navigating to live tracking', '#1A56DB');
-}
-
-/* ===== ON DEMAND RIDE SELECTION ===== */
-function selectRideOpt(el, name, price) {
-  document.querySelectorAll('.ride-opt').forEach(r => r.classList.remove('sel'));
-  el.classList.add('sel');
-  const btn = document.querySelector('.book-btn');
-  if (btn) btn.textContent = `Schedule ${name} — ${price}`;
-}
-
-/* ===== BOOK DEMAND MODAL ===== */
-function openBookDemandModal() {
   openModal(`
-    <div class="modal-title">Schedule your ride</div>
-    <div class="modal-desc">Select your pickup date and time for your On Demand flex ride.</div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;">Pickup date</div>
-      <input class="modal-input" type="date" style="color:white;" />
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <button onclick="closeModal()" style="background:rgba(255,255,255,0.08);border:none;border-radius:8px;padding:5px 9px;color:white;cursor:pointer;font-size:11px;">← Back</button>
+      <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:white;">Trip details</div>
     </div>
-    <div style="margin-bottom:14px;">
-      <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;">Pickup time</div>
-      <input class="modal-input" type="time" style="color:white;" />
+    <div style="background:rgba(26,86,219,0.2);border:1px solid rgba(26,86,219,0.3);border-radius:11px;padding:11px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:2px;">Total travel time</div>
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:white;">${totalMins} min</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);">Depart ${fmtMins(t.departMins)}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);">Arrive</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:white;">${fmtMins(t.arriveMins + walkToDest)}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);">${destName.slice(0,20)}</div>
+      </div>
     </div>
-    <div style="background:rgba(217,119,6,0.15);border:1px solid rgba(217,119,6,0.3);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#FCD34D;">
-      Book before 5:00 PM the day before your trip.
-    </div>
-    <div class="modal-btn-row">
-      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="modal-btn-primary" onclick="closeModal();showToast('Ride scheduled! You\\'ll get a confirmation soon.','#16A34A')">Confirm booking</button>
+    <div style="max-height:280px;overflow-y:auto;margin-bottom:12px;">${stepsHtml}</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="closeModal();showScreen('track',document.querySelector('.nav-btn[onclick*=\\'track\\']'))"
+        style="flex:1;background:#1A56DB;color:white;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:600;font-family:var(--fn);cursor:pointer;">Start trip</button>
+      <button onclick="closeModal();openShareETA('${fmtMins(t.arriveMins+walkToDest)}','${destName.slice(0,30).replace(/'/g,"\\'")}')"
+        style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 14px;font-size:12px;cursor:pointer;">Share</button>
     </div>
   `);
 }
 
+function openShareETA(arrive, dest) {
+  openModal(`
+    <div class="modal-title">Share your ETA</div>
+    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;">
+      "Hey! Taking RTS — arriving ${dest} around ${arrive}. Tracking via RTS Go."
+    </div>
+    <div class="modal-btn-row">
+      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn-primary" onclick="closeModal();showToast('Copied to clipboard!','#16A34A')">Copy</button>
+    </div>
+  `);
+}
+
+/* ===== FALLBACK: built-in schedule data (if GTFS fetch fails) ===== */
+function renderBuiltInResults(options, destName, afterMins) {
+  const el = document.getElementById('trip-results-inner');
+  if (!el) return;
+  const now = afterMins || (new Date().getHours()*60 + new Date().getMinutes());
+
+  if (!options || !options.length) {
+    el.innerHTML = `<div style="padding:14px;text-align:center;">
+      <div style="font-size:12px;color:#94A3B8;margin-bottom:6px;">No routes found for this destination</div>
+      <div style="font-size:11px;color:#CBD5E1;margin-bottom:8px;">Could not load live schedule data</div>
+      <a href="https://www.myrts.com/Maps-Schedules/RTS-Monroe" target="_blank"
+        style="font-size:11px;color:#1A56DB;">View schedules at myrts.com →</a>
+    </div>`;
+    return;
+  }
+
+  let html = `
+    <div style="margin:8px 14px 8px;padding:9px 12px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;display:flex;gap:8px;align-items:center;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;"><circle cx="7" cy="7" r="6" stroke="#D97706" stroke-width="1.2"/><path d="M7 4.5v3" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="9.5" r="0.6" fill="#D97706"/></svg>
+      <div style="font-size:10px;color:#92400E;line-height:1.5;"><strong style="display:block;color:#78350F;">Using offline schedule data</strong>Could not load live GTFS — showing approximate times</div>
+    </div>
+    <div style="padding:4px 14px 4px;font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.05em;">${options.length} route${options.length>1?'s':''} found</div>`;
+
+  options.forEach((opt, i) => {
+    const isBest = i === 0;
+    html += `<div style="margin:5px 14px 0;background:white;border:1.5px solid ${isBest?'#1A56DB':'rgba(0,0,0,0.08)'};border-radius:13px;overflow:hidden;cursor:pointer;"
+      onclick="showToast('Route ${opt.routeNum} — departs ${opt.depart}','#1A56DB')">
+      ${isBest?'<div style="background:#1A56DB;color:white;font-size:9px;font-weight:700;padding:3px 12px;">Best match</div>':''}
+      <div style="padding:10px 12px;">
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:8px;">
+          <div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:700;color:#0F172A;width:38px;flex-shrink:0;">${opt.depart.replace(/\s?(AM|PM)/,'')}</div>
+          <div style="flex:1;display:flex;align-items:center;height:22px;gap:3px;">
+            <div style="height:5px;border-radius:3px;background:#E2E8F0;width:${opt.walkMins*2}px;flex-shrink:0;"></div>
+            <div style="flex:1;position:relative;display:flex;align-items:center;">
+              <div style="height:5px;border-radius:3px;background:${opt.color};width:100%;"></div>
+              <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:${opt.color};color:white;font-size:8px;font-weight:700;padding:1px 4px;border-radius:3px;">${opt.routeNum}</div>
+            </div>
+            <div style="height:5px;border-radius:3px;background:#E2E8F0;width:8px;flex-shrink:0;"></div>
+          </div>
+          <div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:700;color:#0F172A;text-align:right;min-width:38px;">
+            ${opt.arrive.replace(/\s?(AM|PM)/,'')}
+            <span style="display:inline-flex;background:#DCFCE7;color:#16A34A;font-size:8px;padding:1px 4px;border-radius:5px;margin-left:2px;">Sched</span>
+          </div>
+        </div>
+        <div style="font-size:10px;color:#94A3B8;">Route ${opt.routeNum} ${opt.routeName} · ${opt.direction}</div>
+      </div>
+    </div>`;
+  });
+
+  html += '<div style="height:14px;"></div>';
+  el.innerHTML = html;
+}
+
+/* ===== home-screen quick-chip shortcut ===== */
+function selectDest(dest) {
+  selectedDestination = dest;
+  const ti = document.getElementById('plan-to');
+  if (ti) ti.value = dest;
+  planDestGeo = null;
+  const sText = document.querySelector('#screen-home .s-text');
+  if (sText) sText.textContent = dest;
+  showScreen('plan', document.querySelector('.nav-btn[onclick*="plan"]'));
+  setTimeout(() => doPlanSearch(), 300);
+}
+
 /* ===== SCREEN NAVIGATION ===== */
+
 const screens = {
   home: {
     label: 'Home Screen',
@@ -2337,14 +3083,10 @@ function showScreen(id, btn) {
 document.addEventListener('click', (e) => {
   const t = e.target;
 
-  // Search box
-  if (t.closest('.search-box')) { openSearchModal(); return; }
-
   // Quick chips
   if (t.closest('.chip') && t.closest('#screen-home')) {
     const dest = t.textContent.trim();
-    showScreen('plan', document.querySelector('.nav-btn[onclick*="plan"]'));
-    showToast(`Destination set: ${dest}`, '#1A56DB');
+    selectDest(dest);
     return;
   }
 
@@ -2363,10 +3105,7 @@ document.addEventListener('click', (e) => {
   // Pref chips
   if (t.closest('.pref-chip')) { togglePrefChip(t.closest('.pref-chip')); return; }
 
-  // Find routes button — handled by onclick attribute directly
-  if (t.classList.contains('find-btn')) {
-    return;
-  }
+
 
   // Trip card click → handled by onclick in dynamic HTML
   if (t.closest('.trip-card') && t.closest('#trip-results')) {
