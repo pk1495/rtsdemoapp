@@ -463,15 +463,19 @@ body {
 .home-title { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 700; color: #0F172A; margin-bottom: 12px; }
 
 .search-box {
-  background: #F8FAFF;
+  background: white;
   border: 1.5px solid rgba(0,0,0,0.08);
   border-radius: 14px;
-  padding: 11px 13px;
   display: flex;
-  align-items: center;
-  gap: 9px;
+  flex-direction: column;
   margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.15s;
 }
+.search-box:focus-within {
+  border-color: #1A56DB;
+}
+#home-search-results div:hover { background: #F8FAFF; }
 
 .s-dot { width: 10px; height: 10px; border-radius: 50%; background: #1A56DB; flex-shrink: 0; }
 .s-text { font-size: 13px; color: #94A3B8; }
@@ -1160,9 +1164,23 @@ body {
           <div class="home-header">
             <div class="home-greeting" id="home-greeting">Good morning, Petrina</div>
             <div class="home-title">Where are you headed?</div>
-            <div class="search-box">
-              <div class="s-dot"></div>
-              <span class="s-text">Search destination...</span>
+            <div class="search-box" id="home-search-wrap" style="cursor:text;flex-direction:column;align-items:stretch;padding:0;overflow:hidden;position:relative;">
+              <div style="display:flex;align-items:center;gap:9px;padding:11px 13px;">
+                <div class="s-dot" id="home-search-dot"></div>
+                <input id="home-search-input"
+                  placeholder="Search destination..."
+                  autocomplete="off"
+                  style="flex:1;border:none;background:transparent;font-size:13px;color:#0F172A;font-family:'DM Sans',sans-serif;outline:none;"
+                  oninput="onHomeSearch(this.value)"
+                  onkeydown="if(event.key==='Enter'){confirmHomeSearch();}"
+                  onfocus="onHomeSearchFocus()"
+                />
+                <svg id="home-search-loc" onclick="homeUseMyLocation()" width="15" height="15" viewBox="0 0 15 15" fill="none" style="cursor:pointer;flex-shrink:0;opacity:0.55;">
+                  <circle cx="7.5" cy="7.5" r="6" stroke="#1A56DB" stroke-width="1.4"/>
+                  <circle cx="7.5" cy="7.5" r="2.2" fill="#1A56DB"/>
+                </svg>
+              </div>
+              <div id="home-search-results" style="display:none;border-top:1px solid rgba(0,0,0,0.06);max-height:200px;overflow-y:auto;"></div>
             </div>
             <div class="quick-chips">
               <div class="chip">Home</div>
@@ -1250,8 +1268,9 @@ body {
                 <div style="width:9px;height:9px;border-radius:50%;background:#1A56DB;flex-shrink:0;"></div>
                 <input id="plan-to" placeholder="Where to?"
                   style="flex:1;border:none;background:transparent;font-size:12px;font-weight:500;color:#0F172A;font-family:'DM Sans',sans-serif;outline:none;"
-                  oninput="onPlanInputChange()"
-                  onfocus="showPlanSuggestions('to')"
+                  oninput="onPlanToInput()"
+                  onfocus="onPlanToFocus()"
+                  onkeydown="if(event.key==='Enter'){doPlanSearch();this.blur();}"
                 />
                 <svg onclick="clearPlanTo()" width="13" height="13" viewBox="0 0 13 13" fill="none" style="cursor:pointer;flex-shrink:0;opacity:0.4;">
                   <circle cx="6.5" cy="6.5" r="5.5" fill="#64748B"/>
@@ -3077,6 +3096,268 @@ function showScreen(id, btn) {
 
   document.querySelector('.phone-frame').style.animation = 'none';
   setTimeout(() => { document.querySelector('.phone-frame').style.animation = 'fade-in-up 0.3s ease-out'; }, 10);
+}
+
+/* ===== HOME SCREEN SEARCH ===== */
+let homeSearchTimeout = null;
+let homeSearchActive  = false;
+
+function onHomeSearchFocus() {
+  homeSearchActive = true;
+  const dot = document.getElementById('home-search-dot');
+  if (dot) dot.style.background = '#1A56DB';
+  // Show default suggestions immediately
+  onHomeSearch('');
+}
+
+function onHomeSearch(val) {
+  clearTimeout(homeSearchTimeout);
+  const box = document.getElementById('home-search-results');
+  if (!box) return;
+
+  const lower = val.toLowerCase().trim();
+
+  // Filter known destinations
+  const known = ROC_DESTINATIONS.filter(d =>
+    !lower ||
+    d.name.toLowerCase().includes(lower) ||
+    d.address.toLowerCase().includes(lower)
+  );
+
+  // Also search GTFS stop names if loaded
+  let stopRows = [];
+  if (G.loaded && lower.length > 1) {
+    stopRows = searchStops(val, 5).map(s => ({
+      name: s.name,
+      address: 'Bus stop · ' + s.dist ? '' : '',
+      routes: [],
+      isStop: true,
+      lat: s.lat,
+      lon: s.lon,
+      sid: s.sid,
+    }));
+  }
+
+  const combined = [...known.slice(0, 6), ...stopRows.slice(0, 4)];
+
+  if (!combined.length && lower.length < 2) {
+    box.style.display = 'none';
+    return;
+  }
+
+  box.style.display = 'block';
+
+  if (!combined.length) {
+    // Trigger Nominatim after debounce
+    box.innerHTML = `<div style="padding:9px 13px;font-size:11px;color:#94A3B8;">Searching Rochester...</div>`;
+    homeSearchTimeout = setTimeout(() => nominatimHomeSearch(val), 600);
+    return;
+  }
+
+  renderHomeSearchResults(combined);
+
+  // Also trigger nominatim in background for more results
+  if (lower.length > 2) {
+    homeSearchTimeout = setTimeout(() => nominatimHomeSearch(val), 800);
+  }
+}
+
+async function nominatimHomeSearch(val) {
+  const box = document.getElementById('home-search-results');
+  if (!box || !document.getElementById('home-search-input')) return;
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val + ' Rochester NY')}&format=json&limit=5&countrycodes=us&viewbox=-77.85,43.25,-77.45,43.02&bounded=1`;
+    const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+    const data = await res.json();
+    if (!data.length) return;
+
+    const geoResults = data.map(r => ({
+      name: r.display_name.split(',')[0].trim(),
+      address: r.display_name.split(',').slice(1,3).join(',').trim(),
+      routes: [],
+      isGeo: true,
+      lat: parseFloat(r.lat),
+      lon: parseFloat(r.lon),
+    }));
+
+    // Merge with known (avoid dupes)
+    const lower = val.toLowerCase();
+    const known = ROC_DESTINATIONS.filter(d => d.name.toLowerCase().includes(lower)).slice(0,4);
+    renderHomeSearchResults([...known, ...geoResults].slice(0, 8));
+  } catch(e) { /* offline — use known results only */ }
+}
+
+function renderHomeSearchResults(items) {
+  const box = document.getElementById('home-search-results');
+  if (!box) return;
+
+  box.style.display = 'block';
+  box.innerHTML = items.map(p => {
+    const routeBadges = (p.routes||[]).slice(0,3).map(r =>
+      `<span style="background:${RTS_ROUTES[r]?.color||'#1A56DB'};color:white;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:700;margin-left:2px;">${r}</span>`
+    ).join('');
+    const icon = p.isStop
+      ? `<svg width="11" height="13" viewBox="0 0 11 13" fill="none" style="flex-shrink:0;"><rect x="3" y="0" width="5" height="9" rx="1.5" fill="#16A34A"/><rect x="0" y="9" width="11" height="4" rx="1" fill="#0F172A"/></svg>`
+      : `<svg width="11" height="13" viewBox="0 0 11 13" fill="none" style="flex-shrink:0;"><path d="M5.5 0.5C3.3 0.5 1.5 2.3 1.5 4.5c0 3 4 8 4 8s4-5 4-8C9.5 2.3 7.7 0.5 5.5 0.5z" fill="#1A56DB"/><circle cx="5.5" cy="4.5" r="1.6" fill="white"/></svg>`;
+
+    return `<div onclick="selectHomeResult('${p.name.replace(/'/g,"\\'")}',${p.lat||'null'},${p.lon||'null'})"
+      style="display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.04);">
+      ${icon}
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:500;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
+        <div style="font-size:10px;color:#94A3B8;">${p.address||''}</div>
+      </div>
+      <div>${routeBadges}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectHomeResult(name, lat, lon) {
+  // Close search UI
+  const box = document.getElementById('home-search-results');
+  const input = document.getElementById('home-search-input');
+  if (box) box.style.display = 'none';
+  if (input) { input.value = name; input.blur(); }
+
+  // Set as destination in plan screen
+  planDestGeo = lat && lon ? { lat, lon, name } : null;
+  selectedDestination = name;
+
+  const planTo = document.getElementById('plan-to');
+  if (planTo) { planTo.value = name; }
+
+  // Navigate to plan screen and search
+  showScreen('plan', document.querySelector('.nav-btn[onclick*="plan"]'));
+
+  // If we have coords, also show nearest stop immediately
+  if (lat && lon) {
+    setTimeout(() => {
+      doPlanSearch();
+      showNearestStopBanner(lat, lon, name);
+    }, 300);
+  } else {
+    setTimeout(() => doPlanSearch(), 300);
+  }
+}
+
+function confirmHomeSearch() {
+  const val = document.getElementById('home-search-input')?.value?.trim();
+  if (val) selectHomeResult(val, null, null);
+}
+
+function homeUseMyLocation() {
+  if (!navigator.geolocation) { showToast('Geolocation not available', '#D97706'); return; }
+  const input = document.getElementById('home-search-input');
+  if (input) input.placeholder = 'Getting location...';
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    planOriginGeo = { lat, lon, name: 'My location' };
+    const fromEl = document.getElementById('plan-from');
+    if (fromEl) fromEl.value = 'My location';
+    if (input) { input.value = ''; input.placeholder = 'Search destination...'; }
+    // Show nearest stops on home screen
+    showNearestStopsHome(lat, lon);
+  }, () => {
+    if (input) input.placeholder = 'Search destination...';
+    showToast('Could not get location', '#D97706');
+  });
+}
+
+/* ===== NEAREST STOP FEATURE ===== */
+async function showNearestStopBanner(destLat, destLon, destName) {
+  // Make sure GTFS is loaded
+  if (!G.loaded) {
+    const ok = await loadGTFS(msg => {});
+    if (!ok) return;
+  }
+  const nearby = nearbyStops(destLat, destLon, 0.4, 3);
+  if (!nearby.length) return;
+
+  const closest = nearby[0];
+  const walkMin = walkingMins(destLat, destLon, closest.lat, closest.lon);
+
+  // Find which routes serve this stop
+  const routesAtStop = [];
+  for (const [rid, stopSet] of Object.entries(G.routeStops)) {
+    const set = stopSet instanceof Set ? stopSet : new Set(stopSet);
+    if (set.has(closest.sid)) {
+      const r = G.routes[rid];
+      if (r) routesAtStop.push({ rid, ...r });
+    }
+  }
+
+  showToast(`Closest stop: ${closest.name} · ${walkMin} min walk`, '#1A56DB');
+}
+
+async function showNearestStopsHome(lat, lon) {
+  showToast('Finding nearest RTS stops…', '#1A56DB');
+  if (!G.loaded) {
+    const ok = await loadGTFS(msg => {});
+    if (!ok) {
+      showToast('Could not load stop data', '#D97706');
+      return;
+    }
+  }
+  const nearby = nearbyStops(lat, lon, 1.0, 5);
+  if (!nearby.length) { showToast('No stops found nearby', '#D97706'); return; }
+
+  openModal(`
+    <div class="modal-title">Nearest RTS stops</div>
+    <div class="modal-desc">Based on your current location</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+      ${nearby.map((s, i) => {
+        const walkMin = walkingMins(lat, lon, s.lat, s.lon);
+        const routesHere = [];
+        for (const [rid, stopSet] of Object.entries(G.routeStops)) {
+          const set = stopSet instanceof Set ? stopSet : new Set(stopSet);
+          if (set.has(s.sid)) {
+            const r = G.routes[rid];
+            if (r) routesHere.push({ rid, short: r.short, color: r.color });
+          }
+        }
+        return `<div onclick="closeModal();pickNearbyStop('${s.name.replace(/'/g,"\\'")}',${s.lat},${s.lon})"
+          style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:${i===0?'#EBF0FF':'rgba(255,255,255,0.04)'};border:1px solid ${i===0?'rgba(26,86,219,0.3)':'rgba(255,255,255,0.07)'};border-radius:10px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:8px;background:${i===0?'#1A56DB':'rgba(255,255,255,0.1)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="0" width="6" height="9" rx="1.5" fill="white"/><rect x="0" y="9" width="14" height="5" rx="1.5" fill="white" opacity="0.7"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:500;color:${i===0?'#1A56DB':'white'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</div>
+            <div style="font-size:10px;color:${i===0?'#3B6FE8':'rgba(255,255,255,0.45)'};">${walkMin} min walk · ${(s.dist*1000).toFixed(0)}m away</div>
+          </div>
+          <div style="display:flex;gap:3px;flex-shrink:0;">
+            ${routesHere.slice(0,4).map(r=>`<span style="background:${r.color};color:white;font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;">${r.short}</span>`).join('')}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <button onclick="closeModal()" class="modal-btn-secondary" style="width:100%;">Close</button>
+  `);
+}
+
+function pickNearbyStop(stopName, lat, lon) {
+  // Set as origin for trip planning
+  planOriginGeo = { lat, lon, name: stopName };
+  const fromEl = document.getElementById('plan-from');
+  if (fromEl) fromEl.value = stopName;
+  showScreen('plan', document.querySelector('.nav-btn[onclick*="plan"]'));
+  showToast(`Starting from: ${stopName}`, '#16A34A');
+}
+
+// Close home search when clicking outside
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('home-search-wrap');
+  const results = document.getElementById('home-search-results');
+  if (wrap && results && !wrap.contains(e.target)) {
+    results.style.display = 'none';
+  }
+}, true);
+
+/* ===== onPlanToFocus ===== */
+function onPlanToFocus() {
+  // Show default suggestions when field gets focus
+  const val = document.getElementById('plan-to')?.value || '';
+  showSuggestionsFor('to', val);
 }
 
 /* ===== WIRE UP ALL BUTTONS ===== */
