@@ -1339,44 +1339,98 @@ body {
 
       <!-- ===== TRACK SCREEN ===== -->
       <div class="phone-screen" id="screen-track" style="display:none;">
-        <div class="p-statusbar"><span class="live-clock">9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
+        <div class="p-statusbar" id="track-statusbar"><span class="live-clock">9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
         <div class="p-screen">
-          <div class="track-map">
-            <svg width="100%" height="100%" viewBox="0 0 340 220" preserveAspectRatio="xMidYMid slice">
+
+          <!-- Dynamic map area -->
+          <div class="track-map" id="track-map-area">
+            <svg id="track-map-svg" width="100%" height="100%" viewBox="0 0 340 220" preserveAspectRatio="xMidYMid slice">
               <rect width="340" height="220" fill="#BFDBFE"/>
-              <rect y="104" width="340" height="6" fill="rgba(255,255,255,0.85)"/>
-              <rect x="118" y="0" width="6" height="220" fill="rgba(255,255,255,0.85)"/>
-              <rect x="230" y="0" width="6" height="220" fill="rgba(255,255,255,0.65)"/>
-              <rect y="55" width="340" height="4" fill="rgba(255,255,255,0.5)"/>
-              <line x1="30" y1="107" x2="210" y2="107" stroke="#1A56DB" stroke-width="3" stroke-dasharray="0"/>
-              <circle cx="60" cy="107" r="5" fill="white" stroke="#94A3B8" stroke-width="1.5"/>
-              <circle cx="118" cy="107" r="5" fill="white" stroke="#1A56DB" stroke-width="1.5"/>
-              <circle cx="175" cy="107" r="5" fill="white" stroke="#1A56DB" stroke-width="1.5"/>
-              <circle cx="232" cy="107" r="5" fill="white" stroke="#94A3B8" stroke-width="1.5"/>
-              <circle cx="105" cy="107" r="9" fill="#1A56DB" stroke="white" stroke-width="2.5"/>
-              <rect x="95" y="88" width="20" height="11" rx="4" fill="#1A56DB"/>
-              <text x="105" y="96.5" font-size="7" font-weight="700" fill="white" text-anchor="middle" font-family="sans-serif">7</text>
-              <circle cx="168" cy="107" r="7" fill="#16A34A" stroke="white" stroke-width="2.5"/>
-              <polygon points="232,90 225,104 239,104" fill="#1A56DB"/>
+              <!-- roads injected by JS -->
+              <g id="track-roads"></g>
+              <!-- route line -->
+              <line id="track-route-line" x1="30" y1="110" x2="310" y2="110" stroke="#1A56DB" stroke-width="3" opacity="0"/>
+              <!-- stop dots -->
+              <g id="track-stop-dots"></g>
+              <!-- animated bus dot -->
+              <g id="track-bus-group" opacity="0">
+                <circle id="track-bus-dot" cx="50" cy="110" r="10" fill="#1A56DB" stroke="white" stroke-width="2.5"/>
+                <rect id="track-bus-label-bg" x="35" y="90" width="30" height="14" rx="4" fill="#1A56DB"/>
+                <text id="track-bus-label" x="50" y="100" font-size="8" font-weight="700" fill="white" text-anchor="middle" font-family="sans-serif">7</text>
+              </g>
+              <!-- you dot -->
+              <circle id="track-you-dot" cx="170" cy="110" r="7" fill="#16A34A" stroke="white" stroke-width="2.5" opacity="0"/>
+              <!-- dest pin -->
+              <g id="track-dest-pin" opacity="0">
+                <polygon points="290,88 283,103 297,103" fill="#1A56DB"/>
+                <rect x="279" y="72" width="22" height="14" rx="3" fill="#1A56DB"/>
+                <text x="290" y="82" font-size="7" font-weight="700" fill="white" text-anchor="middle" font-family="sans-serif">DEST</text>
+              </g>
             </svg>
           </div>
-          <div class="track-card">
+
+          <!-- Slide-up card -->
+          <div class="track-card" id="track-card-main" style="flex:1;overflow-y:auto;scrollbar-width:none;">
             <div class="tc-pill"></div>
-            <div class="tc-badge"><div class="tc-num">7</div><span class="tc-name">Monroe Ave</span></div>
-            <div class="tc-heading">Bus arriving in 3 min</div>
-            <div class="tc-sub">Stop: University Ave & Elmwood</div>
-            <div class="stops-tl">
-              <div class="stop-row"><div class="sdw"><div class="sd done"></div><div class="sl-line done"></div></div><span class="sn">Park Ave & Alexander</span></div>
-              <div class="stop-row"><div class="sdw"><div class="sd done"></div><div class="sl-line done"></div></div><span class="sn">Monroe & Goodman</span></div>
-              <div class="stop-row"><div class="sdw"><div class="sd you"></div><div class="sl-line"></div></div><div><span class="sn active">University Ave & Elmwood</span><span class="you-tag">You're here</span></div></div>
-              <div class="stop-row"><div class="sdw"><div class="sd"></div></div><span class="sn">Mt. Hope & Elmwood</span></div>
+
+            <!-- Empty state (shown when no trip selected) -->
+            <div id="track-empty-state">
+              <div style="text-align:center;padding:16px 0 8px;">
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style="margin:0 auto 10px;display:block;opacity:0.2;">
+                  <rect x="4" y="12" width="36" height="22" rx="4" fill="#1A56DB"/>
+                  <circle cx="12" cy="34" r="4" fill="#0C447C"/>
+                  <circle cx="32" cy="34" r="4" fill="#0C447C"/>
+                  <path d="M4 22h36" stroke="white" stroke-width="1.5"/>
+                  <path d="M12 12V8h20v4" stroke="#1A56DB" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+                <div style="font-size:13px;font-weight:500;color:#94A3B8;margin-bottom:4px;">No active trip</div>
+                <div style="font-size:11px;color:#CBD5E1;margin-bottom:16px;">Plan a trip to start tracking</div>
+              </div>
+
+              <!-- Manual route picker -->
+              <div style="margin:0 0 10px;">
+                <div style="font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Or track a route now</div>
+                <div id="track-route-picker" style="display:flex;flex-direction:column;gap:6px;"></div>
+              </div>
             </div>
-            <div class="eta-bar">
-              <div><div class="eta-l">Arriving at destination</div><div class="eta-t">12 min</div></div>
-              <button class="eta-btn">Share ETA</button>
+
+            <!-- Active trip state (hidden until trip started) -->
+            <div id="track-active-state" style="display:none;">
+              <div class="tc-badge" id="track-badge">
+                <div class="tc-num" id="track-route-num">7</div>
+                <span class="tc-name" id="track-route-name">Monroe Ave</span>
+              </div>
+              <div class="tc-heading" id="track-heading">Loading...</div>
+              <div class="tc-sub" id="track-sub"></div>
+
+              <!-- Progress bar -->
+              <div style="background:#F1F5F9;border-radius:4px;height:5px;margin-bottom:14px;overflow:hidden;">
+                <div id="track-progress-bar" style="background:#1A56DB;height:5px;border-radius:4px;width:0%;transition:width 1s linear;"></div>
+              </div>
+
+              <!-- Stop timeline -->
+              <div class="stops-tl" id="track-stops-tl"></div>
+
+              <!-- ETA bar -->
+              <div class="eta-bar" id="track-eta-bar">
+                <div>
+                  <div class="eta-l" id="track-eta-label">Arriving at destination</div>
+                  <div class="eta-t" id="track-eta-time">--:--</div>
+                </div>
+                <button class="eta-btn" onclick="openShareETAFromTrack()">Share ETA</button>
+              </div>
+
+              <!-- Next departures on same route -->
+              <div id="track-next-deps" style="margin-top:12px;"></div>
+
+              <!-- Cancel trip button -->
+              <div style="text-align:center;margin:12px 0;">
+                <button onclick="cancelActiveTrip()" style="background:transparent;border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:8px 18px;font-size:12px;color:#64748B;font-family:var(--fn);cursor:pointer;">End trip tracking</button>
+              </div>
             </div>
           </div>
         </div>
+
         <div class="p-bn">
           <div class="p-ni" onclick="showScreen('home',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 8.5L10 2l8 6.5V18a1 1 0 01-1 1H3a1 1 0 01-1-1V8.5z" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="p-nl">Home</span></div>
           <div class="p-ni" onclick="showScreen('plan',null)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5C7 1.5 4.5 4 4.5 7c0 4.2 5.5 10 5.5 10s5.5-5.8 5.5-10c0-3-2.5-5.5-5.5-5.5z" stroke="#94A3B8" stroke-width="1.5"/><circle cx="10" cy="7" r="2" stroke="#94A3B8" stroke-width="1.3"/></svg><span class="p-nl">Plan</span></div>
@@ -2897,7 +2951,7 @@ function showTripDetail(tJson, walkToBoard, walkToDest, originName, destName) {
     </div>
     <div style="max-height:280px;overflow-y:auto;margin-bottom:12px;">${stepsHtml}</div>
     <div style="display:flex;gap:8px;">
-      <button onclick="closeModal();showScreen('track',document.querySelector('.nav-btn[onclick*=\\'track\\']'))"
+      <button onclick="(() => { try { startTripTracking(JSON.parse(tJson), walkToBoard, walkToDest, originName, destName); } catch(e) { showToast('Could not start tracking', \'#D97706\'); } })()"
         style="flex:1;background:#1A56DB;color:white;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:600;font-family:var(--fn);cursor:pointer;">Start trip</button>
       <button onclick="closeModal();openShareETA('${fmtMins(t.arriveMins+walkToDest)}','${destName.slice(0,30).replace(/'/g,"\\'")}')"
         style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 14px;font-size:12px;cursor:pointer;">Share</button>
@@ -3096,7 +3150,670 @@ function showScreen(id, btn) {
 
   document.querySelector('.phone-frame').style.animation = 'none';
   setTimeout(() => { document.querySelector('.phone-frame').style.animation = 'fade-in-up 0.3s ease-out'; }, 10);
+
+  // Re-render live tracking when switching to track screen
+  if (id === 'track') {
+    setTimeout(() => renderTrackScreen(), 100);
+  }
 }
+
+/* ===== SCHEDULE-BASED TRACKING ENGINE ===== */
+// Simulates real-time bus position using GTFS schedule data.
+// Since we don't have live GPS, we interpolate the bus position
+// between stops based on elapsed time since departure.
+
+let activeTrip = null;      // Currently tracked trip state
+let trackInterval = null;   // setInterval handle for live updates
+let trackMapStops = [];     // Stop positions on the SVG map
+
+// ── State object shape ────────────────────────────────────────────
+// activeTrip = {
+//   tid, route_id, routeShort, routeName, routeColor,
+//   headsign, sts (sorted stop_times),
+//   boardIdx, alightIdx,         ← user's board/alight stop indices
+//   departMins, arriveMins,      ← scheduled times in mins-past-midnight
+//   originName, destName,
+//   walkToBoard, walkToDest,
+//   startedAt: Date,             ← wall-clock when trip was started
+//   scheduledDepartWall: Date,   ← wall-clock equivalent of departMins
+// }
+
+/* ─── Start tracking a trip from showTripDetail ─────────────────── */
+function startTripTracking(tripData, walkToBoard, walkToDest, originName, destName) {
+  // tripData is the plain trip object from findDirectTrips / findTransferTrips
+  closeModal();
+
+  if (tripData.type === 'transfer') {
+    // For transfers, track leg 1 first
+    startTripTracking(tripData.legs[0], walkToBoard, 2, originName, tripData.legs[0].alightStop);
+    showToast('Tracking leg 1 — you\'ll be prompted to switch at the transfer stop', '#1A56DB');
+    return;
+  }
+
+  const sts = G.stopTimes[tripData.tid];
+  if (!sts || !sts.length) {
+    showToast('Could not load stop times for this trip', '#D97706');
+    return;
+  }
+
+  // Find board and alight indices
+  const boardIdx  = sts.findIndex(s => s.stop_id === tripData.boardStopId);
+  const alightIdx = sts.findIndex(s => s.stop_id === tripData.alightStopId);
+  if (boardIdx < 0 || alightIdx < 0) {
+    showToast('Stop data not found — cannot track', '#D97706');
+    return;
+  }
+
+  // Calculate wall-clock departure time
+  const now = new Date();
+  const nowMins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+  const schedDep = tripData.departMins; // mins past midnight
+
+  // scheduledDepartWall = now adjusted to the schedule
+  const diffMins = schedDep - nowMins;
+  const scheduledDepartWall = new Date(now.getTime() + diffMins * 60000);
+
+  const route = G.routes[tripData.route_id] || {};
+
+  activeTrip = {
+    tid:                tripData.tid,
+    route_id:           tripData.route_id,
+    routeShort:         tripData.routeShort || route.short || '?',
+    routeName:          tripData.routeName  || route.name  || '',
+    routeColor:         tripData.routeColor || route.color || '#1A56DB',
+    headsign:           tripData.headsign   || '',
+    sts,
+    boardIdx,
+    alightIdx,
+    departMins:         schedDep,
+    arriveMins:         tripData.arriveMins,
+    walkToBoard:        walkToBoard || 0,
+    walkToDest:         walkToDest  || 0,
+    originName:         originName  || 'Origin',
+    destName:           destName    || 'Destination',
+    startedAt:          now,
+    scheduledDepartWall,
+    phase: 'walking',   // 'walking' | 'waiting' | 'riding' | 'arrived'
+  };
+
+  // Navigate to track screen
+  showScreen('track', document.querySelector('.nav-btn[onclick*="track"]'));
+
+  // Render initial state
+  renderTrackScreen();
+
+  // Start live update ticker (every 15 seconds)
+  if (trackInterval) clearInterval(trackInterval);
+  trackInterval = setInterval(updateTrackTick, 15000);
+}
+
+/* ─── Called from the plan screen's "Start Trip" button ─────────── */
+// Wrapper used by showTripDetail modal
+window._startTripFromModal = function(tJson, walkToBoard, walkToDest, originName, destName) {
+  const t = JSON.parse(tJson);
+  startTripTracking(t, walkToBoard, walkToDest, originName, destName);
+};
+
+/* ─── Cancel tracking ───────────────────────────────────────────── */
+function cancelActiveTrip() {
+  if (trackInterval) { clearInterval(trackInterval); trackInterval = null; }
+  activeTrip = null;
+  renderTrackScreen();
+  showToast('Trip tracking ended', '#64748B');
+}
+
+/* ─── Current progress computation ─────────────────────────────── */
+function computeTrackState() {
+  if (!activeTrip) return null;
+  const now = new Date();
+  const nowMins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+
+  const { sts, boardIdx, alightIdx, departMins, arriveMins, walkToBoard, walkToDest } = activeTrip;
+
+  // Phase: walking to stop
+  const walkEndMins = departMins - 1; // arrive at stop ~1 min before bus
+  if (nowMins < walkEndMins - walkToBoard) {
+    const minsUntilDep = Math.round(departMins - nowMins);
+    return {
+      phase: 'walking',
+      minsUntilDep,
+      boardStop: G.stops[sts[boardIdx].stop_id]?.name || '',
+      currentStopIdx: boardIdx,
+      progressPct: 0,
+    };
+  }
+
+  // Phase: waiting at stop
+  if (nowMins < departMins) {
+    const waitLeft = Math.round(departMins - nowMins);
+    return {
+      phase: 'waiting',
+      waitLeft,
+      boardStop: G.stops[sts[boardIdx].stop_id]?.name || '',
+      currentStopIdx: boardIdx,
+      progressPct: 0,
+    };
+  }
+
+  // Phase: riding
+  if (nowMins < arriveMins) {
+    // Find which stop the bus is currently at/between
+    let currentIdx = boardIdx;
+    for (let i = boardIdx; i <= alightIdx; i++) {
+      if (sts[i].arr <= nowMins) currentIdx = i;
+      else break;
+    }
+
+    const totalRideMins = arriveMins - departMins;
+    const elapsedMins   = nowMins - departMins;
+    const progressPct   = Math.min(98, (elapsedMins / totalRideMins) * 100);
+
+    // Interpolate bus position between current and next stop
+    const nextIdx = Math.min(currentIdx + 1, alightIdx);
+    const segStart = sts[currentIdx].dep;
+    const segEnd   = sts[nextIdx].dep;
+    const segPct   = segEnd > segStart ? Math.min(1, (nowMins - segStart) / (segEnd - segStart)) : 0;
+
+    const minsToAlight = Math.round(arriveMins - nowMins);
+    const stopsLeft    = alightIdx - currentIdx;
+
+    return {
+      phase: 'riding',
+      currentIdx,
+      nextIdx,
+      segPct,
+      progressPct,
+      minsToAlight,
+      stopsLeft,
+      currentStop: G.stops[sts[currentIdx].stop_id]?.name || '',
+      alightStop:  G.stops[sts[alightIdx].stop_id]?.name  || '',
+    };
+  }
+
+  // Phase: arrived (within walkToDest window)
+  if (nowMins < arriveMins + walkToDest + 5) {
+    return {
+      phase: 'arrived',
+      minsAgo: Math.round(nowMins - arriveMins),
+      progressPct: 100,
+    };
+  }
+
+  // Trip is fully over
+  return { phase: 'done', progressPct: 100 };
+}
+
+/* ─── Render the full track screen ─────────────────────────────── */
+function renderTrackScreen() {
+  const emptyState  = document.getElementById('track-empty-state');
+  const activeState = document.getElementById('track-active-state');
+
+  if (!activeTrip) {
+    if (emptyState)  emptyState.style.display  = 'block';
+    if (activeState) activeState.style.display = 'none';
+    renderTrackRoutePickerIfReady();
+    renderTrackMapIdle();
+    return;
+  }
+
+  if (emptyState)  emptyState.style.display  = 'none';
+  if (activeState) activeState.style.display = 'block';
+
+  const state = computeTrackState();
+  if (!state) return;
+
+  // Badge
+  const numEl  = document.getElementById('track-route-num');
+  const nameEl = document.getElementById('track-route-name');
+  const badge  = document.getElementById('track-badge');
+  if (numEl)  numEl.textContent  = activeTrip.routeShort;
+  if (nameEl) nameEl.textContent = activeTrip.routeName;
+  if (badge && activeTrip.routeColor) {
+    const numDiv = badge.querySelector('.tc-num');
+    if (numDiv) numDiv.style.background = activeTrip.routeColor;
+  }
+
+  // Heading & sub
+  const heading = document.getElementById('track-heading');
+  const sub     = document.getElementById('track-sub');
+
+  if (state.phase === 'walking') {
+    if (heading) heading.textContent = `Walk to stop · ${state.minsUntilDep} min to departure`;
+    if (sub) sub.textContent = `Board at: ${state.boardStop}`;
+  } else if (state.phase === 'waiting') {
+    if (heading) heading.textContent = state.waitLeft <= 1 ? 'Bus arriving now!' : `Bus arriving in ${state.waitLeft} min`;
+    if (sub) sub.textContent = `Waiting at: ${state.boardStop}`;
+  } else if (state.phase === 'riding') {
+    if (heading) heading.textContent = `${state.stopsLeft} stop${state.stopsLeft===1?'':'s'} to go`;
+    if (sub) sub.textContent = `On board · alighting at ${state.alightStop}`;
+  } else if (state.phase === 'arrived') {
+    if (heading) heading.textContent = 'You have arrived!';
+    if (sub) sub.textContent = state.minsAgo === 0 ? 'Just arrived' : `Arrived ${state.minsAgo} min ago`;
+  } else {
+    if (heading) heading.textContent = 'Trip complete';
+    if (sub) sub.textContent = '';
+  }
+
+  // Progress bar
+  const bar = document.getElementById('track-progress-bar');
+  if (bar) bar.style.width = (state.progressPct || 0) + '%';
+  if (bar && activeTrip.routeColor) bar.style.background = activeTrip.routeColor;
+
+  // Stop timeline
+  renderStopsTimeline(state);
+
+  // ETA bar
+  const etaTime  = document.getElementById('track-eta-time');
+  const etaLabel = document.getElementById('track-eta-label');
+  if (etaTime) {
+    if (state.phase === 'arrived' || state.phase === 'done') {
+      etaTime.textContent = 'Arrived';
+      if (etaLabel) etaLabel.textContent = activeTrip.destName.slice(0,25);
+    } else {
+      const totalArrival = activeTrip.arriveMins + activeTrip.walkToDest;
+      etaTime.textContent = fmtMins(totalArrival);
+      if (etaLabel) etaLabel.textContent = `Arrive at ${activeTrip.destName.slice(0,20)}`;
+    }
+  }
+
+  // Color eta bar
+  const etaBar = document.getElementById('track-eta-bar');
+  if (etaBar && activeTrip.routeColor) etaBar.style.background = activeTrip.routeColor;
+
+  // Next departures
+  renderNextDepartures();
+
+  // SVG map
+  renderTrackMap(state);
+}
+
+/* ─── Stop timeline ─────────────────────────────────────────────── */
+function renderStopsTimeline(state) {
+  const tl = document.getElementById('track-stops-tl');
+  if (!tl || !activeTrip) return;
+
+  const { sts, boardIdx, alightIdx } = activeTrip;
+  // Show a window of stops: 2 before current, current, all remaining up to alight
+  const currentIdx = state.currentIdx ?? boardIdx;
+  const windowStart = Math.max(boardIdx, currentIdx - 2);
+  const windowEnd   = Math.min(alightIdx, currentIdx + 6);
+
+  let html = '';
+
+  // Walk to stop row (before board)
+  if (state.phase === 'walking' || state.phase === 'waiting') {
+    html += `<div class="stop-row">
+      <div class="sdw">
+        <div class="sd ${state.phase==='waiting'?'done':''}" style="border-color:${state.phase==='waiting'?activeTrip.routeColor:'#CBD5E1'};${state.phase==='waiting'?'background:'+activeTrip.routeColor:''}"></div>
+        <div class="sl-line"></div>
+      </div>
+      <div>
+        <span class="sn" style="${state.phase==='waiting'?'color:#0F172A;font-weight:500;':''}">${activeTrip.originName.slice(0,35)}</span>
+        <span style="font-size:9px;background:${state.phase==='waiting'?'#DCFCE7':'#FEF3C7'};color:${state.phase==='waiting'?'#16A34A':'#D97706'};padding:1px 7px;border-radius:8px;font-weight:600;margin-left:5px;display:inline-block;">
+          ${state.phase==='waiting'?'At stop':'Walking'}
+        </span>
+      </div>
+    </div>`;
+  }
+
+  for (let i = windowStart; i <= windowEnd; i++) {
+    const stop  = G.stops[sts[i].stop_id];
+    const sname = stop?.name || 'Stop';
+    const dep   = fmtMins(sts[i].dep);
+
+    const isPast   = i < currentIdx || state.phase === 'arrived';
+    const isCurrent = i === currentIdx && state.phase === 'riding';
+    const isBoard  = i === boardIdx;
+    const isAlight = i === alightIdx;
+    const isLast   = i === windowEnd;
+
+    const dotClass = isPast ? 'done' : isCurrent ? 'you' : '';
+    const dotStyle = isCurrent
+      ? `background:${activeTrip.routeColor};border-color:${activeTrip.routeColor};`
+      : isPast
+        ? `background:${activeTrip.routeColor};border-color:${activeTrip.routeColor};`
+        : `border-color:${activeTrip.routeColor};`;
+    const lineClass = isPast ? 'done' : '';
+    const lineStyle = isPast ? `background:${activeTrip.routeColor};` : '';
+
+    let badge = '';
+    if (isBoard && state.phase !== 'riding') badge = `<span style="font-size:9px;background:#EBF0FF;color:#1A56DB;padding:1px 7px;border-radius:8px;font-weight:600;margin-left:5px;display:inline-block;">Board</span>`;
+    if (isCurrent) badge = `<span class="you-tag" style="background:${activeTrip.routeColor}20;color:${activeTrip.routeColor};">Bus here</span>`;
+    if (isAlight && !isPast) badge = `<span style="font-size:9px;background:#DCFCE7;color:#16A34A;padding:1px 7px;border-radius:8px;font-weight:600;margin-left:5px;display:inline-block;">Get off</span>`;
+
+    html += `<div class="stop-row">
+      <div class="sdw">
+        <div class="sd ${dotClass}" style="${dotStyle}"></div>
+        ${!isLast ? `<div class="sl-line ${lineClass}" style="${lineStyle}"></div>` : ''}
+      </div>
+      <div style="display:flex;align-items:baseline;gap:0;flex-wrap:wrap;">
+        <span class="sn ${isCurrent||isAlight?'active':''}" style="${isCurrent?'font-weight:500;color:#0F172A;':''}">${sname}</span>
+        ${badge}
+        <span style="font-size:9px;color:#CBD5E1;margin-left:auto;padding-left:8px;">${dep}</span>
+      </div>
+    </div>`;
+  }
+
+  // Show "... X more stops" if truncated
+  if (windowEnd < alightIdx) {
+    const more = alightIdx - windowEnd;
+    html += `<div style="padding-left:22px;font-size:10px;color:#94A3B8;padding-bottom:8px;">${more} more stop${more===1?'':'s'}…</div>`;
+  }
+
+  tl.innerHTML = html;
+}
+
+/* ─── Next departures on same route ─────────────────────────────── */
+function renderNextDepartures() {
+  const el = document.getElementById('track-next-deps');
+  if (!el || !activeTrip) return;
+
+  const nowMins = new Date().getHours()*60 + new Date().getMinutes();
+  const rid = activeTrip.route_id;
+  const boardSid = activeTrip.sts[activeTrip.boardIdx]?.stop_id;
+  if (!boardSid) { el.innerHTML = ''; return; }
+
+  // Find next 3 departures from the same board stop, same route
+  const upcoming = [];
+  for (const [tid, trip] of Object.entries(G.trips)) {
+    if (trip.route_id !== rid || !serviceRunsToday(trip.service_id)) continue;
+    const tSts = G.stopTimes[tid];
+    if (!tSts) continue;
+    const stopEntry = tSts.find(s => s.stop_id === boardSid && s.dep > nowMins + 5);
+    if (stopEntry) upcoming.push({ dep: stopEntry.dep, headsign: trip.headsign });
+  }
+  upcoming.sort((a,b) => a.dep - b.dep);
+  const next = upcoming.slice(0,3);
+
+  if (!next.length) { el.innerHTML = ''; return; }
+
+  el.innerHTML = `
+    <div style="font-size:10px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Next Route ${activeTrip.routeShort} from this stop</div>
+    <div style="background:#F8FAFF;border-radius:11px;overflow:hidden;border:1px solid rgba(0,0,0,0.06);">
+      ${next.map((n,i) => `
+        <div style="display:flex;align-items:center;padding:8px 12px;${i>0?'border-top:1px solid rgba(0,0,0,0.05)':''};gap:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:${activeTrip.routeColor};flex-shrink:0;"></div>
+          <span style="font-size:12px;font-weight:500;color:#0F172A;flex:1;">${fmtMins(n.dep)}</span>
+          <span style="font-size:10px;color:#94A3B8;">${Math.round(n.dep - nowMins)} min</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ─── SVG map rendering ─────────────────────────────────────────── */
+function renderTrackMap(state) {
+  if (!activeTrip) return;
+  const { sts, boardIdx, alightIdx, routeColor } = activeTrip;
+
+  // Build a proportional x-position for each stop on the 340px wide SVG
+  const Y = 110;
+  const X_START = 30, X_END = 310;
+  const totalStops = alightIdx - boardIdx + 1;
+
+  // Map stop indices to x positions
+  const stopX = (idx) => {
+    const rel = (idx - boardIdx) / Math.max(1, totalStops - 1);
+    return Math.round(X_START + rel * (X_END - X_START));
+  };
+
+  // Route line
+  const routeLine = document.getElementById('track-route-line');
+  if (routeLine) {
+    routeLine.setAttribute('x1', X_START);
+    routeLine.setAttribute('x2', X_END);
+    routeLine.setAttribute('y1', Y);
+    routeLine.setAttribute('y2', Y);
+    routeLine.setAttribute('stroke', routeColor);
+    routeLine.setAttribute('opacity', '0.9');
+  }
+
+  // Stop dots
+  const stopDotsG = document.getElementById('track-stop-dots');
+  if (stopDotsG) {
+    const currentIdx = state?.currentIdx ?? boardIdx;
+    let dotsHtml = '';
+    for (let i = boardIdx; i <= alightIdx; i++) {
+      const x = stopX(i);
+      const isPast = i < currentIdx;
+      const isAlight = i === alightIdx;
+      dotsHtml += `<circle cx="${x}" cy="${Y}" r="${isAlight?6:4}"
+        fill="${isPast ? routeColor : 'white'}"
+        stroke="${isAlight ? '#16A34A' : routeColor}"
+        stroke-width="${isAlight?2:1.5}"/>`;
+    }
+    stopDotsG.innerHTML = dotsHtml;
+  }
+
+  // Bus dot position (interpolated between current and next stop)
+  const busGroup = document.getElementById('track-bus-group');
+  const busDot   = document.getElementById('track-bus-dot');
+  const busLabelBg = document.getElementById('track-bus-label-bg');
+  const busLabel = document.getElementById('track-bus-label');
+
+  if (busGroup && state) {
+    if (state.phase === 'riding') {
+      busGroup.setAttribute('opacity', '1');
+      const ci = state.currentIdx ?? boardIdx;
+      const ni = state.nextIdx   ?? Math.min(ci+1, alightIdx);
+      const x1 = stopX(ci);
+      const x2 = stopX(ni);
+      const bx = Math.round(x1 + (x2 - x1) * (state.segPct || 0));
+      busDot.setAttribute('cx', bx);
+      busDot.setAttribute('cy', Y);
+      busDot.setAttribute('fill', routeColor);
+      if (busLabelBg) {
+        busLabelBg.setAttribute('x', bx - 15);
+        busLabelBg.setAttribute('y', Y - 24);
+        busLabelBg.setAttribute('fill', routeColor);
+      }
+      if (busLabel) {
+        busLabel.setAttribute('x', bx);
+        busLabel.setAttribute('y', Y - 13);
+        busLabel.textContent = activeTrip.routeShort;
+      }
+    } else if (state.phase === 'waiting') {
+      busGroup.setAttribute('opacity', '1');
+      const bx = stopX(boardIdx);
+      busDot.setAttribute('cx', bx);
+      busDot.setAttribute('cy', Y);
+      busDot.setAttribute('fill', routeColor);
+      if (busLabelBg) { busLabelBg.setAttribute('x', bx-15); busLabelBg.setAttribute('y', Y-24); busLabelBg.setAttribute('fill', routeColor); }
+      if (busLabel)   { busLabel.setAttribute('x', bx); busLabel.setAttribute('y', Y-13); busLabel.textContent = activeTrip.routeShort; }
+    } else {
+      busGroup.setAttribute('opacity', '0.3');
+    }
+  }
+
+  // You dot (board stop while walking/waiting, moves off once riding)
+  const youDot = document.getElementById('track-you-dot');
+  if (youDot && state) {
+    if (state.phase === 'walking' || state.phase === 'waiting') {
+      youDot.setAttribute('cx', stopX(boardIdx));
+      youDot.setAttribute('cy', Y);
+      youDot.setAttribute('opacity', '1');
+    } else if (state.phase === 'riding') {
+      youDot.setAttribute('opacity', '0');
+    } else {
+      youDot.setAttribute('cx', X_END);
+      youDot.setAttribute('opacity', '1');
+    }
+  }
+
+  // Destination pin
+  const destPin = document.getElementById('track-dest-pin');
+  if (destPin) {
+    const dx = X_END;
+    destPin.setAttribute('opacity', '1');
+    destPin.querySelector('polygon').setAttribute('points', `${dx},${Y-14} ${dx-7},${Y} ${dx+7},${Y}`);
+    const bg = destPin.querySelector('rect');
+    if (bg) { bg.setAttribute('x', dx-11); bg.setAttribute('y', Y-30); bg.setAttribute('fill', '#16A34A'); }
+    const txt = destPin.querySelector('text');
+    if (txt) { txt.setAttribute('x', dx); txt.setAttribute('y', Y-18); txt.textContent = 'DEST'; }
+  }
+}
+
+function renderTrackMapIdle() {
+  // Reset map to neutral state
+  const line = document.getElementById('track-route-line');
+  if (line) line.setAttribute('opacity', '0.1');
+  const busGroup = document.getElementById('track-bus-group');
+  if (busGroup) busGroup.setAttribute('opacity', '0');
+  const youDot = document.getElementById('track-you-dot');
+  if (youDot) youDot.setAttribute('opacity', '0');
+  const destPin = document.getElementById('track-dest-pin');
+  if (destPin) destPin.setAttribute('opacity', '0');
+  const dots = document.getElementById('track-stop-dots');
+  if (dots) dots.innerHTML = '';
+}
+
+/* ─── Route picker for idle state ───────────────────────────────── */
+function renderTrackRoutePickerIfReady() {
+  const picker = document.getElementById('track-route-picker');
+  if (!picker) return;
+
+  // Show top routes with next departure times
+  const nowMins = new Date().getHours()*60 + new Date().getMinutes();
+  const topRoutes = ['7','35','19','4','10','1'];
+
+  if (!G.loaded) {
+    picker.innerHTML = `<div style="font-size:11px;color:#94A3B8;text-align:center;padding:8px 0;">
+      Plan a trip first to enable tracking,<br>or load schedules from the Plan screen.
+    </div>`;
+    return;
+  }
+
+  let html = '';
+  for (const rnum of topRoutes) {
+    // Find route_id matching this short name
+    const rid = Object.keys(G.routes).find(id => G.routes[id].short === rnum);
+    if (!rid) continue;
+    const route = G.routes[rid];
+
+    // Get next departure across all trips for this route
+    let nextDep = null;
+    for (const [tid, trip] of Object.entries(G.trips)) {
+      if (trip.route_id !== rid || !serviceRunsToday(trip.service_id)) continue;
+      const tSts = G.stopTimes[tid];
+      if (!tSts || !tSts.length) continue;
+      const firstDep = tSts[0].dep;
+      if (firstDep > nowMins && (!nextDep || firstDep < nextDep.dep)) {
+        nextDep = { dep: firstDep, tid, sts: tSts, trip };
+      }
+    }
+
+    if (!nextDep) continue;
+    const waitMins = Math.round(nextDep.dep - nowMins);
+
+    html += `<div onclick="quickTrackRoute('${rnum}','${rid}','${nextDep.tid}')"
+      style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:white;border:1px solid rgba(0,0,0,0.07);border-radius:11px;cursor:pointer;">
+      <div style="width:32px;height:32px;border-radius:9px;background:${route.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:white;">${route.short}</div>
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:500;color:#0F172A;">${route.name}</div>
+        <div style="font-size:10px;color:#64748B;">${nextDep.trip.headsign || ''}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:12px;font-weight:600;color:${waitMins<=5?'#16A34A':waitMins<=15?'#D97706':'#64748B'};">${waitMins <= 1 ? 'Now' : waitMins + ' min'}</div>
+        <div style="font-size:10px;color:#94A3B8;">${fmtMins(nextDep.dep)}</div>
+      </div>
+    </div>`;
+  }
+
+  picker.innerHTML = html || `<div style="font-size:11px;color:#94A3B8;text-align:center;padding:8px 0;">No departures found for today</div>`;
+}
+
+/* ─── Quick-track a route without a planned destination ─────────── */
+function quickTrackRoute(routeShort, routeId, tid) {
+  const route = G.routes[routeId] || {};
+  const sts   = G.stopTimes[tid];
+  if (!sts || !sts.length) { showToast('No stop data for this trip', '#D97706'); return; }
+
+  const trip  = G.trips[tid];
+  const nowMins = new Date().getHours()*60 + new Date().getMinutes();
+
+  // Board at first upcoming stop
+  const boardIdx  = sts.findIndex(s => s.dep > nowMins) || 0;
+  const alightIdx = sts.length - 1;
+
+  activeTrip = {
+    tid,
+    route_id:   routeId,
+    routeShort: route.short || routeShort,
+    routeName:  route.name  || '',
+    routeColor: route.color || '#1A56DB',
+    headsign:   trip?.headsign || '',
+    sts,
+    boardIdx:   Math.max(0, boardIdx),
+    alightIdx,
+    departMins: sts[Math.max(0,boardIdx)].dep,
+    arriveMins: sts[alightIdx].arr,
+    walkToBoard: 0,
+    walkToDest:  0,
+    originName:  sts[Math.max(0,boardIdx)] ? (G.stops[sts[Math.max(0,boardIdx)].stop_id]?.name || 'First stop') : 'First stop',
+    destName:   G.stops[sts[alightIdx].stop_id]?.name || 'Last stop',
+    startedAt:  new Date(),
+    scheduledDepartWall: new Date(),
+    phase: 'waiting',
+  };
+
+  renderTrackScreen();
+  if (trackInterval) clearInterval(trackInterval);
+  trackInterval = setInterval(updateTrackTick, 15000);
+  showToast(`Tracking Route ${routeShort} — ${trip?.headsign || ''}`, '#1A56DB');
+}
+
+/* ─── Periodic tick update ──────────────────────────────────────── */
+function updateTrackTick() {
+  if (!activeTrip) { clearInterval(trackInterval); return; }
+  const state = computeTrackState();
+  if (!state) return;
+  if (state.phase === 'done') {
+    clearInterval(trackInterval);
+    showToast('You have arrived at your destination!', '#16A34A');
+    setTimeout(() => cancelActiveTrip(), 8000);
+    return;
+  }
+  // Alerts
+  if (state.phase === 'waiting' && state.waitLeft <= 2 && state.waitLeft > 0) {
+    showToast(`Route ${activeTrip.routeShort} arriving in ${state.waitLeft} min — be ready!`, activeTrip.routeColor);
+  }
+  if (state.phase === 'riding' && state.stopsLeft === 1) {
+    showToast(`Next stop is yours — get ready to alight!`, '#16A34A');
+  }
+  renderTrackScreen();
+}
+
+/* ─── Share ETA from track screen ───────────────────────────────── */
+function openShareETAFromTrack() {
+  if (!activeTrip) return;
+  const arriveTime = fmtMins(activeTrip.arriveMins + activeTrip.walkToDest);
+  openShareETA(arriveTime, activeTrip.destName);
+}
+
+/* ─── Hook showTripDetail to use startTripTracking ─────────────── */
+// Override the "Start Trip" button in the trip detail modal to use real tracking
+// (patched into showTripDetail's modal HTML via the _startTripFromModal wrapper)
+
+/* ─── updateTrackScreen called from plan results (backward compat) ─ */
+function updateTrackScreen(routeNum, routeName, depart, arrive) {
+  // Legacy bridge — find a matching trip in GTFS and start tracking it
+  if (!G.loaded) {
+    // Just update the static labels if GTFS isn't loaded
+    const tcN = document.querySelector('.tc-num');
+    const tcNm = document.querySelector('.tc-name');
+    const tcH = document.querySelector('.tc-heading');
+    const etaT = document.querySelector('.eta-t');
+    if (tcN) tcN.textContent = routeNum;
+    if (tcNm) tcNm.textContent = routeName;
+    if (tcH) tcH.textContent = `Departing at ${depart}`;
+    if (etaT) etaT.textContent = arrive;
+    return;
+  }
+  // Try to find a real trip
+  const rid = Object.keys(G.routes).find(id => G.routes[id].short === routeNum);
+  if (rid) quickTrackRoute(routeNum, rid, Object.keys(G.trips).find(tid => G.trips[tid].route_id === rid && serviceRunsToday(G.trips[tid].service_id)) || '');
+}
+
+/* ─── Re-render when switching to track screen ───────────────────── */
+// Called by showScreen() — see patched version below
 
 /* ===== HOME SCREEN SEARCH ===== */
 let homeSearchTimeout = null;
