@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1A56DB">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>RTS Go — Reimagined</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RTS Go">
+<meta name="description" content="Rochester Transit reimagined — real RTS schedules, trip planning, and community features for college students.">
+<title>RTS Go — Rochester Transit Reimagined</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
+
 :root {
   --b: #1A56DB;
   --bl: #EBF0FF;
@@ -1020,139 +1023,176 @@ body {
   .phone-frame { width: 100%; max-width: 340px; height: 680px; }
   .right-panel { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.07); padding: 24px 20px; }
 }
+
+
+/* ── Splash animations ── */
+@keyframes fade-in-up {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes slide-up-banner {
+  from { opacity:0; transform:translateX(-50%) translateY(20px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+.splash-feature { animation: fade-in-up 0.5s ease-out both; }
 </style>
 </head>
 <body>
 
-<!-- PWA Install Banner -->
-<div id="pwa-banner" style="display:none;">
-  <div class="pwa-icon">
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <rect x="2" y="7" width="18" height="11" rx="2.5" fill="white" opacity="0.9"/>
-      <circle cx="6" cy="18" r="2" fill="rgba(255,255,255,0.7)"/>
-      <circle cx="16" cy="18" r="2" fill="rgba(255,255,255,0.7)"/>
-      <path d="M2 12h18" stroke="white" stroke-width="1" opacity="0.4"/>
-      <path d="M5 7L7.5 4h7L17 7" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
-    </svg>
+<!-- ========== SPLASH / ONBOARDING ========== -->
+<div id="splash" style="position:fixed;inset:0;background:#0B1220;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;">
+  <div style="animation:fade-in-up 0.5s ease-out both;">
+    <!-- Logo mark -->
+    <div style="width:72px;height:72px;background:#1A56DB;border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="4" y="13" width="32" height="19" rx="4" fill="white" opacity="0.95"/>
+        <circle cx="11" cy="32" r="3.5" fill="rgba(255,255,255,0.7)"/>
+        <circle cx="29" cy="32" r="3.5" fill="rgba(255,255,255,0.7)"/>
+        <path d="M4 22h32" stroke="rgba(0,0,0,0.12)" stroke-width="1.5"/>
+        <path d="M10 13L14 7h12l4 6" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div style="font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:white;text-align:center;letter-spacing:-0.02em;margin-bottom:8px;">RTS Go</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:40px;">Rochester Transit · Reimagined</div>
   </div>
-  <div class="pwa-text">
-    <div class="pwa-title">Install RTS Go</div>
-    <div class="pwa-sub">Add to home screen for the full app experience</div>
+
+  <!-- Feature highlights -->
+  <div style="display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;margin-bottom:40px;animation:fade-in-up 0.5s 0.15s ease-out both;opacity:0;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(26,86,219,0.2);border:1px solid rgba(26,86,219,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5C6 1.5 3.5 4 3.5 7c0 4 5.5 10 5.5 10S14.5 11 14.5 7C14.5 4 12 1.5 9 1.5z" stroke="#93C5FD" stroke-width="1.5"/><circle cx="9" cy="7" r="2" stroke="#93C5FD" stroke-width="1.3"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:white;">Real RTS schedules</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.45);">Live GTFS data from myrts.com</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(22,163,74,0.2);border:1px solid rgba(22,163,74,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#86EFAC" stroke-width="1.5"/><path d="M9 6v3l2.5 1.5" stroke="#86EFAC" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:white;">Schedule-based tracking</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.45);">Know exactly when your bus comes</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(83,74,183,0.2);border:1px solid rgba(83,74,183,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2l1.6 4.5h4.5l-3.6 2.6 1.4 4.4L9 11l-3.9 2.5 1.4-4.4L2.9 6.5h4.5z" fill="#A5B4FC" opacity="0.8"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:white;">Discover &amp; earn XP</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.45);">Explore Rochester, scan stops, level up</div>
+      </div>
+    </div>
   </div>
-  <button class="pwa-install" id="pwa-install-btn">Install</button>
-  <button class="pwa-dismiss" onclick="document.getElementById('pwa-banner').style.display='none'">×</button>
+
+  <!-- CTA -->
+  <div style="width:100%;max-width:320px;animation:fade-in-up 0.5s 0.3s ease-out both;opacity:0;">
+    <button onclick="dismissSplash()" style="width:100%;background:#1A56DB;color:white;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;margin-bottom:12px;">Get started</button>
+    <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.3);">A concept by Petrina K. · Rochester, NY</div>
+  </div>
+</div>
+
+<div id="pwa-banner" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0F172A;border:1px solid rgba(26,86,219,0.4);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:14px;z-index:9998;min-width:300px;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:slide-up-banner 0.4s ease-out;">
+  <div style="width:40px;height:40px;background:#1A56DB;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="7" width="16" height="10" rx="2.5" fill="white" opacity="0.9"/><circle cx="6" cy="17" r="2" fill="rgba(255,255,255,0.7)"/><circle cx="14" cy="17" r="2" fill="rgba(255,255,255,0.7)"/><path d="M5 7L7.5 4h5L15 7" stroke="white" stroke-width="1.4" stroke-linejoin="round"/></svg>
+  </div>
+  <div style="flex:1;">
+    <div style="font-size:13px;font-weight:600;color:white;">Install RTS Go</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.5);">Add to home screen for offline access</div>
+  </div>
+  <button id="pwa-install-btn" style="background:#1A56DB;color:white;border:none;border-radius:9px;padding:8px 16px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;">Install</button>
+  <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:transparent;color:rgba(255,255,255,0.35);border:none;font-size:20px;cursor:pointer;padding:0 2px;line-height:1;">×</button>
 </div>
 
 <div class="desktop-wrap">
 
-  <!-- LEFT PANEL -->
   <div class="left-panel">
-    <div class="left-top">
-      <div class="logo-row">
-        <div class="logo-mark">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <rect x="2" y="7" width="18" height="11" rx="2.5" fill="white" opacity="0.9"/>
-            <circle cx="6" cy="18" r="2" fill="rgba(255,255,255,0.7)"/>
-            <circle cx="16" cy="18" r="2" fill="rgba(255,255,255,0.7)"/>
-            <path d="M2 12h18" stroke="white" stroke-width="1" opacity="0.4"/>
-            <path d="M5 7L7.5 4h7L17 7" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div>
-          <div class="logo-text">RTS Go</div>
-          <div class="logo-sub">Reimagined for Rochester</div>
-        </div>
+  <div class="left-top">
+    <div class="logo-row">
+      <div class="logo-mark">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="2" y="8" width="20" height="12" rx="3" fill="white" opacity="0.9"/>
+          <circle cx="7" cy="20" r="2.5" fill="rgba(255,255,255,0.7)"/>
+          <circle cx="17" cy="20" r="2.5" fill="rgba(255,255,255,0.7)"/>
+          <path d="M2 14h20" stroke="rgba(0,0,0,0.1)" stroke-width="1.2"/>
+          <path d="M6 8L9 5h6l3 3" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
       </div>
-      <div class="tagline">A redesigned transit experience for college students — simpler, smarter, and more connected to Rochester's community.</div>
+      <div>
+        <div class="logo-text">RTS Go</div>
+        <div class="logo-sub">Rochester Transit · Reimagined</div>
+      </div>
     </div>
-
-    <div class="screen-nav">
-      <div class="nav-section-label">Core screens</div>
-
-      <button class="nav-btn active" onclick="showScreen('home', this)">
-        <div class="nav-btn-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2l6 5v7a1 1 0 01-1 1H3a1 1 0 01-1-1V7z" fill="white" opacity="0.8"/></svg>
-        </div>
-        <div class="nav-btn-text">
-          <span class="nav-btn-title">Home</span>
-          <span class="nav-btn-desc">Balance, nearby routes & map</span>
-        </div>
-      </button>
-
-      <button class="nav-btn" onclick="showScreen('plan', this)">
-        <div class="nav-btn-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3 3.8 3 6.5c0 3.7 5 9 5 9s5-5.3 5-9c0-2.7-2.5-5-5-5z" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><circle cx="8" cy="6.5" r="1.8" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/></svg>
-        </div>
-        <div class="nav-btn-text">
-          <span class="nav-btn-title">Plan a Trip</span>
-          <span class="nav-btn-desc">Routes, times, step-by-step</span>
-        </div>
-      </button>
-
-      <button class="nav-btn" onclick="showScreen('track', this)">
-        <div class="nav-btn-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/></svg>
-        </div>
-        <div class="nav-btn-text">
-          <span class="nav-btn-title">Live Tracking</span>
-          <span class="nav-btn-desc">Real-time bus position & ETA</span>
-        </div>
-      </button>
-
-      <button class="nav-btn" onclick="showScreen('demand', this)">
-        <div class="nav-btn-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="8" rx="1.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><circle cx="5" cy="13" r="1.2" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><circle cx="11" cy="13" r="1.2" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><path d="M2 9h12" stroke="rgba(255,255,255,0.5)" stroke-width="1"/><path d="M5 5V3.5h6V5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="nav-btn-text">
-          <span class="nav-btn-title">On Demand</span>
-          <span class="nav-btn-desc">Schedule advance flex rides</span>
-        </div>
-      </button>
-
-      <div class="nav-divider"></div>
-      <div class="nav-section-label">Community features</div>
-
-      <button class="nav-btn" onclick="showScreen('discover', this)">
-        <div class="nav-btn-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.5 4h4l-3.2 2.3 1.2 4L8 9.5l-3.5 2.3 1.2-4L2.5 5.5h4z" fill="rgba(255,255,255,0.8)"/></svg>
-        </div>
-        <div class="nav-btn-text">
-          <span class="nav-btn-title">Discover & XP</span>
-          <span class="nav-btn-desc">Badges, streaks, live ridership</span>
-        </div>
-      </button>
-
-      <button class="nav-btn" onclick="showScreen('qr', this)">
-        <div class="nav-btn-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="10" y="10" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="13" y="10" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="10" y="13" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="13" y="13" width="2" height="2" fill="rgba(255,255,255,0.7)"/></svg>
-        </div>
-        <div class="nav-btn-text">
-          <span class="nav-btn-title">QR Stop Scan</span>
-          <span class="nav-btn-desc">History, art, events, tips</span>
-        </div>
-      </button>
-    </div>
-
-    <div class="feature-badges">
-      <div class="fbadge">PWA Ready</div>
-      <div class="fbadge">Mobile-first</div>
-      <div class="fbadge">Offline support</div>
-      <div class="fbadge">QR scanning</div>
-      <div class="fbadge">Gamification</div>
-      <div class="fbadge">Social layer</div>
-      <div class="fbadge">Stop stories</div>
-    </div>
+    <div class="tagline">A student-designed transit concept for Rochester — simpler trip planning, schedule-based tracking, and community features built for college riders.</div>
   </div>
 
-  <!-- CENTER — PHONE -->
+  <div class="screen-nav">
+    <div class="nav-section-label">Core screens</div>
+
+    <button class="nav-btn active" onclick="showScreen('home',this)">
+      <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2l6 5v7a1 1 0 01-1 1H3a1 1 0 01-1-1V7z" fill="white" opacity="0.8"/></svg></div>
+      <div class="nav-btn-text"><span class="nav-btn-title">Home</span><span class="nav-btn-desc">Balance, nearby buses & search</span></div>
+    </button>
+
+    <button class="nav-btn" onclick="showScreen('plan',this)">
+      <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3 3.8 3 6.5c0 3.7 5 9 5 9s5-5.3 5-9c0-2.7-2.5-5-5-5z" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><circle cx="8" cy="6.5" r="1.8" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/></svg></div>
+      <div class="nav-btn-text"><span class="nav-btn-title">Plan a Trip</span><span class="nav-btn-desc">Real GTFS routing with transfers</span></div>
+    </button>
+
+    <button class="nav-btn" onclick="showScreen('track',this)">
+      <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <div class="nav-btn-text"><span class="nav-btn-title">Track</span><span class="nav-btn-desc">Schedule-based live progress</span></div>
+    </button>
+
+    <button class="nav-btn" onclick="showScreen('demand',this)">
+      <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="8" rx="1.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><circle cx="5" cy="13" r="1.2" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><circle cx="11" cy="13" r="1.2" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><path d="M2 9h12" stroke="rgba(255,255,255,0.5)" stroke-width="1"/><path d="M5 5V3.5h6V5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+      <div class="nav-btn-text"><span class="nav-btn-title">On Demand</span><span class="nav-btn-desc">Advance flex-route booking</span></div>
+    </button>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">Community</div>
+
+    <button class="nav-btn" onclick="showScreen('discover',this)">
+      <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.5 4h4l-3.2 2.3 1.2 4L8 9.5l-3.5 2.3 1.2-4L2.5 5.5h4z" fill="rgba(255,255,255,0.8)"/></svg></div>
+      <div class="nav-btn-text"><span class="nav-btn-title">Discover &amp; XP</span><span class="nav-btn-desc">Badges, streaks, live ridership</span></div>
+    </button>
+
+    <button class="nav-btn" onclick="showScreen('qr',this)">
+      <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="10" y="10" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="13" y="10" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="10" y="13" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="13" y="13" width="2" height="2" fill="rgba(255,255,255,0.7)"/></svg></div>
+      <div class="nav-btn-text"><span class="nav-btn-title">QR Stop Scan</span><span class="nav-btn-desc">History, art, events &amp; tips</span></div>
+    </button>
+  </div>
+
+  <div class="feature-badges">
+    <div class="fbadge">PWA ready</div>
+    <div class="fbadge">GTFS powered</div>
+    <div class="fbadge">No accounts</div>
+    <div class="fbadge">Works offline</div>
+    <div class="fbadge">OpenStreetMap</div>
+    <div class="fbadge">CORS proxy</div>
+    <div class="fbadge">GitHub Pages</div>
+  </div>
+</div>
+
+  <!-- CENTER — phone mockup -->
   <div class="center-panel">
-    <div class="phone-label-top" id="phone-label">Home Screen</div>
+    <div class="phone-label-top" id="phone-label">Home</div>
 
     <div class="phone-frame">
       <div class="notch"></div>
 
-      <!-- ===== HOME SCREEN ===== -->
+      <!-- HOME -->
       <div class="phone-screen" id="screen-home">
+        <div class="p-statusbar">
+  <span class="live-clock">9:41</span>
+  <div class="p-si">
+    <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg>
+    <svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg>
+  </div>
+</div>
+        <div class="phone-screen" id="screen-home">
         <div class="p-statusbar">
           <span class="live-clock">9:41</span>
           <div class="p-si">
@@ -1237,7 +1277,18 @@ body {
       </div>
 
       <!-- ===== PLAN SCREEN ===== -->
+      </div>
+
+      <!-- PLAN A TRIP -->
       <div class="phone-screen" id="screen-plan" style="display:none;">
+        <div class="p-statusbar">
+  <span class="live-clock">9:41</span>
+  <div class="p-si">
+    <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg>
+    <svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg>
+  </div>
+</div>
+        <div class="phone-screen" id="screen-plan" style="display:none;">
         <div class="p-statusbar"><span class="live-clock">9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
         <div class="p-screen" style="background:#F8FAFF;">
 
@@ -1338,7 +1389,18 @@ body {
       </div>
 
       <!-- ===== TRACK SCREEN ===== -->
+      </div>
+
+      <!-- TRACK -->
       <div class="phone-screen" id="screen-track" style="display:none;">
+        <div class="p-statusbar">
+  <span class="live-clock">9:41</span>
+  <div class="p-si">
+    <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg>
+    <svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg>
+  </div>
+</div>
+        <div class="phone-screen" id="screen-track" style="display:none;">
         <div class="p-statusbar" id="track-statusbar"><span class="live-clock">9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
         <div class="p-screen">
 
@@ -1441,12 +1503,23 @@ body {
       </div>
 
       <!-- ===== DISCOVER SCREEN ===== -->
+      </div>
+
+      <!-- DISCOVER -->
       <div class="phone-screen" id="screen-discover" style="display:none;">
+        <div class="p-statusbar">
+  <span class="live-clock">9:41</span>
+  <div class="p-si">
+    <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg>
+    <svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg>
+  </div>
+</div>
+        <div class="phone-screen" id="screen-discover" style="display:none;">
         <div class="p-statusbar"><span class="live-clock">9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
         <div class="p-screen">
           <div class="disc-header"><div class="disc-title">Discover ROC</div><div class="disc-sub">Earn points. Explore your city.</div></div>
           <div class="xp-card">
-            <div class="xp-top"><div class="xp-name">Alex J. — Explorer</div><div class="xp-lv">Level 4</div></div>
+            <div class="xp-top"><div class="xp-name">Petrina K. — Explorer</div><div class="xp-lv">Level 4</div></div>
             <div class="xp-track"><div class="xp-fill"></div></div>
             <div class="xp-meta"><span class="xp-pts">680 / 1000 XP</span><span class="xp-nx">320 XP to Level 5</span></div>
           </div>
@@ -1486,7 +1559,18 @@ body {
       </div>
 
       <!-- ===== QR SCREEN ===== -->
+      </div>
+
+      <!-- QR SCAN -->
       <div class="phone-screen" id="screen-qr" style="display:none;">
+        <div class="p-statusbar dark">
+  <span class="live-clock">9:41</span>
+  <div class="p-si">
+    <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="white"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="white"/><rect x="6" y="1" width="2" height="8" rx="1" fill="white"/><rect x="9" y="0" width="2" height="9" rx="1" fill="white"/></svg>
+    <svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="white" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="white"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="white" opacity="0.5"/></svg>
+  </div>
+</div>
+        <div class="phone-screen" id="screen-qr" style="display:none;">
         <div class="p-statusbar dark"><span class="live-clock">9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="white"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="white"/><rect x="6" y="1" width="2" height="8" rx="1" fill="white"/><rect x="9" y="0" width="2" height="9" rx="1" fill="white"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="white" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="white"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="white" opacity="0.5"/></svg></div></div>
         <div class="p-screen">
           <div class="qr-scan">
@@ -1692,7 +1776,18 @@ body {
       </div>
 
       <!-- ===== ON DEMAND SCREEN ===== -->
+      </div>
+
+      <!-- ON DEMAND -->
       <div class="phone-screen" id="screen-demand" style="display:none;">
+        <div class="p-statusbar">
+  <span class="live-clock">9:41</span>
+  <div class="p-si">
+    <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg>
+    <svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg>
+  </div>
+</div>
+        <div class="phone-screen" id="screen-demand" style="display:none;">
         <div class="p-statusbar"><span class="live-clock">9:41</span><div class="p-si"><svg width="13" height="9" viewBox="0 0 13 9" fill="none"><rect x="0" y="4" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="2.5" width="2" height="6.5" rx="1" fill="currentColor"/><rect x="6" y="1" width="2" height="8" rx="1" fill="currentColor"/><rect x="9" y="0" width="2" height="9" rx="1" fill="currentColor"/></svg><svg width="20" height="9" viewBox="0 0 20 9"><rect x="0" y="1" width="16" height="7" rx="2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="11" height="4" rx="1" fill="currentColor"/><rect x="17" y="2.5" width="2" height="4" rx="1" fill="currentColor" opacity="0.5"/></svg></div></div>
         <div class="p-screen">
           <div class="demand-header">
@@ -1735,18 +1830,17 @@ body {
           <div class="p-ni active"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="10" rx="2" fill="#1A56DB" opacity="0.15" stroke="#1A56DB" stroke-width="1.5"/><circle cx="6" cy="16" r="1.5" stroke="#1A56DB" stroke-width="1.2"/><circle cx="14" cy="16" r="1.5" stroke="#1A56DB" stroke-width="1.2"/><path d="M2 10h16" stroke="#1A56DB" stroke-width="1"/><path d="M6 6V4h8v2" stroke="#1A56DB" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="p-nl" style="color:#1A56DB;">On Demand</span></div>
         </div>
       </div>
+      </div>
 
     </div><!-- /phone-frame -->
   </div><!-- /center-panel -->
 
-  <!-- RIGHT PANEL -->
-  <div class="right-panel" id="right-panel">
-    <!-- content injected by JS -->
-  </div>
+  <div class="right-panel" id="right-panel"></div>
 
 </div><!-- /desktop-wrap -->
 
 <script>
+
 /* ===== PWA INSTALL PROMPT ===== */
 let deferredPrompt = null;
 
@@ -1894,19 +1988,7 @@ function confirmAddFunds() {
 }
 
 /* ===== SHARE ETA MODAL ===== */
-function openShareETAModal() {
-  openModal(`
-    <div class="modal-title">Share your ETA</div>
-    <div class="modal-desc">Let someone know you're arriving at <strong style="color:white;">Strong Memorial</strong> at <strong style="color:white;">10:18 AM</strong>.</div>
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;">
-      "Hey, I'm on Route 7 — arriving Strong Memorial around 10:18 AM. Tracking via RTS Go."
-    </div>
-    <div class="modal-btn-row">
-      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="modal-btn-primary" onclick="closeModal();showToast('ETA copied to clipboard!','#16A34A')">Copy message</button>
-    </div>
-  `);
-}
+
 
 /* ===== LIVE CLOCK ===== */
 function updateClock() {
@@ -4077,6 +4159,118 @@ function onPlanToFocus() {
   showSuggestionsFor('to', val);
 }
 
+
+/* ===== MISSING / STUB FUNCTIONS ===== */
+
+// openSearchModal — home screen search (now handled by home-search-input directly,
+// but kept as a stub for any legacy calls)
+function openSearchModal() {
+  const input = document.getElementById('home-search-input');
+  if (input) { input.focus(); showScreen('home', document.querySelector('.nav-btn[onclick*="home"]')); }
+}
+
+// openLink — open a URL in a new tab
+function openLink(url) {
+  window.open(url, '_blank', 'noopener');
+}
+
+// selectDeparture — pick a specific departure from next-departures list
+function selectDeparture(depart, arrive, routeNum, routeName) {
+  showToast('Route ' + routeNum + ' selected — departs ' + depart, '#1A56DB');
+  updateTrackScreen(routeNum, routeName, depart, arrive);
+  setTimeout(() => showScreen('track', document.querySelector('.nav-btn[onclick*="track"]')), 400);
+}
+
+// showBuiltInItinerary — trip detail for fallback (non-GTFS) results
+function showBuiltInItinerary(optJson) {
+  let opt;
+  try { opt = JSON.parse(decodeURIComponent(optJson)); } catch(e) {
+    try { opt = JSON.parse(optJson.replace(/&#39;/g,"'")); } catch(e2) { showToast('Could not open trip details', '#D97706'); return; }
+  }
+  openModal(`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <button onclick="closeModal()" style="background:rgba(255,255,255,0.08);border:none;border-radius:8px;padding:5px 9px;color:white;cursor:pointer;font-size:11px;">← Back</button>
+      <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:white;">Route ${opt.routeNum || '?'} details</div>
+    </div>
+    <div style="background:rgba(26,86,219,0.2);border:1px solid rgba(26,86,219,0.3);border-radius:11px;padding:11px 14px;margin-bottom:12px;display:flex;justify-content:space-between;">
+      <div><div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:2px;">Depart</div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:white;">${opt.depart || '--'}</div></div>
+      <div style="text-align:right;"><div style="font-size:10px;color:rgba(255,255,255,0.5);">Arrive</div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:white;">${opt.arrive || '--'}</div></div>
+    </div>
+    <div style="margin-bottom:14px;display:flex;flex-direction:column;gap:0;">
+      <div style="display:flex;gap:9px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div style="width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5a1 1 0 100-2 1 1 0 000 2zM3.5 3.5l2 2L7 5l.5 3-2 1" stroke="rgba(255,255,255,0.6)" stroke-width="1.1" stroke-linecap="round"/></svg>
+        </div>
+        <div><div style="font-size:11px;font-weight:500;color:white;">Walk to stop · ${opt.walkMins || 2} min</div><div style="font-size:10px;color:rgba(255,255,255,0.4);">${opt.boardStop || (opt.stops && opt.stops[0]) || ''}</div></div>
+      </div>
+      <div style="display:flex;gap:9px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div style="width:26px;height:26px;border-radius:7px;background:${opt.color || '#1A56DB'};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700;color:white;font-family:'Syne',sans-serif;">${opt.routeNum || '?'}</div>
+        <div>
+          <div style="font-size:11px;font-weight:500;color:white;">Board Route ${opt.routeNum} — ${opt.routeName || ''}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);">Departs ${opt.depart} · ${opt.direction || ''}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);">${opt.travelMins || '?'} min ride</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:9px;padding:9px 0;">
+        <div style="width:26px;height:26px;border-radius:7px;background:rgba(22,163,74,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1C4 1 2.5 2.5 2.5 4.5c0 2.5 3.5 6.5 3.5 6.5s3.5-4 3.5-6.5C9.5 2.5 8 1 6 1z" fill="#16A34A"/><circle cx="6" cy="4.5" r="1.3" fill="white"/></svg>
+        </div>
+        <div><div style="font-size:11px;font-weight:500;color:#4ADE80;">Arrive at destination</div><div style="font-size:10px;color:rgba(255,255,255,0.4);">${opt.arrive}</div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="(() => { closeModal(); if(opt.tid && G.loaded) { startTripTracking(opt,opt.walkMins||2,opt.walkMins||2,opt.boardStop||'',opt.alightStop||selectedDestination||''); } else { updateTrackScreen(opt.routeNum,opt.routeName,opt.depart,opt.arrive); showScreen('track',document.querySelector('.nav-btn[onclick*=\'track\']')); } })()"
+        style="flex:1;background:#1A56DB;color:white;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:600;font-family:var(--fn);cursor:pointer;">Start trip</button>
+    </div>
+  `);
+}
+
+// openBookDemandModal — On Demand scheduling modal
+function openBookDemandModal() {
+  const now = new Date();
+  const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDate = tomorrow.toISOString().split('T')[0];
+  openModal(`
+    <div class="modal-title">Schedule your ride</div>
+    <div class="modal-desc">On Demand rides must be booked before 5 PM the day before your trip.</div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;">Pickup date</div>
+      <input class="modal-input" type="date" id="demand-date" min="${minDate}" value="${minDate}" />
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;">Pickup time</div>
+      <input class="modal-input" type="time" id="demand-time" value="09:00" />
+    </div>
+    <div style="background:rgba(217,119,6,0.15);border:1px solid rgba(217,119,6,0.3);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#FCD34D;line-height:1.5;">
+      Book before 5:00 PM the day prior. Confirmation sent to your RTS Go account.
+    </div>
+    <div class="modal-btn-row">
+      <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn-primary" onclick="confirmDemandBooking()">Confirm booking</button>
+    </div>
+  `);
+}
+
+function confirmDemandBooking() {
+  const date = document.getElementById('demand-date')?.value;
+  const time = document.getElementById('demand-time')?.value;
+  if (!date || !time) { showToast('Please select a date and time', '#D97706'); return; }
+  const d = new Date(date);
+  const dayName = d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  const [h, m] = time.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = (h % 12) || 12;
+  closeModal();
+  showToast(`Ride scheduled for ${dayName} at ${h12}:${m.toString().padStart(2,'0')} ${ampm}`, '#16A34A');
+}
+
+// openShareETAModal — share ETA from track screen (legacy alias)
+function openShareETAModal() { openShareETAFromTrack(); }
+
+// togglePrefChip — plan screen preference chips (legacy alias)
+function togglePrefChip(el) { togglePlanPref(el); }
+
+
 /* ===== WIRE UP ALL BUTTONS ===== */
 document.addEventListener('click', (e) => {
   const t = e.target;
@@ -4145,6 +4339,31 @@ document.addEventListener('click', (e) => {
   }
 });
 
+showScreen('home', document.querySelector('.nav-btn.active'));
+
+
+/* ── Splash dismiss ── */
+function dismissSplash() {
+  const splash = document.getElementById('splash');
+  if (!splash) return;
+  splash.style.transition = 'opacity 0.4s ease';
+  splash.style.opacity = '0';
+  setTimeout(() => splash.remove(), 400);
+  // Show PWA prompt after a delay
+  setTimeout(() => {
+    if (!deferredPrompt) document.getElementById('pwa-banner').style.display = 'flex';
+  }, 4000);
+}
+
+// Skip splash if returning visitor
+if (localStorage.getItem('rts_splash_seen')) {
+  const splash = document.getElementById('splash');
+  if (splash) splash.remove();
+} else {
+  localStorage.setItem('rts_splash_seen', '1');
+}
+
+// Init
 showScreen('home', document.querySelector('.nav-btn.active'));
 </script>
 </body>
