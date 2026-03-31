@@ -1012,158 +1012,16 @@ body {
 .toast-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
 /* ===== MOBILE ONLY VIEW ===== */
-/* ============================================================
-   RESPONSIVE BREAKPOINTS
-   1280px+  Full 3-panel layout (left + phone + right)
-   1024–1279  Narrower panels, slightly smaller phone
-   769–1023   Left panel collapses to icon rail, right panel below
-   ≤768       Mobile: stacked single column
-   ============================================================ */
-
-/* ── 1280–1440: standard laptop, everything fits ── */
-@media (max-width: 1440px) {
-  .left-panel  { width: 320px; }
-  .right-panel { width: 280px; padding: 32px 22px; }
-  .left-top    { padding: 26px 22px 20px; }
-  .tagline     { font-size: 12px; }
-  .screen-title { font-size: 22px; }
-}
-
-/* ── 1024–1279: tight laptop (13" MacBook, Surface, common classroom projector) ── */
-@media (max-width: 1279px) {
-  .desktop-wrap { position: relative; }
-
-  /* Left panel: collapses to a compact icon rail */
-  .left-panel {
-    width: 72px;
-    overflow: visible;
-  }
-  .left-top    { padding: 20px 16px 16px; border-bottom: none; }
-  .logo-mark   { width: 36px; height: 36px; border-radius: 10px; }
-  .logo-text, .logo-sub, .tagline { display: none; }
-  .logo-row    { justify-content: center; margin-bottom: 0; }
-
-  .screen-nav  { padding: 12px 8px; }
-  .nav-btn     { padding: 10px 0; justify-content: center; border-radius: 12px; margin-bottom: 4px; }
-  .nav-btn-text { display: none; }
-  .nav-btn-icon { width: 36px; height: 36px; border-radius: 10px; margin: 0; }
-  .nav-section-label { display: none; }
-  .nav-divider { margin: 8px 0; }
-  .feature-badges { display: none; }
-
-  /* Tooltip on hover for nav items */
-  .nav-btn { position: relative; }
-  .nav-btn:hover::after {
-    content: attr(data-tip);
-    position: absolute;
-    left: 80px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #1E293B;
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 6px 12px;
-    border-radius: 8px;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 1000;
-    border: 1px solid rgba(255,255,255,0.1);
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  /* Phone stays same size */
-  .center-panel { padding: 32px 0; }
-  .phone-frame  { width: 320px; height: 650px; }
-
-  /* Right panel: narrower */
-  .right-panel  { width: 260px; padding: 28px 18px; }
-  .screen-title { font-size: 20px; }
-  .screen-desc  { font-size: 12px; }
-  .feature-text { font-size: 12px; }
-  .stat-val     { font-size: 18px; }
-}
-
-/* ── 900–1023: very tight — right panel moves below phone ── */
-@media (max-width: 1023px) {
-  .desktop-wrap { flex-wrap: wrap; }
-
-  /* Left panel stays as icon rail */
-  .left-panel { width: 68px; height: 100vh; }
-
-  /* Center takes full remaining width */
-  .center-panel { flex: 1; padding: 24px 16px; min-width: 0; justify-content: center; }
-  .phone-frame  { width: 300px; height: 620px; }
-  .phone-frame  { border-radius: 38px; }
-
-  /* Right panel below — full width banner */
-  .right-panel {
-    width: calc(100% - 68px);
-    margin-left: 68px;
-    border-left: none;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    padding: 20px 28px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 16px;
-    max-height: none;
-  }
-  .screen-title { width: 100%; font-size: 18px; margin-bottom: 6px; }
-  .screen-desc  { width: 100%; font-size: 12px; margin-bottom: 12px; }
-  .feature-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex: 1; margin-bottom: 0; }
-  .insight-card { flex: 1; min-width: 200px; margin-bottom: 0; }
-  .stat-row     { flex: 1; min-width: 180px; margin-bottom: 0; }
-}
-
-/* ── ≤768: mobile — full stacked layout ── */
 @media (max-width: 768px) {
   .desktop-wrap { flex-direction: column; }
-  .left-panel {
-    width: 100%;
-    height: auto;
-    position: static;
-    border-right: none;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    flex-direction: row;
-    align-items: center;
-    padding: 14px 16px;
-  }
-  .left-top    { padding: 0; border: none; flex-shrink: 0; }
-  .tagline     { display: none; }
-  .logo-row    { margin-bottom: 0; }
-  .screen-nav  {
-    flex: 1;
-    padding: 0 0 0 12px;
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 4px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .screen-nav::-webkit-scrollbar { display: none; }
-  .nav-btn     { width: auto; flex: 0 0 auto; padding: 8px 12px; min-width: 0; }
-  .nav-btn-desc, .nav-section-label, .nav-divider, .feature-badges { display: none; }
-  .nav-btn-title { font-size: 12px; }
-  .nav-btn-icon { width: 24px; height: 24px; }
-
-  .center-panel { padding: 20px 0 16px; }
-  .phone-label-top { margin-bottom: 12px; }
-  .phone-frame  { width: min(340px, 92vw); height: 680px; }
-
-  .right-panel {
-    width: 100%;
-    border-left: none;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    padding: 20px 20px 28px;
-  }
-  .screen-title { font-size: 22px; }
-}
-
-/* ── ≤480: small phones ── */
-@media (max-width: 480px) {
-  .phone-frame { width: 100vw; height: 100svh; border-radius: 0; border: none; box-shadow: none; }
-  .center-panel { padding: 0; }
-  .phone-label-top { display: none; }
+  .left-panel { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .left-top { padding: 20px 20px 16px; }
+  .screen-nav { padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .nav-btn { width: auto; flex: 1; min-width: 140px; }
+  .feature-badges { display: none; }
+  .center-panel { padding: 24px 0; }
+  .phone-frame { width: 100%; max-width: 340px; height: 680px; }
+  .right-panel { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.07); padding: 24px 20px; }
 }
 
 
@@ -1255,39 +1113,6 @@ body {
   line-height: 1.65;
 }
 
-/* Onboarding responsive — desktop centers it with max-width */
-@media (min-width: 769px) {
-  #onboarding {
-    align-items: center;
-    justify-content: center;
-  }
-  #onboarding > #ob-dots,
-  #onboarding > div:last-child {
-    width: 100%;
-    max-width: 520px;
-  }
-  #ob-track {
-    max-width: 520px;
-    width: 520px;
-    border-radius: 24px;
-    overflow: hidden;
-    flex: none;
-    height: 75vh;
-    max-height: 620px;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
-    align-self: stretch;
-  }
-  .ob-slide {
-    min-width: 520px;
-    width: 520px;
-  }
-  .ob-art {
-    max-height: none;
-  }
-  .ob-title { font-size: 32px; }
-  .ob-copy { padding: 24px 32px 6px; }
-}
-
 /* Onboarding animations */
 @keyframes ob-drive-in {
   from { transform: translateX(-180px); }
@@ -1342,7 +1167,7 @@ body {
   </div>
 
   <!-- Slide track -->
-  <div id="ob-track" style="display:flex;flex:1;transition:transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform;overflow:hidden;">
+  <div id="ob-track" style="display:flex;flex:1;transition:transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform;">
 
     <!-- ── SLIDE 1 · Welcome ── -->
     <div class="ob-slide">
@@ -1800,29 +1625,29 @@ body {
   </div>
   <div class="screen-nav">
     <div class="nav-section-label">Core screens</div>
-    <button class="nav-btn active" data-tip="Home" onclick="showScreen('home',this)">
+    <button class="nav-btn active" onclick="showScreen('home',this)">
       <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2l6 5v7a1 1 0 01-1 1H3a1 1 0 01-1-1V7z" fill="white" opacity="0.8"/></svg></div>
       <div class="nav-btn-text"><span class="nav-btn-title">Home</span><span class="nav-btn-desc">Live nearby arrivals &amp; search</span></div>
     </button>
-    <button class="nav-btn" data-tip="Plan a Trip" onclick="showScreen('plan',this)">
+    <button class="nav-btn" onclick="showScreen('plan',this)">
       <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3 3.8 3 6.5c0 3.7 5 9 5 9s5-5.3 5-9c0-2.7-2.5-5-5-5z" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><circle cx="8" cy="6.5" r="1.8" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/></svg></div>
       <div class="nav-btn-text"><span class="nav-btn-title">Plan a Trip</span><span class="nav-btn-desc">Real GTFS routing + transfers</span></div>
     </button>
-    <button class="nav-btn" data-tip="Track" onclick="showScreen('track',this)">
+    <button class="nav-btn" onclick="showScreen('track',this)">
       <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
       <div class="nav-btn-text"><span class="nav-btn-title">Track</span><span class="nav-btn-desc">Schedule-based live progress</span></div>
     </button>
-    <button class="nav-btn" data-tip="On Demand" onclick="showScreen('demand',this)">
+    <button class="nav-btn" onclick="showScreen('demand',this)">
       <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="8" rx="1.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><circle cx="5" cy="13" r="1.2" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><circle cx="11" cy="13" r="1.2" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><path d="M2 9h12" stroke="rgba(255,255,255,0.5)" stroke-width="1"/><path d="M5 5V3.5h6V5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
       <div class="nav-btn-text"><span class="nav-btn-title">On Demand</span><span class="nav-btn-desc">Advance flex-route booking</span></div>
     </button>
     <div class="nav-divider"></div>
     <div class="nav-section-label">Community</div>
-    <button class="nav-btn" data-tip="Discover &amp; XP" onclick="showScreen('discover',this)">
+    <button class="nav-btn" onclick="showScreen('discover',this)">
       <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.5 4h4l-3.2 2.3 1.2 4L8 9.5l-3.5 2.3 1.2-4L2.5 5.5h4z" fill="rgba(255,255,255,0.8)"/></svg></div>
       <div class="nav-btn-text"><span class="nav-btn-title">Discover &amp; XP</span><span class="nav-btn-desc">Badges, streaks, live ridership</span></div>
     </button>
-    <button class="nav-btn" data-tip="QR Stop Scan" onclick="showScreen('qr',this)">
+    <button class="nav-btn" onclick="showScreen('qr',this)">
       <div class="nav-btn-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="rgba(255,255,255,0.7)" stroke-width="1.3"/><rect x="10" y="10" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="13" y="10" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="10" y="13" width="2" height="2" fill="rgba(255,255,255,0.7)"/><rect x="13" y="13" width="2" height="2" fill="rgba(255,255,255,0.7)"/></svg></div>
       <div class="nav-btn-text"><span class="nav-btn-title">QR Stop Scan</span><span class="nav-btn-desc">History, art, events &amp; live arrivals</span></div>
     </button>
@@ -5191,10 +5016,7 @@ let   obDragDelta = 0;
 function obGoto(idx) {
   obCurrent = Math.max(0, Math.min(OB_TOTAL - 1, idx));
   const track = document.getElementById('ob-track');
-  if (track) {
-    const slideW = track.children[0]?.offsetWidth || track.offsetWidth;
-    track.style.transform = `translateX(-${obCurrent * slideW}px)`;
-  }
+  if (track) track.style.transform = `translateX(-${obCurrent * 100}vw)`;
 
   // Update dots
   const dots = document.querySelectorAll('.ob-dot');
@@ -5260,8 +5082,7 @@ function finishOnboarding() {
     const track = document.getElementById('ob-track');
     if (track) {
       track.style.transition = 'none';
-      const slideW2 = track.children[0]?.offsetWidth || track.offsetWidth;
-      track.style.transform  = `translateX(calc(-${obCurrent * slideW2}px + ${obDragDelta}px))`;
+      track.style.transform  = `translateX(calc(-${obCurrent * 100}vw + ${obDragDelta}px))`;
     }
   }, { passive: true });
 
@@ -5286,8 +5107,7 @@ function finishOnboarding() {
     const track = document.getElementById('ob-track');
     if (track) {
       track.style.transition = 'none';
-      const slideW2 = track.children[0]?.offsetWidth || track.offsetWidth;
-      track.style.transform  = `translateX(calc(-${obCurrent * slideW2}px + ${obDragDelta}px))`;
+      track.style.transform  = `translateX(calc(-${obCurrent * 100}vw + ${obDragDelta}px))`;
     }
   });
   window.addEventListener('mouseup', () => {
